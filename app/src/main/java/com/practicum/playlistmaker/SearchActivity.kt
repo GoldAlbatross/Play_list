@@ -3,9 +3,9 @@ package com.practicum.playlistmaker
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MediaLib : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.media_lib)
+        setContentView(R.layout.search)
     }
 }
