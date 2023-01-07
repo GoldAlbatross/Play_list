@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <Button
@@ -15,7 +16,7 @@
         app:icon="@drawable/ic_array_back"
         app:iconGravity="textStart"
         app:iconPadding="28dp"
-        app:iconTint="@android:color/black" />
+        app:iconTint="?attr/colorOnSecondary" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch1"
@@ -26,7 +27,7 @@
         android:paddingHorizontal="@dimen/size_16dp"
         android:paddingVertical="@dimen/size_21dp"
         android:text="@string/night_theme"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/size_16sp" />
 
     <Button

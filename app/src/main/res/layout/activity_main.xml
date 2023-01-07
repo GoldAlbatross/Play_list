@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/size_16dp"
-    android:background="@color/blue">
+    android:background="?attr/background">
 
     <FrameLayout
         android:layout_width="match_parent"
