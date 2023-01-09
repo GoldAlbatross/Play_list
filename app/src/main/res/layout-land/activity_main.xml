@@ -44,7 +44,7 @@
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="@dimen/size_22sp"
-            app:icon="@drawable/ic_magnifying_glass"
+            app:icon="@drawable/ic_lens_19"
             app:iconGravity="textStart"
             app:iconPadding="10dp"
             app:iconTint="@color/black" />

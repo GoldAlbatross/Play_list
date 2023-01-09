@@ -2,11 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/size_16dp"
-    android:background="?attr/background">
+    android:background="?attr/background"
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -32,13 +34,14 @@
             android:id="@+id/btn_search"
             style="@style/button"
             android:text="@string/search"
-            app:icon="@drawable/ic_magnifying_glass" />
+            app:icon="@drawable/ic_lens_19" />
         <Button
             android:id="@+id/btn_media"
             style="@style/button"
             android:layout_marginTop="@dimen/size_16dp"
             android:text="@string/media_lib"
             app:icon="@drawable/ic_media_lib" />
+
         <Button
             android:id="@+id/btn_settings"
             style="@style/button"

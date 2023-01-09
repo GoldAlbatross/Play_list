@@ -12,4 +12,5 @@
     <string name="rating">Рейтинг этого фильма больше чем 9?</string>
     <string name="numbers">2/10</string>
     <string name="question">Вопрос</string>
+    <string name="input_clearing">Очистить строку поиска</string>
 </resources>
