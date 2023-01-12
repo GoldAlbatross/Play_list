@@ -15,12 +15,11 @@ class SettingsActivity : AppCompatActivity() {
 
         val sharing = findViewById<Button>(R.id.btn_sharing)
         sharing.setOnClickListener {
-            val sendIntent: Intent = Intent(Intent.ACTION_SEND).apply {
+            Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, "https://practicum.yandex.ru/android-developer/")
                 type = "text/plain"
+                startActivity(Intent.createChooser(this, null))
             }
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
         }
 
         val support = findViewById<Button>(R.id.btn_support)
