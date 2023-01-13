@@ -1,17 +1,28 @@
 package com.practicum.playlistmaker
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        val button = findViewById<Button>(R.id.button)
+        button.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
+        val switch = findViewById<SwitchCompat>(R.id.switch1)
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
+            else{ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
+        }
 
         val sharing = findViewById<Button>(R.id.btn_sharing)
         sharing.setOnClickListener {
@@ -24,26 +35,20 @@ class SettingsActivity : AppCompatActivity() {
 
         val support = findViewById<Button>(R.id.btn_support)
         support.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO).apply {
+            Intent(Intent.ACTION_SENDTO).apply {
                 putExtra(Intent.EXTRA_EMAIL, arrayOf("goldalbatross@yandex.ru"))
                 putExtra(Intent.EXTRA_SUBJECT, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
                 putExtra(Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
                 data = Uri.parse("mailto:")
-            }
-            try { startActivity(intent) }
-            catch (e : ActivityNotFoundException) {
-                Toast.makeText(this, "Нет подходящего приложения", Toast.LENGTH_SHORT).show()
+                startActivity(Intent.createChooser(this, null))
             }
         }
 
         val agreement = findViewById<Button>(R.id.btn_agreement)
         agreement.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
+            Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("https://yandex.ru/legal/practicum_offer/")
-            }
-            try { startActivity(intent) }
-            catch (e : ActivityNotFoundException) {
-                Toast.makeText(this, "Нет подходящего приложения", Toast.LENGTH_SHORT).show()
+                startActivity(Intent.createChooser(this, null))
             }
         }
     }

@@ -35,6 +35,7 @@
     <ImageView
         android:id="@+id/icon_clear"
         style="@style/image_clearing"
+        android:visibility="invisible"
         android:contentDescription="@string/input_clearing"
         app:layout_constraintBottom_toBottomOf="@+id/edit_search"
         app:layout_constraintEnd_toEndOf="@+id/edit_search"

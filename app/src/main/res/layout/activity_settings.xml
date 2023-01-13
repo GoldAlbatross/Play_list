@@ -28,11 +28,7 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch1"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_60dp"
-        android:layout_marginTop="@dimen/size_24dp"
-        android:paddingStart="@dimen/size_16dp"
-        android:paddingEnd="@dimen/size_16dp"
+        style="@style/switcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />

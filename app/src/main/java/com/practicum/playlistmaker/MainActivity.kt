@@ -12,17 +12,17 @@ class MainActivity : AppCompatActivity() {
 
         val btnSearch = findViewById<Button>(R.id.btn_search)
         btnSearch.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+            startActivity(Intent(this, SearchActivity::class.java))
         }
 
         val btnMediaLib = findViewById<Button>(R.id.btn_media)
         btnMediaLib.setOnClickListener {
-            startActivity(Intent(this@MainActivity, MediaLibActivity::class.java))
+            startActivity(Intent(this, MediaLibActivity::class.java))
         }
 
         val btnSettings = findViewById<Button>(R.id.btn_settings)
         btnSettings.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 }
