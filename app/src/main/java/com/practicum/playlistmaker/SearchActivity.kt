@@ -14,7 +14,7 @@ import androidx.core.widget.doOnTextChanged
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var searchText: String
+    private var searchText: String = ""
     private lateinit var search: EditText
     companion object {
         const val KEY_EDIT_TEXT = "SearchActivity.KEY_EDIT_TEXT"
