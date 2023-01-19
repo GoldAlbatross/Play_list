@@ -2,6 +2,8 @@ package com.practicum.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -12,6 +14,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.delay
 
 class SearchActivity : AppCompatActivity() {
 
@@ -21,6 +24,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var clearingButton: ImageView
     private lateinit var backButton: Button
     private lateinit var state: State
+    private val callback = Runnable { renderState() }
+    private val handler = Handler(Looper.getMainLooper())
 
     @Parcelize
     class State: Parcelable {
@@ -39,7 +44,8 @@ class SearchActivity : AppCompatActivity() {
         backButton.setOnClickListener { finish() }
 
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
-        renderState()
+        searchEditText.setText(state.searchText)
+        handler.postDelayed(callback, 500)
 
         searchEditText.doOnTextChanged { text,_,_,_ ->
             clearingButton.visibility = clearButtonVisibility(text)
@@ -54,9 +60,12 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(callback)
+    }
 
     private fun renderState() {
-        searchEditText.setText(state.searchText)
         if (state.focus) { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(searchEditText, 0)
         }
