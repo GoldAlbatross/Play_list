@@ -13,4 +13,6 @@
     <string name="numbers">2/10</string>
     <string name="question">Вопрос</string>
     <string name="input_clearing">Очистить строку поиска</string>
+    <string name="theme_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>

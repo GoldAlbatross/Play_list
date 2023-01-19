@@ -29,13 +29,13 @@
 
         <Button
             android:id="@+id/btn_search"
-            style="@style/button"
+            style="@style/main_button"
             android:text="@string/search"
             app:icon="@drawable/ic_lens_19" />
 
         <Button
             android:id="@+id/btn_media"
-            style="@style/button"
+            style="@style/main_button"
             android:layout_marginTop="16dp"
             android:text="@string/media_lib"
             app:icon="@drawable/ic_media_lib"
@@ -43,7 +43,7 @@
 
         <Button
             android:id="@+id/btn_settings"
-            style="@style/button"
+            style="@style/main_button"
             android:layout_marginTop="16dp"
             android:text="@string/settings"
             app:icon="@drawable/ic_gearwheel"

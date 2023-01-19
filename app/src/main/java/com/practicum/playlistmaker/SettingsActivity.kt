@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
         val sharing = findViewById<Button>(R.id.btn_sharing)
         sharing.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, "https://practicum.yandex.ru/android-developer/")
+                putExtra(Intent.EXTRA_TEXT, http_practicum)
                 type = "text/plain"
                 startActivity(Intent.createChooser(this, null))
             }
@@ -36,9 +36,9 @@ class SettingsActivity : AppCompatActivity() {
         val support = findViewById<Button>(R.id.btn_support)
         support.setOnClickListener {
             Intent(Intent.ACTION_SENDTO).apply {
-                putExtra(Intent.EXTRA_EMAIL, arrayOf("goldalbatross@yandex.ru"))
-                putExtra(Intent.EXTRA_SUBJECT, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
-                putExtra(Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email_albatross))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.theme_email))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.email_message))
                 data = Uri.parse("mailto:")
                 startActivity(Intent.createChooser(this, null))
             }
@@ -47,9 +47,14 @@ class SettingsActivity : AppCompatActivity() {
         val agreement = findViewById<Button>(R.id.btn_agreement)
         agreement.setOnClickListener {
             Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+                data = Uri.parse(http_offer)
                 startActivity(Intent.createChooser(this, null))
             }
         }
+    }
+    companion object {
+        const val http_practicum = "https://practicum.yandex.ru/android-developer/"
+        const val http_offer = "https://yandex.ru/legal/practicum_offer/"
+        const val email_albatross = "goldalbatross@yandex.ru"
     }
 }
