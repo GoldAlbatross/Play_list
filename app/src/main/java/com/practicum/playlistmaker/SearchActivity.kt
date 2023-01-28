@@ -14,7 +14,6 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.delay
 
 class SearchActivity : AppCompatActivity() {
 
