@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?actionBarItemBackground"
+    android:backgroundTint="?attr/colorSecondary"
+    android:clickable="true"
+    android:focusable="true" >
+
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="@dimen/size_46dp"
+        android:layout_height="@dimen/size_46dp"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_8dp"
+        android:layout_marginBottom="@dimen/size_8dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/picture_of_album"
+        tools:src="@drawable/placeholder"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/size_8dp"
+        android:paddingEnd="@dimen/size_8dp"
+        android:layout_gravity="center_vertical">
+        <TextView
+            android:id="@+id/song"
+            style="@style/text_for_recycler_item"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textSize="@dimen/text_size_16sp"
+            android:maxLength="35"
+            tools:text="Smells Like Teen Spirit" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/artist"
+                style="@style/text_for_recycler_item"
+                tools:text="Nirvana" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/size_5dp"
+                android:layout_marginEnd="@dimen/size_5dp"
+                android:contentDescription="@string/empty"
+                android:src="@drawable/circle"/>
+            <TextView
+                android:id="@+id/time"
+                style="@style/text_for_recycler_item"
+                tools:text="2:55"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="13dp"
+            android:contentDescription="@string/go_to"
+            android:src="@drawable/ic_array_go_to"/>
+    </LinearLayout>
+</LinearLayout>
