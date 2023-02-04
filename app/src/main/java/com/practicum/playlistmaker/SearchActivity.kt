@@ -13,14 +13,12 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.adapter.TrackAdapter
 import com.practicum.playlistmaker.model.Track
 import kotlinx.android.parcel.Parcelize
 
 class SearchActivity : AppCompatActivity() {
-
     companion object { const val KEY_STATE = "SearchActivity.KEY_STATE" }
 
     private lateinit var searchEditText: EditText
@@ -66,6 +64,41 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // handling RecyclerView
+        initTrackList()
+        setRecycler(trackList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(callback)
+    }
+
+    private fun renderState() {
+        if (state.focus) { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(searchEditText, 0)
+        }
+        else { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        }
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) INVISIBLE
+        else VISIBLE
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (currentFocus == searchEditText) state.focus = true
+        outState.putParcelable(KEY_STATE, state)
+    }
+
+    private fun setRecycler(trackList: List<Track>) {
+        recycler = findViewById(R.id.recycler)
+        recycler.adapter = TrackAdapter(trackList)
+    }
+
+    private fun initTrackList() {
         trackList.add(Track(
             0,
             "Smells Like Teen Spirit",
@@ -102,36 +135,5 @@ class SearchActivity : AppCompatActivity() {
             "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg")
         )
         (0..20).map { trackList.add(trackList[(0..4).random()]) }
-        setRecycler(trackList)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(callback)
-    }
-
-    private fun renderState() {
-        if (state.focus) { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(searchEditText, 0)
-        }
-        else { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
-        }
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) INVISIBLE
-        else VISIBLE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (currentFocus == searchEditText) state.focus = true
-        outState.putParcelable(KEY_STATE, state)
-    }
-
-    private fun setRecycler(trackList: List<Track>) {
-        recycler = findViewById(R.id.recycler)
-        recycler.adapter = TrackAdapter(trackList)
     }
 }
