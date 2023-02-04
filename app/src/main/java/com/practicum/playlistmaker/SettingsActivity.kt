@@ -1,25 +1,29 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val button = findViewById<Button>(R.id.button)
-        button.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setOnClickListener { finish() }
 
-        val switch = findViewById<SwitchCompat>(R.id.switch1)
-        switch.setOnCheckedChangeListener { _, isChecked ->
+        val swtch = findViewById<SwitchCompat>(R.id.night_swtch)
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> { swtch.isChecked = true }
+            else -> { swtch.isChecked = false }
+        }
+        swtch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
             else{ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
         }

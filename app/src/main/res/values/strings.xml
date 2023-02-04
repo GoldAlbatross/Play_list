@@ -15,4 +15,7 @@
     <string name="input_clearing">Очистить строку поиска</string>
     <string name="theme_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="picture_of_album">Picture of album</string>
+    <string name="empty" />
+    <string name="go_to">Go to</string>
 </resources>

@@ -9,39 +9,33 @@
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <Button
-        android:id="@+id/button"
-        style="@style/button_max_width"
-        app:icon="@drawable/ic_array_back"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        style="@style/text_for_btn_max_width"
-        android:text="@string/settings"
-        android:fontFamily="@font/ys_display_medium"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button" />
+        app:layout_constraintTop_toTopOf="parent" >
+        <TextView
+            style="@style/text_for_toolbar" />
+    </androidx.appcompat.widget.Toolbar>
 
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switch1"
+        android:id="@+id/night_swtch"
         style="@style/switcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/night_theme"
-        android:textSize="@dimen/size_16sp"
+        android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/switch1"
+        app:layout_constraintBottom_toBottomOf="@+id/night_swtch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switch1" />
+        app:layout_constraintTop_toTopOf="@+id/night_swtch" />
 
 
     <Button
@@ -51,11 +45,11 @@
         android:drawableEnd="@drawable/ic_share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        app:layout_constraintTop_toBottomOf="@+id/night_swtch" />
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/share_app"
-        android:textSize="@dimen/size_16sp"
+        android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_sharing"
@@ -75,7 +69,7 @@
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/support"
-        android:textSize="@dimen/size_16sp"
+        android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_support"
@@ -95,7 +89,7 @@
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/terms_of_use"
-        android:textSize="@dimen/size_16sp"
+        android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_agreement"
