@@ -43,6 +43,7 @@
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_share"
+        android:contentDescription="@string/share_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/night_swtch" />
@@ -63,6 +64,7 @@
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_head"
+        android:contentDescription="@string/support"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_sharing" />
@@ -83,6 +85,7 @@
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_array_go_to"
+        android:contentDescription="@string/agreement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_support" />

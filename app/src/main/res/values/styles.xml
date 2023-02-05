@@ -50,7 +50,7 @@
 
     <style name="edit_text">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:layout_marginTop">@dimen/size_8dp</item>
         <item name="android:layout_marginStart">@dimen/size_16dp</item>
         <item name="android:layout_marginEnd">@dimen/size_16dp</item>
