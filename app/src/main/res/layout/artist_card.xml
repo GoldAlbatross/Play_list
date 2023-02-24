@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/picture"
-        android:layout_width="@dimen/size_56dp"
-        android:layout_height="@dimen/size_56dp"
+        android:layout_width="@dimen/size_50dp"
+        android:layout_height="@dimen/size_50dp"
         android:layout_marginStart="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_8dp"
         android:layout_marginBottom="@dimen/size_8dp"

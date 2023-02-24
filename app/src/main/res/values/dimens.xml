@@ -8,6 +8,7 @@
     <dimen name="size_24dp">24dp</dimen>
     <dimen name="size_21dp">21dp</dimen>
     <dimen name="size_46dp">46dp</dimen>
+    <dimen name="size_50dp">50dp</dimen>
     <dimen name="size_56dp">56dp</dimen>
     <dimen name="size_60dp">60dp</dimen>
     <dimen name="size_64dp">64dp</dimen>
