@@ -3,4 +3,9 @@
     <string name="media_lib">Media library</string>
     <string name="settings">Settings</string>
     <string name="search">Search</string>
+    <string name="agreement">Agreement</string>
+    <string name="empty_list">Nothing found</string>
+    <string name="error">Communication problems\n \nDownload failed. Check\nyour internet connection</string>
+    <string name="refresh">Refresh</string>
+
 </resources>

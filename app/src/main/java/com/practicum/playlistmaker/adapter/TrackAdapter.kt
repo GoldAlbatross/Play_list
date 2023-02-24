@@ -9,16 +9,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.model.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TrackAdapter(var trackList: List<Track>): RecyclerView.Adapter<TrackViewHolder>() {
-
+class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
+    internal val trackList = mutableListOf<Track>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
         TrackViewHolder(parent)
-
     override fun getItemCount(): Int = trackList.size
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+        val track = trackList[holder.adapterPosition]
+        holder.bind(track)
+    }
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) =
-        holder.bind(trackList[position])
 }
 
 class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
@@ -29,15 +32,15 @@ class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
     private val trackTime = itemView.findViewById<TextView>(R.id.time)
     private val artwork = itemView.findViewById<ImageView>(R.id.picture)
 
-    fun bind(obj: Track) {
-        trackName.text = obj.trackName
-        artistName.text = obj.artistName
-        trackTime.text = obj.trackTime
+    fun bind(model: Track) {
+        trackName.text = model.track
+        artistName.text = model.artist
+        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTime).toString()
         Glide
             .with(itemView.context)
-            .load(obj.artworkUrl)
+            .load(model.url)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(4))
+            .transform(RoundedCorners(8))
             .into(artwork)
     }
 }
