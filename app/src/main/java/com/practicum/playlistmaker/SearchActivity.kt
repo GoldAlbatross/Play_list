@@ -154,7 +154,7 @@ class SearchActivity : AppCompatActivity() {
             is NetworkResponse.Success -> {
                 tracksAdapter.trackList.clear()
                 tracksAdapter.trackList.addAll(response.listFromApi)
-                recycler.adapter?.notifyItemRangeChanged(0, tracksAdapter.trackList.size)
+                tracksAdapter.notifyDataSetChanged()
                 dummy.visibility = INVISIBLE
             }
             is NetworkResponse.NoData -> {
