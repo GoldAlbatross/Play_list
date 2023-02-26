@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -22,7 +21,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.adapter.TrackAdapter
-import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
@@ -47,7 +45,6 @@ class SearchActivity : AppCompatActivity() {
     // variables for RecyclerView
     private lateinit var recycler: RecyclerView
     private val tracksAdapter = TrackAdapter()
-    private var list = mutableListOf<Track>()
 
     //variables for Retrofit
     private val retrofit = TrackRetrofit()
