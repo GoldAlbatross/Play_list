@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
+import android.os.PersistableBundle
 import android.view.View
+import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
@@ -24,6 +26,7 @@ import com.practicum.playlistmaker.adapter.TrackAdapter
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
+import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
 import retrofit2.Response
 
@@ -70,6 +73,7 @@ class SearchActivity : AppCompatActivity() {
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
         searchEditText.setText(state.searchText)
         handler.postDelayed(callback, 500)
+        clearingButton.visibility = state.cross
 
         //init the recyclerView
         recycler.layoutManager = LinearLayoutManager(this)
@@ -80,7 +84,6 @@ class SearchActivity : AppCompatActivity() {
         super.onResume()
         searchEditText.doOnTextChanged { text,_,_,_ ->
             clearingButton.visibility = clearButtonVisibility(text)
-            state.searchText = "$text"
         }
 
         //clearing search field and recycler
@@ -96,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
         //handling backendApi request/response
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                retrofit.listener = object : TrackRetrofit.TrackRetrofitListener {
+                retrofit.listener = object : TrackRetrofitListener {
 
                     override fun onSuccess(response: Response<TrackResponse>) {
                         if (response.isSuccessful){
@@ -120,6 +123,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        state.cross = clearingButton.visibility
+        state.searchText = searchEditText.text.toString()
+        if (searchEditText.hasFocus()) state.focus = true
+        outState.putParcelable(KEY_STATE, state)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(callback)
@@ -138,12 +149,6 @@ class SearchActivity : AppCompatActivity() {
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) INVISIBLE
         else VISIBLE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (currentFocus == searchEditText) state.focus = true
-        outState.putParcelable(KEY_STATE, state)
     }
 
     private fun handlingSearchQuery(response: NetworkResponse) =
@@ -175,5 +180,6 @@ class SearchActivity : AppCompatActivity() {
     class State: Parcelable {
         var searchText: String = ""
         var focus: Boolean = false
+        var cross = GONE
     }
 }

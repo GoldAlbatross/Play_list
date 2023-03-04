@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.okhttp
 
-
 import com.practicum.playlistmaker.model.TrackResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL = "https://itunes.apple.com"
-
 class TrackRetrofit {
 
     internal var listener: TrackRetrofitListener? = null
@@ -35,9 +33,9 @@ class TrackRetrofit {
             }
         })
     }
+}
 
-    interface TrackRetrofitListener {
-        fun onSuccess(response: Response<TrackResponse>)
-        fun onError(t: Throwable)
-    }
+interface TrackRetrofitListener {
+    fun onSuccess(response: Response<TrackResponse>)
+    fun onError(t: Throwable)
 }
