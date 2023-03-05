@@ -25,6 +25,7 @@
         android:hint="@string/search"
         android:imeOptions="actionDone"
         android:singleLine="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -32,7 +33,6 @@
         android:id="@+id/icon_clear"
         style="@style/image_clearing"
         android:visibility="invisible"
-        tools:visibility="visible"
         android:contentDescription="@string/input_clearing"
         app:layout_constraintBottom_toBottomOf="@+id/edit_search"
         app:layout_constraintEnd_toEndOf="@+id/edit_search"

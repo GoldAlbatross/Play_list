@@ -1,12 +1,10 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 class SettingsActivity : AppCompatActivity() {
@@ -25,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
         sharing = findViewById(R.id.btn_sharing)
         support = findViewById(R.id.btn_support)
         agreement = findViewById(R.id.btn_agreement)
-        swtch.isChecked = (applicationContext as App).darkTheme
+        swtch.isChecked = App.instance.themeSwitcher.darkTheme
 
     }
 
@@ -33,10 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onResume()
 
         swtch.setOnCheckedChangeListener { _, isChecked ->
-            (applicationContext as App).apply {
-                switcherTheme(isChecked)
-                saveTheme(isChecked)
-            }
+            App.instance.themeSwitcher.addBoolean(isChecked)
         }
 
         sharing.setOnClickListener {

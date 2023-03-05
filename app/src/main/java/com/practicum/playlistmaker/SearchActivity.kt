@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,9 +67,6 @@ class SearchActivity : AppCompatActivity() {
         txtDummy = findViewById(R.id.txt_dummy)
         btnDummy = findViewById(R.id.btn_dummy)
 
-        //come back
-        toolbar.setOnClickListener { finish() }
-
         //handling a state
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
         searchEditText.setText(state.searchText)
@@ -82,11 +80,17 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // hide the cross
         searchEditText.doOnTextChanged { text,_,_,_ ->
-            clearingButton.visibility = clearButtonVisibility(text)
+            btnVisibility(text, clearingButton)
         }
 
-        //clearing search field and recycler
+        // catch the focus
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
+            recyclerVisibility(recycler, hasFocus)
+        }
+
+        // clearing search field and recycler
         clearingButton.setOnClickListener {
             searchEditText.setText("")
             searchEditText.clearFocus()
@@ -96,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
             tracksAdapter.notifyDataSetChanged()
         }
 
-        //handling backendApi request/response
+        // handling backendApi request/response
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 retrofit.listener = object : TrackRetrofitListener {
@@ -117,17 +121,20 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        //refresh request
+        // refresh request
         btnDummy.setOnClickListener {
             retrofit.getResponseFromBackend(searchEditText.text.toString())
         }
+
+        // come back
+        toolbar.setOnClickListener { finish() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        state.cross = clearingButton.visibility
         state.searchText = searchEditText.text.toString()
-        if (searchEditText.hasFocus()) state.focus = true
+        state.focus = searchEditText.hasFocus()
+        state.cross = clearingButton.visibility
         outState.putParcelable(KEY_STATE, state)
     }
 
@@ -146,10 +153,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) INVISIBLE
-        else VISIBLE
+    private fun btnVisibility(text: CharSequence?, view: View) {
+        view.visibility = if (text.isNullOrEmpty()) INVISIBLE else VISIBLE
     }
+    private fun recyclerVisibility(view: View, hasFocus: Boolean) {
+        view.visibility = if (hasFocus && searchEditText.text.isNullOrEmpty()) VISIBLE else INVISIBLE
+    }
+
 
     private fun handlingSearchQuery(response: NetworkResponse) =
         when(response) {
