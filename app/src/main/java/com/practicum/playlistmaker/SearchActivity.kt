@@ -86,6 +86,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         // hide the cross
         searchEditText.doOnTextChanged { text,_,_,_ ->
             if (searchEditText.hasFocus() && text?.isNotEmpty() == true) showEmptyList()
@@ -104,9 +105,6 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.clearFocus()
             state.focus = false
             renderState()
-//            tracksAdapter.trackList.clear()
-//            tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
-//            tracksAdapter.notifyDataSetChanged()
         }
 
         // handling backendApi request/response
@@ -142,7 +140,9 @@ class SearchActivity : AppCompatActivity() {
             showEmptyList()
         }
 
-        tracksAdapter.listener = { track -> App.instance.trackStorage.addTracks(track) }
+        tracksAdapter.listener = { track ->
+            App.instance.trackStorage.addTracks(track)
+        }
 
     }
 
@@ -158,7 +158,6 @@ class SearchActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeCallbacks(callback)
         retrofit.listener = null
-        tracksAdapter.listener = null
     }
 
     private fun renderState() {
@@ -188,10 +187,6 @@ class SearchActivity : AppCompatActivity() {
             tracksAdapter.notifyDataSetChanged()
         } else showEmptyList()
     }
-
-
-
-
     private fun handlingSearchQuery(response: NetworkResponse) =
         when(response) {
             is NetworkResponse.Success -> {
@@ -203,7 +198,7 @@ class SearchActivity : AppCompatActivity() {
             }
             is NetworkResponse.NoData -> {
                 tracksAdapter.trackList.clear()
-                tracksAdapter.notifyDataSetChanged()
+                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = AppCompatResources.getDrawable(this, R.drawable.search_dummy_empty)
                 txtDummy.text = getString(R.string.empty_list)
@@ -211,7 +206,7 @@ class SearchActivity : AppCompatActivity() {
             }
             is NetworkResponse.Error-> {
                 tracksAdapter.trackList.clear()
-                tracksAdapter.notifyDataSetChanged()
+                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = AppCompatResources.getDrawable(this, R.drawable.search_dummy_error)
                 txtDummy.text = getString(R.string.error)
