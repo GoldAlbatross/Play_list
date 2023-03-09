@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
         sharing = findViewById(R.id.btn_sharing)
         support = findViewById(R.id.btn_support)
         agreement = findViewById(R.id.btn_agreement)
-        swtch.isChecked = App.instance.themeSwitcher.darkTheme
+        swtch.isChecked = App.instance.themeSwitcher.getBoolean()
 
     }
 

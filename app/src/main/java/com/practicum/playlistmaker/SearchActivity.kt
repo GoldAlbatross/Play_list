@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
-import android.os.PersistableBundle
+import android.util.LruCache
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
@@ -19,16 +19,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
-import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.adapter.TrackAdapter
+import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
 import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
+import okhttp3.internal.notifyAll
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
@@ -38,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var dummy: View
     private lateinit var imgDummy: ImageView
     private lateinit var txtDummy: TextView
+    private lateinit var header: TextView
     private lateinit var btnDummy: Button
     private lateinit var toolbar: Toolbar
 
@@ -49,6 +51,7 @@ class SearchActivity : AppCompatActivity() {
     // variables for RecyclerView
     private lateinit var recycler: RecyclerView
     private val tracksAdapter = TrackAdapter()
+    private lateinit var footer: Button
 
     //variables for Retrofit
     private val retrofit = TrackRetrofit()
@@ -66,6 +69,8 @@ class SearchActivity : AppCompatActivity() {
         imgDummy = findViewById(R.id.img_dummy)
         txtDummy = findViewById(R.id.txt_dummy)
         btnDummy = findViewById(R.id.btn_dummy)
+        footer = findViewById(R.id.btn_clear_history)
+        header = findViewById<TextView>(R.id.txt_history)
 
         //handling a state
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
@@ -75,6 +80,7 @@ class SearchActivity : AppCompatActivity() {
 
         //init the recyclerView
         recycler.layoutManager = LinearLayoutManager(this)
+        tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.adapter = tracksAdapter
     }
 
@@ -82,12 +88,14 @@ class SearchActivity : AppCompatActivity() {
         super.onResume()
         // hide the cross
         searchEditText.doOnTextChanged { text,_,_,_ ->
+            if (searchEditText.hasFocus() && text?.isNotEmpty() == true) showEmptyList()
+            else showHistorySearch(searchEditText.hasFocus())
             btnVisibility(text, clearingButton)
         }
 
-        // catch the focus
+        // catch the focus and set visibility
         searchEditText.setOnFocusChangeListener { _, hasFocus ->
-            recyclerVisibility(recycler, hasFocus)
+            if (searchEditText.text.isNullOrEmpty()) showHistorySearch(hasFocus)
         }
 
         // clearing search field and recycler
@@ -96,8 +104,9 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.clearFocus()
             state.focus = false
             renderState()
-            tracksAdapter.trackList.clear()
-            tracksAdapter.notifyDataSetChanged()
+//            tracksAdapter.trackList.clear()
+//            tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
+//            tracksAdapter.notifyDataSetChanged()
         }
 
         // handling backendApi request/response
@@ -126,8 +135,15 @@ class SearchActivity : AppCompatActivity() {
             retrofit.getResponseFromBackend(searchEditText.text.toString())
         }
 
-        // come back
         toolbar.setOnClickListener { finish() }
+
+        footer.setOnClickListener {
+            App.instance.trackStorage.clearTrackList()
+            showEmptyList()
+        }
+
+        tracksAdapter.listener = { track -> App.instance.trackStorage.addTracks(track) }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -142,6 +158,7 @@ class SearchActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeCallbacks(callback)
         retrofit.listener = null
+        tracksAdapter.listener = null
     }
 
     private fun renderState() {
@@ -156,9 +173,23 @@ class SearchActivity : AppCompatActivity() {
     private fun btnVisibility(text: CharSequence?, view: View) {
         view.visibility = if (text.isNullOrEmpty()) INVISIBLE else VISIBLE
     }
-    private fun recyclerVisibility(view: View, hasFocus: Boolean) {
-        view.visibility = if (hasFocus && searchEditText.text.isNullOrEmpty()) VISIBLE else INVISIBLE
+    private fun showEmptyList() {
+            recycler.visibility = INVISIBLE
+            header.visibility = GONE
+            footer.visibility = GONE
     }
+    private fun showHistorySearch(hasFocus: Boolean) {
+        if (hasFocus && tracksAdapter.trackList.isNotEmpty()) {
+            recycler.visibility = VISIBLE
+            header.visibility = VISIBLE
+            footer.visibility = VISIBLE
+            tracksAdapter.trackList.clear()
+            tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
+            tracksAdapter.notifyDataSetChanged()
+        } else showEmptyList()
+    }
+
+
 
 
     private fun handlingSearchQuery(response: NetworkResponse) =
@@ -168,6 +199,7 @@ class SearchActivity : AppCompatActivity() {
                 tracksAdapter.trackList.addAll(response.listFromApi)
                 tracksAdapter.notifyDataSetChanged()
                 dummy.visibility = INVISIBLE
+                recycler.visibility = VISIBLE
             }
             is NetworkResponse.NoData -> {
                 tracksAdapter.trackList.clear()
