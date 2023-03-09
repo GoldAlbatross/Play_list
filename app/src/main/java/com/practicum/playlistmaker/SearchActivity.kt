@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
-import android.util.LruCache
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
@@ -23,13 +22,11 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.adapter.TrackAdapter
-import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
 import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
-import okhttp3.internal.notifyAll
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
@@ -70,7 +67,7 @@ class SearchActivity : AppCompatActivity() {
         txtDummy = findViewById(R.id.txt_dummy)
         btnDummy = findViewById(R.id.btn_dummy)
         footer = findViewById(R.id.btn_clear_history)
-        header = findViewById<TextView>(R.id.txt_history)
+        header = findViewById(R.id.txt_history)
 
         //handling a state
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
