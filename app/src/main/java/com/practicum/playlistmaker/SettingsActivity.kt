@@ -59,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        toolbar.setOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { finish() }
     }
     companion object {
         const val http_practicum = "https://practicum.yandex.ru/android-developer/"

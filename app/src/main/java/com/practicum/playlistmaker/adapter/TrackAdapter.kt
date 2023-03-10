@@ -13,16 +13,15 @@ import com.practicum.playlistmaker.model.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
     internal var listener: ((Track) -> Unit)? = null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
     }
     override fun getItemCount(): Int = trackList.size
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[holder.adapterPosition]
-        holder as TrackViewHolder
         holder.bind(track)
         holder.itemView.setOnClickListener { listener?.invoke(track) }
     }
@@ -45,7 +44,7 @@ class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
             .with(itemView.context)
             .load(model.url)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(R.dimen.size_10dp))
+            .transform(RoundedCorners(R.dimen.size_8dp))
             .into(artwork)
     }
 }
