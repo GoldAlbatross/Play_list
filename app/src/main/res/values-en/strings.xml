@@ -7,5 +7,7 @@
     <string name="empty_list">Nothing found</string>
     <string name="error">Communication problems\n \nDownload failed. Check\nyour internet connection</string>
     <string name="refresh">Refresh</string>
+    <string name="search_history">Search history</string>
+    <string name="clear_history">Clear the history</string>
 
 </resources>

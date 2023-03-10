@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
 import android.view.View
+import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
@@ -14,7 +15,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -26,16 +26,21 @@ import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
+import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
-    companion object { const val KEY_STATE = "SearchActivity.KEY_STATE" }
+    companion object {
+        const val KEY_STATE = "SearchActivity.KEY_STATE"
+    }
+
     private lateinit var searchEditText: EditText
     private lateinit var clearingButton: ImageView
     private lateinit var dummy: View
     private lateinit var imgDummy: ImageView
     private lateinit var txtDummy: TextView
+    private lateinit var header: TextView
     private lateinit var btnDummy: Button
     private lateinit var toolbar: Toolbar
 
@@ -47,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
     // variables for RecyclerView
     private lateinit var recycler: RecyclerView
     private val tracksAdapter = TrackAdapter()
-    private var list = mutableListOf<Track>()
+    private lateinit var footer: Button
 
     //variables for Retrofit
     private val retrofit = TrackRetrofit()
@@ -65,50 +70,58 @@ class SearchActivity : AppCompatActivity() {
         imgDummy = findViewById(R.id.img_dummy)
         txtDummy = findViewById(R.id.txt_dummy)
         btnDummy = findViewById(R.id.btn_dummy)
-
-        //come back
-        toolbar.setOnClickListener { finish() }
+        footer = findViewById(R.id.btn_clear_history)
+        header = findViewById(R.id.txt_history)
 
         //handling a state
         state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
         searchEditText.setText(state.searchText)
         handler.postDelayed(callback, 500)
+        clearingButton.visibility = state.cross
 
         //init the recyclerView
         recycler.layoutManager = LinearLayoutManager(this)
+        tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.adapter = tracksAdapter
     }
 
     override fun onResume() {
         super.onResume()
-        searchEditText.doOnTextChanged { text,_,_,_ ->
-            clearingButton.visibility = clearButtonVisibility(text)
-            state.searchText = "$text"
+
+        // hide the cross
+        searchEditText.doOnTextChanged { text, _, _, _ ->
+            if (searchEditText.hasFocus() && text?.isNotEmpty() == true) showEmptyList()
+            else showHistorySearch(searchEditText.hasFocus())
+            btnVisibility(text, clearingButton)
         }
 
-        //clearing search field and recycler
+        // catch the focus and set visibility
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (searchEditText.text.isNullOrEmpty()) showHistorySearch(hasFocus)
+        }
+
+        // clearing search field and recycler
         clearingButton.setOnClickListener {
             searchEditText.setText("")
             searchEditText.clearFocus()
             state.focus = false
             renderState()
-            tracksAdapter.trackList.clear()
-            tracksAdapter.notifyDataSetChanged()
         }
 
-        //handling backendApi request/response
+        // handling backendApi request/response
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                retrofit.listener = object : TrackRetrofit.TrackRetrofitListener {
+                retrofit.listener = object : TrackRetrofitListener {
 
                     override fun onSuccess(response: Response<TrackResponse>) {
-                        if (response.isSuccessful){
+                        if (response.isSuccessful) {
                             if (response.body()!!.trackList.isNotEmpty())
                                 handlingSearchQuery(NetworkResponse.Success(response.body()?.trackList!!))
                             else
                                 handlingSearchQuery(NetworkResponse.NoData)
                         }
                     }
+
                     override fun onError(t: Throwable) =
                         handlingSearchQuery(NetworkResponse.Error(t.toString()))
                 }
@@ -117,10 +130,29 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        //refresh request
+        // refresh request
         btnDummy.setOnClickListener {
             retrofit.getResponseFromBackend(searchEditText.text.toString())
         }
+
+        toolbar.setNavigationOnClickListener { finish() }
+
+        footer.setOnClickListener {
+            App.instance.trackStorage.clearTrackList()
+            showEmptyList()
+        }
+
+        tracksAdapter.listener = { track ->
+            App.instance.trackStorage.addTracks(track)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        state.searchText = searchEditText.text.toString()
+        state.focus = searchEditText.hasFocus()
+        state.cross = clearingButton.visibility
+        outState.putParcelable(KEY_STATE, state)
     }
 
     override fun onDestroy() {
@@ -130,53 +162,73 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderState() {
-        if (state.focus) { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (state.focus) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(searchEditText, 0)
-        }
-        else { val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        } else {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) INVISIBLE
-        else VISIBLE
+    private fun btnVisibility(text: CharSequence?, view: View) {
+        view.visibility = if (text.isNullOrEmpty()) INVISIBLE else VISIBLE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (currentFocus == searchEditText) state.focus = true
-        outState.putParcelable(KEY_STATE, state)
+    private fun showEmptyList() {
+        recycler.visibility = INVISIBLE
+        header.visibility = GONE
+        footer.visibility = GONE
     }
 
-    private fun handlingSearchQuery(response: NetworkResponse) =
-        when(response) {
+    private fun showHistorySearch(hasFocus: Boolean) {
+        if (hasFocus && tracksAdapter.trackList.isNotEmpty()) {
+            recycler.visibility = VISIBLE
+            header.visibility = VISIBLE
+            footer.visibility = VISIBLE
+            setItems(App.instance.trackStorage.getTracks())
+        } else showEmptyList()
+    }
+
+    private fun handlingSearchQuery(response: NetworkResponse) {
+        when (response) {
             is NetworkResponse.Success -> {
-                tracksAdapter.trackList.clear()
-                tracksAdapter.trackList.addAll(response.listFromApi)
-                tracksAdapter.notifyDataSetChanged()
+                setItems(response.listFromApi)
                 dummy.visibility = INVISIBLE
+                recycler.visibility = VISIBLE
             }
             is NetworkResponse.NoData -> {
                 tracksAdapter.trackList.clear()
-                tracksAdapter.notifyDataSetChanged()
+                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
-                imgDummy.background = AppCompatResources.getDrawable(this, R.drawable.search_dummy_empty)
+                imgDummy.background = setImage(R.drawable.search_dummy_empty)
                 txtDummy.text = getString(R.string.empty_list)
                 btnDummy.visibility = INVISIBLE
             }
-            is NetworkResponse.Error-> {
+            is NetworkResponse.Error -> {
                 tracksAdapter.trackList.clear()
-                tracksAdapter.notifyDataSetChanged()
+                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
-                imgDummy.background = AppCompatResources.getDrawable(this, R.drawable.search_dummy_error)
+                imgDummy.background = setImage(R.drawable.search_dummy_error)
                 txtDummy.text = getString(R.string.error)
                 btnDummy.visibility = VISIBLE
             }
         }
+    }
+
+    private fun setImage(image: Int) =
+        AppCompatResources.getDrawable(this, R.drawable.search_dummy_error)
+
+    private fun setItems(items: List<Track>?) {
+        tracksAdapter.trackList.clear()
+        if (items != null) tracksAdapter.trackList.addAll(items)
+        tracksAdapter.notifyDataSetChanged()
+    }
+
     @Parcelize
-    class State: Parcelable {
+    class State : Parcelable {
         var searchText: String = ""
         var focus: Boolean = false
+        var cross = GONE
     }
 }

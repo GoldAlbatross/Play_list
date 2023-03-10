@@ -9,18 +9,18 @@
     <string name="terms_of_use">Пользовательское соглашение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="rating">Рейтинг этого фильма больше чем 9?</string>
-    <string name="numbers">2/10</string>
     <string name="question">Вопрос</string>
     <string name="input_clearing">Очистить строку поиска</string>
     <string name="theme_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="picture_of_album">Picture of album</string>
-    <string name="empty" />
-    <string name="go_to">Go to</string>
+    <string name="empty" translatable="false" />
+    <string name="go_to" translatable="false">Go to</string>
     <string name="agreement">Соглашение</string>
     <string name="empty_list">Ничего не нашлось</string>
     <string name="error">Проблемы со связью\n \nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="refresh">Обновить</string>
+    <string name="search_history">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 
 </resources>

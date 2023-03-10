@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.model
 import com.google.gson.annotations.SerializedName
 
 data class Track(
+    val trackId: Int,
     @SerializedName("trackName")
     val track: String,
     @SerializedName("artistName")

@@ -1,34 +1,39 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var swtch: SwitchCompat
+    private lateinit var toolbar: Toolbar
+    private lateinit var sharing: Button
+    private lateinit var support: Button
+    private lateinit var agreement: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setOnClickListener { finish() }
+        swtch = findViewById(R.id.night_swtch)
+        toolbar = findViewById(R.id.toolbar)
+        sharing = findViewById(R.id.btn_sharing)
+        support = findViewById(R.id.btn_support)
+        agreement = findViewById(R.id.btn_agreement)
+        swtch.isChecked = App.instance.themeSwitcher.getBoolean()
 
-        val swtch = findViewById<SwitchCompat>(R.id.night_swtch)
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES -> { swtch.isChecked = true }
-            else -> { swtch.isChecked = false }
-        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         swtch.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
-            else{ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
+            App.instance.themeSwitcher.addBoolean(isChecked)
         }
 
-        val sharing = findViewById<Button>(R.id.btn_sharing)
         sharing.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, http_practicum)
@@ -37,7 +42,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        val support = findViewById<Button>(R.id.btn_support)
         support.setOnClickListener {
             Intent(Intent.ACTION_SENDTO).apply {
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(email_albatross))
@@ -48,13 +52,14 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        val agreement = findViewById<Button>(R.id.btn_agreement)
         agreement.setOnClickListener {
             Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(http_offer)
                 startActivity(Intent.createChooser(this, null))
             }
         }
+
+        toolbar.setNavigationOnClickListener { finish() }
     }
     companion object {
         const val http_practicum = "https://practicum.yandex.ru/android-developer/"

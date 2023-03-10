@@ -6,7 +6,7 @@
             android:dither="false"
             android:shape="rectangle"
             android:visible="true">
-            <solid android:color="@color/text_gray" />
+            <solid android:color="@color/blue" />
             <corners android:radius="6dp" />
             <size android:height="12dp" />
         </shape>

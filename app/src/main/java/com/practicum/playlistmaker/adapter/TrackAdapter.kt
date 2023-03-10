@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.adapter
 
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,12 +15,15 @@ import java.util.Locale
 
 class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
-        TrackViewHolder(parent)
+    internal var listener: ((Track) -> Unit)? = null
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
+        return TrackViewHolder(parent)
+    }
     override fun getItemCount(): Int = trackList.size
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[holder.adapterPosition]
         holder.bind(track)
+        holder.itemView.setOnClickListener { listener?.invoke(track) }
     }
 
 }
@@ -40,7 +44,7 @@ class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
             .with(itemView.context)
             .load(model.url)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(8))
+            .transform(RoundedCorners(R.dimen.size_8dp))
             .into(artwork)
     }
 }
