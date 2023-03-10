@@ -79,10 +79,11 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(callback, 500)
         clearingButton.visibility = state.cross
 
-        //init the recyclerView
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.apply {
+            layoutManager = LinearLayoutManager(this@SearchActivity)
+            adapter = tracksAdapter
+        }
         tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
-        recycler.adapter = tracksAdapter
     }
 
     override fun onResume() {
