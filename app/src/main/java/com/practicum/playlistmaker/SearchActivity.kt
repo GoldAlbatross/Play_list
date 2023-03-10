@@ -19,9 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.adapter.TrackAdapter
+import com.practicum.playlistmaker.adapter.SwipeToDeleteCallback
 import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
@@ -51,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
 
     // variables for RecyclerView
     private lateinit var recycler: RecyclerView
-    private val tracksAdapter = TrackAdapter()
+    private val trackAdapter = App.instance.trackAdapter
     private lateinit var footer: Button
 
     //variables for Retrofit
@@ -79,11 +81,28 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(callback, 500)
         clearingButton.visibility = state.cross
 
+        trackAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.apply {
+            addItemDecoration(DividerItemDecoration(this@SearchActivity, DividerItemDecoration.VERTICAL))
             layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter = tracksAdapter
+            adapter = trackAdapter
         }
-        tracksAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
+
+        val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
+
+            override fun onMove(
+                recycler: RecyclerView,
+                source: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder): Boolean {
+                return super.onMove(recycler, source, target)
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                super.onSwiped(viewHolder, direction)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recycler)
     }
 
     override fun onResume() {
@@ -143,7 +162,7 @@ class SearchActivity : AppCompatActivity() {
             showEmptyList()
         }
 
-        tracksAdapter.listener = { track ->
+        trackAdapter.listener = { track ->
             App.instance.trackStorage.addTracks(track)
         }
     }
@@ -183,7 +202,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showHistorySearch(hasFocus: Boolean) {
-        if (hasFocus && tracksAdapter.trackList.isNotEmpty()) {
+        if (hasFocus && trackAdapter.trackList.isNotEmpty()) {
             recycler.visibility = VISIBLE
             header.visibility = VISIBLE
             footer.visibility = VISIBLE
@@ -191,7 +210,7 @@ class SearchActivity : AppCompatActivity() {
         } else showEmptyList()
     }
 
-    private fun handlingSearchQuery(response: NetworkResponse) {
+    private fun handlingSearchQuery(response: NetworkResponse) =
         when (response) {
             is NetworkResponse.Success -> {
                 setItems(response.listFromApi)
@@ -199,7 +218,7 @@ class SearchActivity : AppCompatActivity() {
                 recycler.visibility = VISIBLE
             }
             is NetworkResponse.NoData -> {
-                tracksAdapter.trackList.clear()
+                trackAdapter.trackList.clear()
                 recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = setImage(R.drawable.search_dummy_empty)
@@ -207,7 +226,7 @@ class SearchActivity : AppCompatActivity() {
                 btnDummy.visibility = INVISIBLE
             }
             is NetworkResponse.Error -> {
-                tracksAdapter.trackList.clear()
+                trackAdapter.trackList.clear()
                 recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = setImage(R.drawable.search_dummy_error)
@@ -215,15 +234,15 @@ class SearchActivity : AppCompatActivity() {
                 btnDummy.visibility = VISIBLE
             }
         }
-    }
+
 
     private fun setImage(image: Int) =
-        AppCompatResources.getDrawable(this, R.drawable.search_dummy_error)
+        AppCompatResources.getDrawable(this, image)
 
     private fun setItems(items: List<Track>?) {
-        tracksAdapter.trackList.clear()
-        if (items != null) tracksAdapter.trackList.addAll(items)
-        tracksAdapter.notifyDataSetChanged()
+        trackAdapter.trackList.clear()
+        if (items != null) trackAdapter.trackList.addAll(items)
+        trackAdapter.notifyDataSetChanged()
     }
 
     @Parcelize

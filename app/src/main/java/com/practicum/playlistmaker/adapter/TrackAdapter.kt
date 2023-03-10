@@ -26,6 +26,16 @@ class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
         holder.itemView.setOnClickListener { listener?.invoke(track) }
     }
 
+    fun addItem(item: Track) {
+        trackList.add(item)
+        notifyItemInserted(trackList.size)
+    }
+
+    fun removeAt(position: Int) {
+        trackList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 }
 
 class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
