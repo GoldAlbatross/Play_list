@@ -91,8 +91,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // Handling a swipe or drag
-        val swipeHandlerCallback = object : SwipeHandlerCallback(this, trackAdapter) { }
-        val itemTouchHelper = ItemTouchHelper(swipeHandlerCallback)
+        val swipeHandler = SwipeHandlerCallback(this, trackAdapter)
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recycler)
     }
 

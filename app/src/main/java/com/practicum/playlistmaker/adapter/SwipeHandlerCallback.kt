@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 
 
-abstract class SwipeHandlerCallback(
+class SwipeHandlerCallback(
     private val context: Context,
     private val trackAdapter: TrackAdapter
 ) : ItemTouchHelper.SimpleCallback(
