@@ -85,13 +85,13 @@ class SearchActivity : AppCompatActivity() {
         // init the recyclerView
         trackAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.apply {
-            addItemDecoration(DividerItemDecoration(this@SearchActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(DividerItemDecoration(this@SearchActivity, LinearLayoutManager.VERTICAL))
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = trackAdapter
         }
 
         // Handling a swipe or drag
-        val swipeHandlerCallback = object : SwipeHandlerCallback(trackAdapter) { }
+        val swipeHandlerCallback = object : SwipeHandlerCallback(this, trackAdapter) { }
         val itemTouchHelper = ItemTouchHelper(swipeHandlerCallback)
         itemTouchHelper.attachToRecyclerView(recycler)
     }
@@ -154,7 +154,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         trackAdapter.listener = { track ->
-            App.instance.trackStorage.addTracks(track)
+            App.instance.trackStorage.addTrack(track)
         }
     }
 
