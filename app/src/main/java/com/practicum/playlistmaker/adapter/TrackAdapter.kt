@@ -11,14 +11,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.model.Track
 import java.text.SimpleDateFormat
+import java.util.Collections
 import java.util.Locale
 
-class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
     internal var listener: ((Track) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
     }
+
     override fun getItemCount(): Int = trackList.size
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[holder.adapterPosition]
@@ -26,9 +28,19 @@ class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
         holder.itemView.setOnClickListener { listener?.invoke(track) }
     }
 
+    fun replaceItem(sourcePosition: Int, targetPosition: Int) {
+        Collections.swap(trackList, sourcePosition, targetPosition)
+        notifyItemMoved(sourcePosition, targetPosition)
+    }
+
+    fun removeAt(position: Int) {
+        trackList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 }
 
-class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
+class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.artist_card, parent, false)
 ) {
     private val trackName = itemView.findViewById<TextView>(R.id.song)
@@ -39,12 +51,13 @@ class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
     fun bind(model: Track) {
         trackName.text = model.track
         artistName.text = model.artist
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTime).toString()
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTime).toString()
         Glide
             .with(itemView.context)
             .load(model.url)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(R.dimen.size_8dp))
+            .transform(RoundedCorners(10))
             .into(artwork)
     }
 }

@@ -2,6 +2,7 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import com.google.gson.Gson
+import com.practicum.playlistmaker.adapter.TrackAdapter
 import com.practicum.playlistmaker.storage.BooleanStorage
 import com.practicum.playlistmaker.storage.ThemeSwitcher
 import com.practicum.playlistmaker.storage.TrackStorage
