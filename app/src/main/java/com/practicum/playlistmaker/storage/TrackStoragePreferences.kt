@@ -10,13 +10,12 @@ class TrackStoragePreferences(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson,
     private val count: Int): TrackStorage {
-    override fun addTracks(track: Track) {
+    override fun addTrack(track: Track) {
         val list: MutableList<Track> = getJsonString()?.toTrackList() ?: mutableListOf()
         if (list.contains(track)) list.remove(track)
         list.add(0, track)
         if (list.size > count) list.removeAt(9)
         saveList(list)
-
     }
 
     override fun getTracks(): List<Track> {

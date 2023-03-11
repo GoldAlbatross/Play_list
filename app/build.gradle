@@ -53,4 +53,7 @@ dependencies {
 
     //requests logging
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+
+    //tests
+    //implementation 'com.jakewharton.timber:timber:4.6.0'
 }
