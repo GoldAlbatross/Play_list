@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.model.Track
 import java.text.SimpleDateFormat
+import java.util.Collections
 import java.util.Locale
 
 class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
@@ -26,9 +27,9 @@ class TrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
         holder.itemView.setOnClickListener { listener?.invoke(track) }
     }
 
-    fun addItem(item: Track) {
-        trackList.add(item)
-        notifyItemInserted(trackList.size)
+    fun replaceItem(sourcePosition: Int, targetPosition: Int) {
+        Collections.swap(trackList, sourcePosition, targetPosition)
+        notifyItemMoved(sourcePosition,targetPosition)
     }
 
     fun removeAt(position: Int) {

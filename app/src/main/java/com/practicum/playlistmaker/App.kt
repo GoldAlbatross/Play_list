@@ -14,8 +14,6 @@ class App: Application() {
     private set
     internal lateinit var trackStorage: TrackStorage
     private set
-    internal lateinit var trackAdapter: TrackAdapter
-    private set
 
 
     override fun onCreate() {
@@ -25,7 +23,6 @@ class App: Application() {
             ThemeSwitcher(getSharedPreferences(DARK_THEME_PREFERENCES, MODE_PRIVATE))
         trackStorage =
             TrackStoragePreferences(getSharedPreferences(TRACKS_PREFERENCES, MODE_PRIVATE), gson, 10)
-        trackAdapter = TrackAdapter()
     }
 
     companion object {

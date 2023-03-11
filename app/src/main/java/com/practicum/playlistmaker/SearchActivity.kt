@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.adapter.SwipeToDeleteCallback
+import com.practicum.playlistmaker.adapter.SwipeHandlerCallback
+import com.practicum.playlistmaker.adapter.TrackAdapter
 import com.practicum.playlistmaker.model.Track
 import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
@@ -53,7 +54,7 @@ class SearchActivity : AppCompatActivity() {
 
     // variables for RecyclerView
     private lateinit var recycler: RecyclerView
-    private val trackAdapter = App.instance.trackAdapter
+    private val trackAdapter = TrackAdapter()
     private lateinit var footer: Button
 
     //variables for Retrofit
@@ -81,6 +82,7 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(callback, 500)
         clearingButton.visibility = state.cross
 
+        // init the recyclerView
         trackAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.apply {
             addItemDecoration(DividerItemDecoration(this@SearchActivity, DividerItemDecoration.VERTICAL))
@@ -88,20 +90,9 @@ class SearchActivity : AppCompatActivity() {
             adapter = trackAdapter
         }
 
-        val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
-
-            override fun onMove(
-                recycler: RecyclerView,
-                source: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder): Boolean {
-                return super.onMove(recycler, source, target)
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                super.onSwiped(viewHolder, direction)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        // Handling a swipe
+        val swipeHandlerCallback = object : SwipeHandlerCallback(trackAdapter) { }
+        val itemTouchHelper = ItemTouchHelper(swipeHandlerCallback)
         itemTouchHelper.attachToRecyclerView(recycler)
     }
 
