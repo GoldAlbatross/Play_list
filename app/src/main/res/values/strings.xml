@@ -3,12 +3,12 @@
     <string name="media_lib">Медиатека</string>
     <string name="settings">Настройки</string>
     <string name="search">Поиск</string>
-    <string name="night_theme">Темная тема</string>
+    <string name="night_theme" translatable="false">Темная тема</string>
     <string name="share_app">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="terms_of_use">Пользовательское соглашение</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
+    <string name="yes" translatable="false">Да</string>
+    <string name="no" translatable="false">Нет</string>
     <string name="question">Вопрос</string>
     <string name="input_clearing">Очистить строку поиска</string>
     <string name="theme_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
@@ -22,6 +22,12 @@
     <string name="refresh">Обновить</string>
     <string name="search_history">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
-    <string name="_0_30">0:30</string>
+    <string name="_0_30" translatable="false">0:30</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="play">Проигрывать песню</string>
 
 </resources>
