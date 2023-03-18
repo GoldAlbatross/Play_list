@@ -18,8 +18,8 @@ class MediaLibActivity : AppCompatActivity(R.layout.activity_player) {
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
 
         val track = when {
-            SDK_INT >= 33 -> intent.getSerializableExtra(SearchActivity.KEY_TRACK, Track::class.java)
-            else -> @Suppress("DEPRECATION") intent.getSerializableExtra(SearchActivity.KEY_TRACK) as? Track
+            SDK_INT >= 33 -> intent.getParcelableExtra(SearchActivity.KEY_TRACK, Track::class.java)
+            else -> @Suppress("DEPRECATION") intent.getParcelableExtra(SearchActivity.KEY_TRACK) as? Track
         }
 
         if (track != null) {
