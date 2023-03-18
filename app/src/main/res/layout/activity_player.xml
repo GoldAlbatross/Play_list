@@ -69,32 +69,30 @@
 
     <TextView
         android:id="@+id/txt_track"
-        style="@style/text_for_toolbar"
-        android:layout_width="0dp"
-        android:lines="1"
-        android:layout_marginTop="@dimen/size_12dp"
-        tools:text="The Beatles "
+        style="@style/text_for_player_left"
+        android:layout_marginTop="@dimen/size_16dp"
         android:textSize="@dimen/text_size_22sp"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0"
+        app:layout_constrainedWidth="true"
+        android:textColor="?attr/colorPrimaryVariant"
         app:layout_constraintTop_toBottomOf="@id/barrier"
         app:layout_constraintBottom_toTopOf="@id/txt_artist"
         app:layout_constraintStart_toStartOf="@id/left_guideline_24"
         app:layout_constraintEnd_toEndOf="@id/right_guideline_24"
-        app:layout_constraintHorizontal_chainStyle="packed"/>
+        app:layout_constraintHorizontal_chainStyle="packed"
+        tools:text="The Beatles"/>
 
     <TextView
         android:id="@+id/txt_artist"
-        style="@style/text_for_toolbar"
-        android:layout_width="0dp"
-        android:lines="1"
-        tools:text="Yesterday (Remastered 2009)"
+        style="@style/text_for_player_left"
         android:textSize="@dimen/text_size_14sp"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textColor="?attr/colorPrimaryVariant"
+        app:layout_constrainedWidth="true"
         app:layout_constraintTop_toBottomOf="@id/txt_track"
         app:layout_constraintBottom_toTopOf="@id/btn_play"
         app:layout_constraintStart_toStartOf="@id/left_guideline_24"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline_24"/>
+        app:layout_constraintEnd_toEndOf="@id/right_guideline_24"
+        tools:text="Yesterday (Remastered 2009)"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_add"
