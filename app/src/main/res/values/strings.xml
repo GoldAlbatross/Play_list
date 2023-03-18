@@ -22,5 +22,6 @@
     <string name="refresh">Обновить</string>
     <string name="search_history">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="_0_30">0:30</string>
 
 </resources>

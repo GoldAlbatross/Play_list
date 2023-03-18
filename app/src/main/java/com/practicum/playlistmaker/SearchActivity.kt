@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -33,9 +34,10 @@ import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
 import retrofit2.Response
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     companion object {
-        const val KEY_STATE = "SearchActivity.KEY_STATE"
+        const val KEY_STATE = "searchActivity_state"
+        const val KEY_TRACK = "searchActivity_track"
     }
 
     private lateinit var searchEditText: EditText
@@ -45,7 +47,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var txtDummy: TextView
     private lateinit var header: TextView
     private lateinit var btnDummy: Button
-    private lateinit var toolbar: Toolbar
 
     // variables for save state of SearchActivity
     private lateinit var state: State
@@ -62,10 +63,8 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
 
         //binds View
-        toolbar = findViewById(R.id.toolbar)
         searchEditText = findViewById(R.id.edit_search)
         clearingButton = findViewById(R.id.icon_clear)
         recycler = findViewById(R.id.recycler)
@@ -85,7 +84,7 @@ class SearchActivity : AppCompatActivity() {
         // init the recyclerView
         trackAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.apply {
-            addItemDecoration(DividerItemDecoration(this@SearchActivity, LinearLayoutManager.VERTICAL))
+            //addItemDecoration(DividerItemDecoration(this@SearchActivity, LinearLayoutManager.VERTICAL))
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = trackAdapter
         }
@@ -94,6 +93,8 @@ class SearchActivity : AppCompatActivity() {
         val swipeHandler = SwipeHandlerCallback(this, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recycler)
+
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
     }
 
     override fun onResume() {
@@ -146,8 +147,6 @@ class SearchActivity : AppCompatActivity() {
             retrofit.getResponseFromBackend(searchEditText.text.toString())
         }
 
-        toolbar.setNavigationOnClickListener { finish() }
-
         footer.setOnClickListener {
             App.instance.trackStorage.clearTrackList()
             showEmptyList()
@@ -155,6 +154,7 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter.listener = { track ->
             App.instance.trackStorage.addTrack(track)
+            startActivity(Intent(this, MediaLibActivity::class.java).putExtra(KEY_TRACK, track))
         }
     }
 
