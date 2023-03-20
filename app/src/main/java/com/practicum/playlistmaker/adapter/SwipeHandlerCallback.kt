@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
@@ -11,9 +10,7 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.MediaLibActivity
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.SearchActivity
 
 
 class SwipeHandlerCallback(

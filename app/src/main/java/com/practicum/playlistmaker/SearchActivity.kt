@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -154,7 +153,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
         trackAdapter.listener = { track ->
             App.instance.trackStorage.addTrack(track)
-            startActivity(Intent(this, MediaLibActivity::class.java).putExtra(KEY_TRACK, track))
+            startActivity(Intent(this, PlayerActivity::class.java).putExtra(KEY_TRACK, track))
         }
     }
 
