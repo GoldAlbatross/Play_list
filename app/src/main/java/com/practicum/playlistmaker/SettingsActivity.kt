@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var swtch: SwitchCompat
-    private lateinit var toolbar: Toolbar
     private lateinit var sharing: Button
     private lateinit var support: Button
     private lateinit var agreement: Button
@@ -19,11 +18,12 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         swtch = findViewById(R.id.night_swtch)
-        toolbar = findViewById(R.id.toolbar)
         sharing = findViewById(R.id.btn_sharing)
         support = findViewById(R.id.btn_support)
         agreement = findViewById(R.id.btn_agreement)
         swtch.isChecked = App.instance.themeSwitcher.getBoolean()
+
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
 
     }
 
@@ -58,8 +58,6 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(Intent.createChooser(this, null))
             }
         }
-
-        toolbar.setNavigationOnClickListener { finish() }
     }
     companion object {
         const val http_practicum = "https://practicum.yandex.ru/android-developer/"

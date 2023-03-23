@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.adapter
 
-import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
