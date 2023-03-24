@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.model.Track
 import java.text.SimpleDateFormat
@@ -24,7 +25,9 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[holder.adapterPosition]
         holder.bind(track)
-        holder.itemView.setOnClickListener { listener?.invoke(track) }
+        holder.itemView.setOnClickListener {
+            listener
+                ?.invoke(track) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {

@@ -16,9 +16,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isNotEmpty
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +33,7 @@ import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
 import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
 import kotlinx.android.parcel.Parcelize
+import okhttp3.internal.notifyAll
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity(R.layout.activity_search) {
@@ -98,6 +101,8 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
     override fun onResume() {
         super.onResume()
+
+        if (recycler.adapter != null) recycler.adapter?.notifyDataSetChanged()
 
         // hide the cross
         searchEditText.doOnTextChanged { text, _, _, _ ->
