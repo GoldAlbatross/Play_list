@@ -16,11 +16,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isNotEmpty
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,8 +30,8 @@ import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
 import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
-import kotlinx.android.parcel.Parcelize
-import okhttp3.internal.notifyAll
+import com.practicum.playlistmaker.tools.getParcelableFromBundle
+import kotlinx.parcelize.Parcelize
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity(R.layout.activity_search) {
@@ -78,7 +76,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         header = findViewById(R.id.txt_history)
 
         //handling a state
-        state = savedInstanceState?.getParcelable(KEY_STATE) ?: State()
+        state = savedInstanceState?.getParcelableFromBundle(KEY_STATE, State::class.java) ?: State()
         searchEditText.setText(state.searchText)
         handler.postDelayed(callback, 500)
         clearingButton.visibility = state.cross
@@ -104,7 +102,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
         if (recycler.adapter != null) recycler.adapter?.notifyDataSetChanged()
 
-        // hide the cross
+        // hide the cross button
         searchEditText.doOnTextChanged { text, _, _, _ ->
             if (searchEditText.hasFocus() && text?.isNotEmpty() == true) showEmptyList()
             else showHistorySearch(searchEditText.hasFocus())
@@ -241,9 +239,9 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     }
 
     @Parcelize
-    class State : Parcelable {
-        var searchText: String = ""
-        var focus: Boolean = false
-        var cross = GONE
-    }
+    class State(
+        var searchText: String = "",
+        var focus: Boolean = false,
+        var cross: Int = GONE,
+    ) : Parcelable
 }
