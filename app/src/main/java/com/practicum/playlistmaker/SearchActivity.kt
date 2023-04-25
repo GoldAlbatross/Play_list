@@ -10,11 +10,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -30,6 +30,8 @@ import com.practicum.playlistmaker.model.TrackResponse
 import com.practicum.playlistmaker.okhttp.NetworkResponse
 import com.practicum.playlistmaker.okhttp.TrackRetrofit
 import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
+import com.practicum.playlistmaker.tools.DELAY_1000
+import com.practicum.playlistmaker.tools.DELAY_500
 import com.practicum.playlistmaker.tools.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
 import retrofit2.Response
@@ -47,6 +49,8 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     private lateinit var txtDummy: TextView
     private lateinit var header: TextView
     private lateinit var btnDummy: Button
+    private lateinit var progress: ProgressBar
+    private val requestDataRunnable = Runnable { requestData() }
 
     // variables for save state of SearchActivity
     private lateinit var state: State
@@ -74,17 +78,17 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         btnDummy = findViewById(R.id.btn_dummy)
         footer = findViewById(R.id.btn_clear_history)
         header = findViewById(R.id.txt_history)
+        progress = findViewById(R.id.progress_bar)
 
         //handling a state
         state = savedInstanceState?.getParcelableFromBundle(KEY_STATE, State::class.java) ?: State()
         searchEditText.setText(state.searchText)
-        handler.postDelayed(callback, 500)
+        handler.postDelayed(callback, DELAY_500)
         clearingButton.visibility = state.cross
 
         // init the recyclerView
         trackAdapter.trackList.addAll(App.instance.trackStorage.getTracks())
         recycler.apply {
-            //addItemDecoration(DividerItemDecoration(this@SearchActivity, LinearLayoutManager.VERTICAL))
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = trackAdapter
         }
@@ -104,8 +108,12 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
         // hide the cross button
         searchEditText.doOnTextChanged { text, _, _, _ ->
-            if (searchEditText.hasFocus() && text?.isNotEmpty() == true) showEmptyList()
-            else showHistorySearch(searchEditText.hasFocus())
+            if (searchEditText.hasFocus() && text?.isNotEmpty() == true) {
+                requestDataDebounce()
+                showEmptyList()
+            }
+            else
+                showHistorySearch(searchEditText.hasFocus())
             btnVisibility(text, clearingButton)
         }
 
@@ -122,27 +130,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
             renderState()
         }
 
-        // handling backendApi request/response
-        searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                retrofit.listener = object : TrackRetrofitListener {
-
-                    override fun onSuccess(response: Response<TrackResponse>) {
-                        if (response.isSuccessful) {
-                            if (response.body()!!.trackList.isNotEmpty())
-                                handlingSearchQuery(NetworkResponse.Success(response.body()?.trackList!!))
-                            else
-                                handlingSearchQuery(NetworkResponse.NoData)
-                        }
-                    }
-
-                    override fun onError(t: Throwable) =
-                        handlingSearchQuery(NetworkResponse.Error(t.toString()))
-                }
-                retrofit.getResponseFromBackend(searchEditText.text.toString())
-            }
-            false
-        }
 
         // refresh request
         btnDummy.setOnClickListener {
@@ -174,6 +161,24 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         retrofit.listener = null
     }
 
+    private fun requestData () {
+        retrofit.listener = object : TrackRetrofitListener {
+
+            override fun onSuccess(response: Response<TrackResponse>) {
+                if (response.isSuccessful) {
+                    if (response.body()!!.trackList.isNotEmpty())
+                        handlingSearchQuery(NetworkResponse.Success(response.body()?.trackList!!))
+                    else
+                        handlingSearchQuery(NetworkResponse.NoData)
+                }
+            }
+
+            override fun onError(t: Throwable) =
+                handlingSearchQuery(NetworkResponse.Error(t.toString()))
+        }
+        retrofit.getResponseFromBackend(searchEditText.text.toString())
+    }
+
     private fun renderState() {
         if (state.focus) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -203,16 +208,16 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         } else showEmptyList()
     }
 
-    private fun handlingSearchQuery(response: NetworkResponse) =
+    private fun handlingSearchQuery(response: NetworkResponse) {
+        progress.visibility = GONE
+        recycler.visibility = VISIBLE
         when (response) {
             is NetworkResponse.Success -> {
                 setItems(response.listFromApi)
-                dummy.visibility = INVISIBLE
-                recycler.visibility = VISIBLE
+                dummy.visibility = GONE
             }
             is NetworkResponse.NoData -> {
                 trackAdapter.trackList.clear()
-                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = setImage(R.drawable.search_dummy_empty)
                 txtDummy.text = getString(R.string.empty_list)
@@ -220,14 +225,19 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
             }
             is NetworkResponse.Error -> {
                 trackAdapter.trackList.clear()
-                recycler.visibility = VISIBLE
                 dummy.visibility = VISIBLE
                 imgDummy.background = setImage(R.drawable.search_dummy_error)
                 txtDummy.text = getString(R.string.error)
                 btnDummy.visibility = VISIBLE
             }
         }
+    }
 
+    private fun requestDataDebounce() {
+        progress.visibility = VISIBLE
+        handler.removeCallbacks(requestDataRunnable)
+        handler.postDelayed(requestDataRunnable, DELAY_1000)
+    }
 
     private fun setImage(image: Int) =
         AppCompatResources.getDrawable(this, image)

@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import com.practicum.playlistmaker.tools.Debouncer
+import com.practicum.playlistmaker.tools.debounceClickListener
+
 class SettingsActivity : AppCompatActivity() {
 
+    private val debouncer = Debouncer()
     private lateinit var swtch: SwitchCompat
     private lateinit var sharing: Button
     private lateinit var support: Button
@@ -34,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
             App.instance.themeSwitcher.addBoolean(isChecked)
         }
 
-        sharing.setOnClickListener {
+        sharing.debounceClickListener(debouncer) {
             Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, http_practicum)
                 type = "text/plain"
@@ -42,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        support.setOnClickListener {
+        support.debounceClickListener(debouncer) {
             Intent(Intent.ACTION_SENDTO).apply {
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(email_albatross))
                 putExtra(Intent.EXTRA_SUBJECT, getString(R.string.theme_email))
@@ -52,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        agreement.setOnClickListener {
+        agreement.debounceClickListener(debouncer) {
             Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(http_offer)
                 startActivity(Intent.createChooser(this, null))

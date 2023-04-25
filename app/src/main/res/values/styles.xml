@@ -149,4 +149,13 @@
         <item name="android:layout_marginTop">@dimen/size_8dp</item>
     </style>
 
+    <style name="progress_bar">
+        <item name="android:layout_width">@dimen/size_56dp</item>
+        <item name="android:layout_height">@dimen/size_56dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTint">@color/blue</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

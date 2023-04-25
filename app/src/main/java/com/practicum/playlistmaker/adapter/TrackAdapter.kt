@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.model.Track
+import com.practicum.playlistmaker.tools.Debouncer
+import com.practicum.playlistmaker.tools.debounceClickListener
 import java.text.SimpleDateFormat
 import java.util.Collections
 import java.util.Locale
@@ -17,6 +18,7 @@ import java.util.Locale
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
     internal var listener: ((Track) -> Unit)? = null
+    private val debouncer = Debouncer()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
     }
@@ -25,9 +27,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[holder.adapterPosition]
         holder.bind(track)
-        holder.itemView.setOnClickListener {
-            listener
-                ?.invoke(track) }
+        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {
