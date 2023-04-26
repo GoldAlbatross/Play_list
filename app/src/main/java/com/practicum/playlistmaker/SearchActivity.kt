@@ -97,8 +97,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         val swipeHandler = SwipeHandlerCallback(this, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recycler)
-
-        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
     }
 
     override fun onResume() {
@@ -145,6 +143,8 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
             App.instance.trackStorage.addTrack(track)
             startActivity(Intent(this, PlayerActivity::class.java).putExtra(KEY_TRACK, track))
         }
+
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -1,15 +1,12 @@
 package com.practicum.playlistmaker.adapter
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -19,7 +16,6 @@ import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.PlayerActivity
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.SearchActivity
-import com.practicum.playlistmaker.model.Track
 
 
 class SwipeHandlerCallback(
@@ -29,9 +25,6 @@ class SwipeHandlerCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN,
     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
 ) {
-    //private lateinit var icon: Drawable
-    private var iconWidth = 0
-    private var iconHeight = 0
     private val background = ColorDrawable()
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
@@ -67,7 +60,7 @@ class SwipeHandlerCallback(
             return
         }
 
-        if (dX > 20f) { // to the right
+        if (dX > 30f) { // to the right
 
             // Draw the blue background
             background.color = context.getColor(R.color.blue_background)
@@ -79,19 +72,19 @@ class SwipeHandlerCallback(
             background.draw(c)
 
             // Draw the icon
-            if (dX > 240f) {
-                drawIcon(R.drawable.player_notes1, 44, itemView, itemHeight, c)
-                if (dX > 550f) {
-                    drawIcon(R.drawable.player_notes3, 160, itemView, itemHeight, c)
-                    if (dX > 700f) {
-                        drawIcon(R.drawable.player_notes2, 300, itemView, itemHeight, c)
+            if (dX > 280f) {
+                drawLeftIcon(R.drawable.player_notes1, 44, itemView, itemHeight, c)
+                if (dX > 350f) {
+                    drawLeftIcon(R.drawable.player_notes3, 160, itemView, itemHeight, c)
+                    if (dX > 450f) {
+                        drawLeftIcon(R.drawable.player_notes2, 300, itemView, itemHeight, c)
                     }
                 }
             }
         }
 
         // swipe to the left
-        if (dX < -20f) {
+        if (dX < -30f) {
 
             // Draw the gray background
             background.color = context.getColor(R.color.text_gray)
@@ -104,7 +97,7 @@ class SwipeHandlerCallback(
 
             // Draw the icon
             if (dX < -130f) {
-                drawIcon(R.drawable.recycler_swipe_delete,40,itemView,itemHeight, c)
+                drawRightIcon(R.drawable.recycler_swipe_delete,40,itemView,itemHeight, c)
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -114,15 +107,30 @@ class SwipeHandlerCallback(
         c?.drawRect(left, top, right, bottom, clearPaint)
     }
 
-    private fun drawIcon(id: Int, margin: Int, view: View, viewHeight: Int, c: Canvas) {
+    private fun drawLeftIcon(id: Int, margin: Int, view: View, viewHeight: Int, c: Canvas) {
 
-        // Calculate position of play icon
+        // Calculate position of left icon
         val icon = ContextCompat.getDrawable(context, id)!!
         val iconWidth = icon.intrinsicWidth
         val iconHeight = icon.intrinsicHeight
         val top = view.top + (viewHeight - iconHeight) / 2
         val right = view.left + margin + iconWidth
         val left = view.left + margin
+        val bottom = top + iconHeight
+
+        // Draw the icon
+        icon.setBounds(left, top, right, bottom)
+        icon.draw(c)
+    }
+    private fun drawRightIcon(id: Int, margin: Int, view: View, viewHeight: Int, c: Canvas) {
+
+        // Calculate position of right icon
+        val icon = ContextCompat.getDrawable(context, id)!!
+        val iconWidth = icon.intrinsicWidth
+        val iconHeight = icon.intrinsicHeight
+        val top = view.top + (viewHeight - iconHeight) / 2
+        val right = view.right - margin
+        val left = view.right - margin - iconWidth
         val bottom = top + iconHeight
 
         // Draw the icon

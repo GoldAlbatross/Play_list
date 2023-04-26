@@ -11,7 +11,7 @@ class Debouncer(
     fun onClick(listener: () -> Unit) {
         if (available) {
             available = false
-            handler.postDelayed({ available = true }, DELAY_500)
+            handler.postDelayed({ available = true }, DELAY_1000)
             listener.invoke()
         } else return
     }

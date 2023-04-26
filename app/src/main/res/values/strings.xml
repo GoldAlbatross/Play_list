@@ -22,12 +22,14 @@
     <string name="refresh">Обновить</string>
     <string name="search_history">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
-    <string name="_0_30" translatable="false">0:30</string>
+    <string name="timer" translatable="false">00:00</string>
     <string name="duration">Длительность</string>
     <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="play">Проигрывать песню</string>
+    <string name="button_like">button like</string>
+    <string name="button_add">button add the track</string>
 
 </resources>

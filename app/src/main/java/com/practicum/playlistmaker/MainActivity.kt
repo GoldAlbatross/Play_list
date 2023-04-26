@@ -13,11 +13,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         val btnSearch = findViewById<Button>(R.id.btn_search)
         val btnMediaLib = findViewById<Button>(R.id.btn_media)
         val btnSettings = findViewById<Button>(R.id.btn_settings)
-
 
         btnSearch.debounceClickListener(debouncer) {
             startActivity(Intent(this, SearchActivity::class.java))
