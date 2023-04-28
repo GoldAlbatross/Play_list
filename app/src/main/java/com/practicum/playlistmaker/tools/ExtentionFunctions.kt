@@ -3,24 +3,32 @@ package com.practicum.playlistmaker.tools
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
+import android.view.View
 
 
-fun <T : Parcelable?> Intent.getParcelable(key: String, clazz: Class<T>): T {
+fun <T : Parcelable?> Intent.getParcelableFromIntent(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this.getParcelableExtra(key, clazz)!!
+        getParcelableExtra(key, clazz)!!
     else {
         @Suppress("DEPRECATION")
-        this.getParcelableExtra<T>(key)!!
+        getParcelableExtra<T>(key)!!
     }
 }
 
 
 fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this.getParcelable(key, clazz)!!
+        getParcelable(key, clazz)!!
     else {
         @Suppress("DEPRECATION")
-        this.getParcelable<T>(key)!!
+        getParcelable<T>(key)!!
     }
+}
+
+
+fun View.debounceClickListener(debouncer: Debouncer, listenerBlock: () -> Unit) {
+    setOnClickListener { debouncer.onClick(listenerBlock) }
 }
