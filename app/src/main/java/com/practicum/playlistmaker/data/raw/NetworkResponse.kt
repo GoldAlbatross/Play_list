@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker.okhttp
+package com.practicum.playlistmaker.data.raw
 
-import com.practicum.playlistmaker.model.Track
+import com.practicum.playlistmaker.data.Track
 
 sealed class NetworkResponse {
     class Success (val listFromApi: List<Track>): NetworkResponse()

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.storage
+package com.practicum.playlistmaker.data.raw
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate

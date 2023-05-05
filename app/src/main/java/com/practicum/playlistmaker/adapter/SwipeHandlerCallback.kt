@@ -13,9 +13,9 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.PlayerActivity
+import com.practicum.playlistmaker._player.PlayerActivity
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.SearchActivity
+import com.practicum.playlistmaker.tools.KEY_STATE
 
 
 class SwipeHandlerCallback(
@@ -154,7 +154,7 @@ class SwipeHandlerCallback(
         // play item
         if (direction == 8) {
             val intent = Intent(viewHolder.itemView.context, PlayerActivity::class.java)
-            intent.putExtra(SearchActivity.KEY_TRACK, track)
+            intent.putExtra(KEY_STATE, track)
             startActivity(viewHolder.itemView.context, intent, intent.extras)
             App.instance.trackStorage.addTrack(track)
             trackAdapter.replaceItem(position, position)

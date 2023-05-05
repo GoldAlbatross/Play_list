@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker.okhttp
+package com.practicum.playlistmaker.data.raw
 
-import com.practicum.playlistmaker.model.TrackResponse
+import com.practicum.playlistmaker.data.TrackResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

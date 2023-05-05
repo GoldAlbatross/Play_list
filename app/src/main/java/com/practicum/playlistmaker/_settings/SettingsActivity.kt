@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker._settings
 
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.tools.Debouncer
 import com.practicum.playlistmaker.tools.debounceClickListener
 

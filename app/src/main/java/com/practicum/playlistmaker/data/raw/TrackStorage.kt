@@ -1,7 +1,6 @@
-package com.practicum.playlistmaker.storage
+package com.practicum.playlistmaker.data.raw
 
-import android.util.LruCache
-import com.practicum.playlistmaker.model.Track
+import com.practicum.playlistmaker.data.Track
 
 interface TrackStorage {
     fun addTrack(track: Track)

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.storage
+package com.practicum.playlistmaker.data.raw
 
 interface BooleanStorage {
 

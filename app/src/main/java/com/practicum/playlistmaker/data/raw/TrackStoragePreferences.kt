@@ -1,10 +1,9 @@
-package com.practicum.playlistmaker.storage
+package com.practicum.playlistmaker.data.raw
 
 import android.content.SharedPreferences
-import android.util.LruCache
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.model.Track
+import com.practicum.playlistmaker.data.Track
 
 class TrackStoragePreferences(
     private val sharedPreferences: SharedPreferences,

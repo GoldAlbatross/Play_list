@@ -29,7 +29,8 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="play">Проигрывать песню</string>
-    <string name="button_like">button like</string>
-    <string name="button_add">button add the track</string>
+    <string name="button_like">Кнопка нравится</string>
+    <string name="button_add">Кнопка добавить</string>
+    <string name="loading">Всё ещё загружается …</string>
 
 </resources>

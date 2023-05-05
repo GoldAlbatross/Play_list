@@ -1,9 +1,13 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker._main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker._settings.SettingsActivity
+import com.practicum.playlistmaker._media_lib.MediaLibActivity
+import com.practicum.playlistmaker._search.SearchActivity
 import com.practicum.playlistmaker.tools.Debouncer
 import com.practicum.playlistmaker.tools.debounceClickListener
 
