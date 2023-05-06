@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker._player.presentation
+package com.practicum.playlistmaker.player.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,9 +11,9 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker._player.repository.PlayerRepository
+import com.practicum.playlistmaker.player.repository.PlayerRepository
 import com.practicum.playlistmaker.models.domain.Track
-import com.practicum.playlistmaker._player.domain.interactor.PlayerInteractor
+import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractor
 import com.practicum.playlistmaker.tools.DELAY_1500
 import com.practicum.playlistmaker.tools.DELAY_2000
 import com.practicum.playlistmaker.tools.DELAY_3000

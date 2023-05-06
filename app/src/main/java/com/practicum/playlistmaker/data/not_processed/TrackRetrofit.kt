@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.data.not_processed
 import com.practicum.playlistmaker.models.domain.Track
 import com.practicum.playlistmaker.models.data.TrackDto
 import com.practicum.playlistmaker.models.data.TrackResponse
-import com.practicum.playlistmaker._search.repository.ApiITunes
+import com.practicum.playlistmaker.search.repository.ApiITunes
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

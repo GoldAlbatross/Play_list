@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker._player.repository
+package com.practicum.playlistmaker.player.repository
 
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.models.domain.PlayerStates
-import com.practicum.playlistmaker._player.domain.repository._PlayerRepository
+import com.practicum.playlistmaker.player.domain.repository._PlayerRepository
 
 class PlayerRepository: _PlayerRepository {
 

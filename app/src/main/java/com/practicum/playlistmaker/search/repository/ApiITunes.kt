@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker._search.repository
+package com.practicum.playlistmaker.search.repository
 
 import com.practicum.playlistmaker.models.data.TrackResponse
 import retrofit2.Call

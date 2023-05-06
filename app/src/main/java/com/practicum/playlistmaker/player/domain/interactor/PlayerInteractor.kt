@@ -1,7 +1,7 @@
-package com.practicum.playlistmaker._player.domain.interactor
+package com.practicum.playlistmaker.player.domain.interactor
 
 import com.practicum.playlistmaker.models.domain.PlayerStates
-import com.practicum.playlistmaker._player.domain.repository._PlayerRepository
+import com.practicum.playlistmaker.player.domain.repository._PlayerRepository
 
 class PlayerInteractor(
     private val mediaPlayer: _PlayerRepository

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker._search.presentation
+package com.practicum.playlistmaker.search.presentation
 
 import android.content.Context
 import android.os.Bundle

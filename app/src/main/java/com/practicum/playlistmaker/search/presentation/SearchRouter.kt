@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker._search.presentation
+package com.practicum.playlistmaker.search.presentation
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker._player.presentation.PlayerActivity
+import com.practicum.playlistmaker.player.presentation.PlayerActivity
 import com.practicum.playlistmaker.models.domain.Track
 import com.practicum.playlistmaker.tools.KEY_TRACK
 
