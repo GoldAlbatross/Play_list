@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    tools:context="._player.PlayerActivity">
+    tools:context="._player.presentation.PlayerActivity">
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

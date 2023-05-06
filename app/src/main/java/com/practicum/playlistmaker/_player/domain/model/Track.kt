@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.data
+package com.practicum.playlistmaker._player.domain.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

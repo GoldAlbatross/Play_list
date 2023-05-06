@@ -1,10 +1,10 @@
-package com.practicum.playlistmaker.data
+package com.practicum.playlistmaker._player.repository
 
 import android.media.MediaPlayer
-import com.practicum.playlistmaker.domain.model.PlayerStates
-import com.practicum.playlistmaker.domain.repository.IMediaPlayerRepository
+import com.practicum.playlistmaker._player.domain.model.PlayerStates
+import com.practicum.playlistmaker._player.domain.repository._PlayerRepository
 
-class MediaPlayerRepository: IMediaPlayerRepository {
+class PlayerRepository: _PlayerRepository {
 
     private val mediaPlayer = MediaPlayer()
     override var state = PlayerStates.DEFAULT

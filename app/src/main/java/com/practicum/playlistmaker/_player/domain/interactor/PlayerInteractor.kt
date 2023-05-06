@@ -1,14 +1,14 @@
-package com.practicum.playlistmaker.domain.player_interactor
+package com.practicum.playlistmaker._player.domain.interactor
 
-import com.practicum.playlistmaker.domain.model.PlayerStates
-import com.practicum.playlistmaker.domain.repository.IMediaPlayerRepository
+import com.practicum.playlistmaker._player.domain.model.PlayerStates
+import com.practicum.playlistmaker._player.domain.repository._PlayerRepository
 
 class PlayerInteractor(
-    private val mediaPlayer: IMediaPlayerRepository
-): IPlayerInteractor {
+    private val mediaPlayer: _PlayerRepository
+): _PlayerInteractor {
 
     override fun prepareMediaPlayer(url: String, listener: () -> Unit) {
-        mediaPlayer.prepareMediaPlayer(url) {listener.invoke()}
+        mediaPlayer.prepareMediaPlayer(url, listener)
     }
 
     override fun getState(): PlayerStates {
@@ -24,7 +24,7 @@ class PlayerInteractor(
     }
 
     override fun setStopListenerOnMediaPlayer(listener: () -> Unit) {
-        mediaPlayer.setStopListener {listener.invoke()}
+        mediaPlayer.setStopListener(listener)
     }
 
     override fun pauseMediaPlayer() {

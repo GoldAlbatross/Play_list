@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker._player
+package com.practicum.playlistmaker._player.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,19 +11,17 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.data.MediaPlayerRepository
-import com.practicum.playlistmaker.data.Track
-import com.practicum.playlistmaker.domain.player_interactor.PlayerInteractor
-import com.practicum.playlistmaker.presenters.player.PlayerPresenter
-import com.practicum.playlistmaker.presenters.player.PlayerRouter
-import com.practicum.playlistmaker.presenters.player.IPlayerView
+import com.practicum.playlistmaker._player.repository.PlayerRepository
+import com.practicum.playlistmaker._player.domain.model.Track
+import com.practicum.playlistmaker._player.domain.interactor.PlayerInteractor
+import com.practicum.playlistmaker.tools.DELAY_1500
 import com.practicum.playlistmaker.tools.DELAY_2000
 import com.practicum.playlistmaker.tools.DELAY_3000
 import com.practicum.playlistmaker.tools.Debouncer
 import com.practicum.playlistmaker.tools.debounceClickListener
 import com.practicum.playlistmaker.tools.getTimeFormat
 
-class PlayerActivity : AppCompatActivity(R.layout.activity_player), IPlayerView {
+class PlayerActivity : AppCompatActivity(R.layout.activity_player), _PlayerView {
 
     private val debouncer = Debouncer()
 
@@ -44,7 +42,7 @@ class PlayerActivity : AppCompatActivity(R.layout.activity_player), IPlayerView 
         super.onCreate(savedInstanceState)
 
         presenter = PlayerPresenter(view = this,
-            interactor = PlayerInteractor(mediaPlayer = MediaPlayerRepository()),
+            interactor = PlayerInteractor(mediaPlayer = PlayerRepository()),
             router = PlayerRouter(this),
         )
 
@@ -86,7 +84,7 @@ class PlayerActivity : AppCompatActivity(R.layout.activity_player), IPlayerView 
         country.text = track.country
     }
     override fun startAnimationAlfa() {
-        btnPlay.animate().apply { duration = DELAY_2000; alpha(1.0f) }
+        btnPlay.animate().apply { duration = DELAY_1500; alpha(1.0f) }
     }
     override fun startAnimationScale() {
         btnPlay.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale))

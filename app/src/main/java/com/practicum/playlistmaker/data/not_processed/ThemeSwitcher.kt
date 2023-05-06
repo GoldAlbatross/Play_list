@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.data.raw
+package com.practicum.playlistmaker.data.not_processed
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate

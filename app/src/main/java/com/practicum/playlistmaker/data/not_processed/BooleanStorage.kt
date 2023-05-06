@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.data.raw
+package com.practicum.playlistmaker.data.not_processed
 
 interface BooleanStorage {
 

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker._player.PlayerActivity
+import com.practicum.playlistmaker._player.presentation.PlayerActivity
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.tools.KEY_STATE
 

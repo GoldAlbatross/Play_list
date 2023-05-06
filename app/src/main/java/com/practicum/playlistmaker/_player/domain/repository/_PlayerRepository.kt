@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker.domain.repository
+package com.practicum.playlistmaker._player.domain.repository
 
-import com.practicum.playlistmaker.domain.model.PlayerStates
+import com.practicum.playlistmaker._player.domain.model.PlayerStates
 
-interface IMediaPlayerRepository {
+interface _PlayerRepository {
     
     var state: PlayerStates
 

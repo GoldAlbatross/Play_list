@@ -19,14 +19,14 @@
             android:name="._media_lib.MediaLibActivity"
             android:exported="false" />
         <activity
-            android:name="._search.SearchActivity"
+            android:name="._search.presentation.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="._player.PlayerActivity"
+            android:name="._player.presentation.PlayerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

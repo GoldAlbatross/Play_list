@@ -2,10 +2,10 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import com.google.gson.Gson
-import com.practicum.playlistmaker.data.raw.BooleanStorage
-import com.practicum.playlistmaker.data.raw.ThemeSwitcher
-import com.practicum.playlistmaker.data.raw.TrackStorage
-import com.practicum.playlistmaker.data.raw.TrackStoragePreferences
+import com.practicum.playlistmaker.data.not_processed.BooleanStorage
+import com.practicum.playlistmaker.data.not_processed.ThemeSwitcher
+import com.practicum.playlistmaker.data.not_processed.TrackStorage
+import com.practicum.playlistmaker.data.not_processed.TrackStoragePreferences
 
 class App: Application() {
     internal val gson = Gson()

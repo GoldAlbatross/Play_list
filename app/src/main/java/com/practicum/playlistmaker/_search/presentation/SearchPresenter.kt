@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.presenters.search
+package com.practicum.playlistmaker._search.presentation
 
-import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker._player.domain.model.Track
 
 class SearchPresenter(
-    private val view: SearchView,
+    private val view: _SearchView,
     private val router: SearchRouter,
 ) {
     fun onClickedTrack(track: Track) {

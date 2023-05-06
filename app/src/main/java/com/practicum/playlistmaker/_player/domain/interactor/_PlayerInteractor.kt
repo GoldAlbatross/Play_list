@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.domain.player_interactor
+package com.practicum.playlistmaker._player.domain.interactor
 
-import com.practicum.playlistmaker.domain.model.PlayerStates
+import com.practicum.playlistmaker._player.domain.model.PlayerStates
 
 
-interface IPlayerInteractor {
+interface _PlayerInteractor {
 
     fun prepareMediaPlayer(url: String, listener:() -> Unit)
     fun getState(): PlayerStates

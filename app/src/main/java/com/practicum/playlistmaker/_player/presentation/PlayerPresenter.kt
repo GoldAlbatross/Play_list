@@ -1,15 +1,15 @@
-package com.practicum.playlistmaker.presenters.player
+package com.practicum.playlistmaker._player.presentation
 
 import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.domain.model.PlayerStates
-import com.practicum.playlistmaker.domain.player_interactor.IPlayerInteractor
+import com.practicum.playlistmaker._player.domain.model.PlayerStates
+import com.practicum.playlistmaker._player.domain.interactor._PlayerInteractor
 import com.practicum.playlistmaker.tools.DELAY_300
 
 class PlayerPresenter(
-    private val view: IPlayerView,
-    private val interactor: IPlayerInteractor,
+    private val view: _PlayerView,
+    private val interactor: _PlayerInteractor,
     private val router: PlayerRouter,
     ) {
 

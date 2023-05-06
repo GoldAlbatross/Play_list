@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker.presenters.player
+package com.practicum.playlistmaker._player.presentation
 
-import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker._player.domain.model.Track
 
-interface IPlayerView {
+interface _PlayerView {
     fun drawScreen(track: Track)
     fun startAnimationAlfa()
     fun startAnimationScale()

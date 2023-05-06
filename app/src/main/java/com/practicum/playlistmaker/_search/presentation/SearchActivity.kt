@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker._search
+package com.practicum.playlistmaker._search.presentation
 
 import android.content.Context
 import android.os.Bundle
@@ -26,22 +26,19 @@ import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.adapter.SwipeHandlerCallback
 import com.practicum.playlistmaker.adapter.TrackAdapter
-import com.practicum.playlistmaker.data.Track
-import com.practicum.playlistmaker.data.TrackResponse
-import com.practicum.playlistmaker.data.raw.NetworkResponse
-import com.practicum.playlistmaker.data.raw.TrackRetrofit
-import com.practicum.playlistmaker.data.raw.TrackRetrofitListener
-import com.practicum.playlistmaker.presenters.search.SearchPresenter
-import com.practicum.playlistmaker.presenters.search.SearchRouter
-import com.practicum.playlistmaker.presenters.search.SearchView
-import com.practicum.playlistmaker.tools.DELAY_1000
+import com.practicum.playlistmaker._player.domain.model.Track
+import com.practicum.playlistmaker._player.domain.model.TrackResponse
+import com.practicum.playlistmaker.data.not_processed.NetworkResponse
+import com.practicum.playlistmaker.data.not_processed.TrackRetrofit
+import com.practicum.playlistmaker.data.not_processed.TrackRetrofitListener
+import com.practicum.playlistmaker.tools.DELAY_1500
 import com.practicum.playlistmaker.tools.DELAY_500
 import com.practicum.playlistmaker.tools.KEY_STATE
 import com.practicum.playlistmaker.tools.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
 import retrofit2.Response
 
-class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
+class SearchActivity : AppCompatActivity(R.layout.activity_search), _SearchView {
 
     private lateinit var searchEditText: EditText
     private lateinit var clearingButton: ImageView
@@ -242,7 +239,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
     private fun requestDataDebounce() {
         progress.visibility = VISIBLE
         handler.removeCallbacks(requestDataRunnable)
-        handler.postDelayed(requestDataRunnable, DELAY_1000)
+        handler.postDelayed(requestDataRunnable, DELAY_1500)
     }
 
     private fun setImage(image: Int) =

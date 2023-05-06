@@ -7,7 +7,7 @@ import android.widget.Button
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker._settings.SettingsActivity
 import com.practicum.playlistmaker._media_lib.MediaLibActivity
-import com.practicum.playlistmaker._search.SearchActivity
+import com.practicum.playlistmaker._search.presentation.SearchActivity
 import com.practicum.playlistmaker.tools.Debouncer
 import com.practicum.playlistmaker.tools.debounceClickListener
 
