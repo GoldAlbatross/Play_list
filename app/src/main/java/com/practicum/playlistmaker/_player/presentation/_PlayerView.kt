@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker._player.presentation
 
-import com.practicum.playlistmaker._player.domain.model.Track
+import com.practicum.playlistmaker.models.domain.Track
 
 interface _PlayerView {
     fun drawScreen(track: Track)

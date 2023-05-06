@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker._search.presentation
 
-import com.practicum.playlistmaker._player.domain.model.Track
+import com.practicum.playlistmaker.models.domain.Track
 
 class SearchPresenter(
     private val view: _SearchView,

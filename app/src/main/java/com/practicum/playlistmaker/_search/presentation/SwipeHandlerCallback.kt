@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.adapter
+package com.practicum.playlistmaker._search.presentation
 
 import android.content.Context
 import android.content.Intent

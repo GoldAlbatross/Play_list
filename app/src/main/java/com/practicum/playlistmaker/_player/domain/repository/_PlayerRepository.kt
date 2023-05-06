@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker._player.domain.repository
 
-import com.practicum.playlistmaker._player.domain.model.PlayerStates
+import com.practicum.playlistmaker.models.domain.PlayerStates
 
 interface _PlayerRepository {
     

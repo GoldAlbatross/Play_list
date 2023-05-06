@@ -1,6 +1,9 @@
 package com.practicum.playlistmaker.data.not_processed
 
-import com.practicum.playlistmaker._player.domain.model.TrackResponse
+import com.practicum.playlistmaker.models.domain.Track
+import com.practicum.playlistmaker.models.data.TrackDto
+import com.practicum.playlistmaker.models.data.TrackResponse
+import com.practicum.playlistmaker._search.repository.ApiITunes
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -23,19 +26,35 @@ class TrackRetrofit {
         .build()
     private val backendApi = retrofit.create(ApiITunes::class.java)
 
-    internal fun getResponseFromBackend(text: String) {
-        backendApi.getTrackList(text).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                listener?.onSuccess(response)
+    internal fun getResponseFromBackend(query: String) {
+        backendApi.getTrackList(query)
+            .enqueue(object : Callback<TrackResponse> {
+
+            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>, ) {
+                if (response.isSuccessful)
+                    listener?.onSuccess(response.body()?.trackList!!.map { mapTrack(it) })
             }
+
             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                 listener?.onError(t)
             }
         })
     }
+    private fun mapTrack(trackDto: TrackDto): Track {
+        return Track(
+            trackDto.track,
+            trackDto.artist,
+            trackDto.trackTime,
+            trackDto.url,
+            trackDto.collectionName,
+            trackDto.releaseDate,
+            trackDto.primaryGenreName,
+            trackDto.country,
+            trackDto.previewUrl,
+        )
+    }
 }
-
 interface TrackRetrofitListener {
-    fun onSuccess(response: Response<TrackResponse>)
+    fun onSuccess(response: List<Track>)
     fun onError(t: Throwable)
 }

@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.data.not_processed
 
-import com.practicum.playlistmaker._player.domain.model.Track
+import com.practicum.playlistmaker.models.domain.Track
 
 interface TrackStorage {
     fun addTrack(track: Track)

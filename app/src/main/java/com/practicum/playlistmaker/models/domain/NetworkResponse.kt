@@ -1,6 +1,4 @@
-package com.practicum.playlistmaker.data.not_processed
-
-import com.practicum.playlistmaker._player.domain.model.Track
+package com.practicum.playlistmaker.models.domain
 
 sealed class NetworkResponse {
     class Success (val listFromApi: List<Track>): NetworkResponse()

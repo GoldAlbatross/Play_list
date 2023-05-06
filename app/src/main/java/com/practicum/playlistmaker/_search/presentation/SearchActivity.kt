@@ -24,11 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.adapter.SwipeHandlerCallback
-import com.practicum.playlistmaker.adapter.TrackAdapter
-import com.practicum.playlistmaker._player.domain.model.Track
-import com.practicum.playlistmaker._player.domain.model.TrackResponse
-import com.practicum.playlistmaker.data.not_processed.NetworkResponse
+import com.practicum.playlistmaker.models.domain.Track
+import com.practicum.playlistmaker.models.domain.NetworkResponse
 import com.practicum.playlistmaker.data.not_processed.TrackRetrofit
 import com.practicum.playlistmaker.data.not_processed.TrackRetrofitListener
 import com.practicum.playlistmaker.tools.DELAY_1500
@@ -36,7 +33,6 @@ import com.practicum.playlistmaker.tools.DELAY_500
 import com.practicum.playlistmaker.tools.KEY_STATE
 import com.practicum.playlistmaker.tools.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
-import retrofit2.Response
 
 class SearchActivity : AppCompatActivity(R.layout.activity_search), _SearchView {
 
@@ -167,13 +163,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), _SearchView 
     private fun requestData () {
         retrofit.listener = object : TrackRetrofitListener {
 
-            override fun onSuccess(response: Response<TrackResponse>) {
-                if (response.isSuccessful) {
-                    if (response.body()!!.trackList.isNotEmpty())
-                        handlingSearchQuery(NetworkResponse.Success(response.body()?.trackList!!))
-                    else
-                        handlingSearchQuery(NetworkResponse.NoData)
-                }
+            override fun onSuccess(response: List<Track>) {
+                if (response.isNotEmpty())
+                    handlingSearchQuery(NetworkResponse.Success(response))
+                else
+                    handlingSearchQuery(NetworkResponse.NoData)
             }
 
             override fun onError(t: Throwable) =

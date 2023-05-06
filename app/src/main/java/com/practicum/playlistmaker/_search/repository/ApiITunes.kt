@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker.data.not_processed
+package com.practicum.playlistmaker._search.repository
 
-import com.practicum.playlistmaker._player.domain.model.TrackResponse
+import com.practicum.playlistmaker.models.data.TrackResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

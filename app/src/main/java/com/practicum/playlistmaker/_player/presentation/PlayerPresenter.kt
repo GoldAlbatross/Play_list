@@ -3,7 +3,7 @@ package com.practicum.playlistmaker._player.presentation
 import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker._player.domain.model.PlayerStates
+import com.practicum.playlistmaker.models.domain.PlayerStates
 import com.practicum.playlistmaker._player.domain.interactor._PlayerInteractor
 import com.practicum.playlistmaker.tools.DELAY_300
 
