@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.creator
+package com.practicum.playlistmaker.player.presentation.creator
 
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractorImpl
@@ -8,7 +8,6 @@ import com.practicum.playlistmaker.player.presentation.PlayerView
 import com.practicum.playlistmaker.player.repository.PlayerRepositoryImpl
 
 object Creator {
-
     fun createPresenter(
         view: PlayerView,
         activity: AppCompatActivity

@@ -8,7 +8,7 @@ import com.practicum.playlistmaker.data.not_processed.TrackStorage
 import com.practicum.playlistmaker.data.not_processed.TrackStoragePreferences
 
 class App: Application() {
-    internal val gson = Gson()
+
     internal lateinit var themeSwitcher: BooleanStorage
     private set
     internal lateinit var trackStorage: TrackStorage
@@ -18,10 +18,11 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        themeSwitcher =
-            ThemeSwitcher(getSharedPreferences(DARK_THEME_PREFERENCES, MODE_PRIVATE))
-        trackStorage =
-            TrackStoragePreferences(getSharedPreferences(TRACKS_PREFERENCES, MODE_PRIVATE), gson, 10)
+        themeSwitcher = ThemeSwitcher(getSharedPreferences(DARK_THEME_PREFERENCES, MODE_PRIVATE))
+        trackStorage = TrackStoragePreferences(
+            getSharedPreferences(TRACKS_PREFERENCES, MODE_PRIVATE),
+            Gson(), 10
+        )
     }
 
     companion object {

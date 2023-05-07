@@ -8,7 +8,8 @@ import com.practicum.playlistmaker.models.domain.Track
 class TrackStoragePreferences(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson,
-    private val count: Int): TrackStorage {
+    private val count: Int
+    ): TrackStorage {
     override fun addTrack(track: Track) {
         val list: MutableList<Track> = getJsonString()?.toTrackList() ?: mutableListOf()
         if (list.contains(track)) list.remove(track)

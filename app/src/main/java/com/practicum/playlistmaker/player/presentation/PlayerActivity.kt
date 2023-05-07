@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.player.presentation.creator.Creator
 import com.practicum.playlistmaker.player.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.models.domain.Track
 import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractorImpl
