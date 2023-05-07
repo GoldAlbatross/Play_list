@@ -2,9 +2,10 @@ package com.practicum.playlistmaker.player.repository
 
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.models.domain.PlayerStates
-import com.practicum.playlistmaker.player.domain.repository._PlayerRepository
+import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
 
-class PlayerRepository: _PlayerRepository {
+class PlayerRepositoryImpl:
+    PlayerRepository {
 
     private val mediaPlayer = MediaPlayer()
     override var state = PlayerStates.DEFAULT
@@ -43,6 +44,4 @@ class PlayerRepository: _PlayerRepository {
     override fun stop() {
         mediaPlayer.release()
     }
-
-
 }

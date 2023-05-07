@@ -34,7 +34,7 @@ import com.practicum.playlistmaker.tools.KEY_STATE
 import com.practicum.playlistmaker.tools.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
 
-class SearchActivity : AppCompatActivity(R.layout.activity_search), _SearchView {
+class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
 
     private lateinit var searchEditText: EditText
     private lateinit var clearingButton: ImageView

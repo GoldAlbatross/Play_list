@@ -4,12 +4,12 @@ import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.models.domain.PlayerStates
-import com.practicum.playlistmaker.player.domain.interactor._PlayerInteractor
+import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractor
 import com.practicum.playlistmaker.tools.DELAY_300
 
 class PlayerPresenter(
-    private val view: _PlayerView,
-    private val interactor: _PlayerInteractor,
+    private val view: PlayerView,
+    private val interactor: PlayerInteractor,
     private val router: PlayerRouter,
     ) {
 

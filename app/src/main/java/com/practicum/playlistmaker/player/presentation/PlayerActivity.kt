@@ -11,9 +11,10 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.repository.PlayerRepository
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.player.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.models.domain.Track
-import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractor
+import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractorImpl
 import com.practicum.playlistmaker.tools.DELAY_1500
 import com.practicum.playlistmaker.tools.DELAY_2000
 import com.practicum.playlistmaker.tools.DELAY_3000
@@ -21,7 +22,7 @@ import com.practicum.playlistmaker.tools.Debouncer
 import com.practicum.playlistmaker.tools.debounceClickListener
 import com.practicum.playlistmaker.tools.getTimeFormat
 
-class PlayerActivity : AppCompatActivity(R.layout.activity_player), _PlayerView {
+class PlayerActivity : AppCompatActivity(R.layout.activity_player), PlayerView {
 
     private val debouncer = Debouncer()
 
@@ -41,10 +42,7 @@ class PlayerActivity : AppCompatActivity(R.layout.activity_player), _PlayerView 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = PlayerPresenter(view = this,
-            interactor = PlayerInteractor(mediaPlayer = PlayerRepository()),
-            router = PlayerRouter(this),
-        )
+        presenter = Creator.createPresenter(view = this, activity = this)
 
         val btnBack = findViewById<Toolbar>(R.id.toolbar)
         btnBack.setNavigationOnClickListener { presenter.onClickedBack() }

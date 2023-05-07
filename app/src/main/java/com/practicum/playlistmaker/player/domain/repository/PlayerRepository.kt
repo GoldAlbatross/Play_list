@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.player.domain.repository
 
 import com.practicum.playlistmaker.models.domain.PlayerStates
 
-interface _PlayerRepository {
+interface PlayerRepository {
     
     var state: PlayerStates
 
