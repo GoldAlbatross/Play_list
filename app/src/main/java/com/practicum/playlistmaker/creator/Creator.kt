@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.presentation.creator
+package com.practicum.playlistmaker.creator
 
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractorImpl
