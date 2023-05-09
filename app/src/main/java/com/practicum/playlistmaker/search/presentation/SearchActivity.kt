@@ -1,7 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,24 +22,19 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.adapter.SwipeHandlerCallback
-import com.practicum.playlistmaker.adapter.TrackAdapter
-import com.practicum.playlistmaker.model.Track
-import com.practicum.playlistmaker.model.TrackResponse
-import com.practicum.playlistmaker.okhttp.NetworkResponse
-import com.practicum.playlistmaker.okhttp.TrackRetrofit
-import com.practicum.playlistmaker.okhttp.TrackRetrofitListener
-import com.practicum.playlistmaker.tools.DELAY_1000
+import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.models.domain.Track
+import com.practicum.playlistmaker.models.domain.NetworkResponse
+import com.practicum.playlistmaker.data.not_processed.TrackRetrofit
+import com.practicum.playlistmaker.data.not_processed.TrackRetrofitListener
+import com.practicum.playlistmaker.tools.DELAY_1500
 import com.practicum.playlistmaker.tools.DELAY_500
+import com.practicum.playlistmaker.tools.KEY_STATE
 import com.practicum.playlistmaker.tools.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
-import retrofit2.Response
 
-class SearchActivity : AppCompatActivity(R.layout.activity_search) {
-    companion object {
-        const val KEY_STATE = "searchActivity_state"
-        const val KEY_TRACK = "searchActivity_track"
-    }
+class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
 
     private lateinit var searchEditText: EditText
     private lateinit var clearingButton: ImageView
@@ -67,6 +61,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val presenter = SearchPresenter(
+            view = this,
+            router = SearchRouter(this),
+        )
 
         //binds View
         searchEditText = findViewById(R.id.edit_search)
@@ -97,6 +96,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         val swipeHandler = SwipeHandlerCallback(this, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recycler)
+
+        trackAdapter.listener = { track ->
+            App.instance.trackStorage.addTrack(track)
+            presenter.onClickedTrack(track)
+        }
     }
 
     override fun onResume() {
@@ -139,11 +143,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
             showEmptyList()
         }
 
-        trackAdapter.listener = { track ->
-            App.instance.trackStorage.addTrack(track)
-            startActivity(Intent(this, PlayerActivity::class.java).putExtra(KEY_TRACK, track))
-        }
-
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
     }
 
@@ -164,13 +163,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     private fun requestData () {
         retrofit.listener = object : TrackRetrofitListener {
 
-            override fun onSuccess(response: Response<TrackResponse>) {
-                if (response.isSuccessful) {
-                    if (response.body()!!.trackList.isNotEmpty())
-                        handlingSearchQuery(NetworkResponse.Success(response.body()?.trackList!!))
-                    else
-                        handlingSearchQuery(NetworkResponse.NoData)
-                }
+            override fun onSuccess(response: List<Track>) {
+                if (response.isNotEmpty())
+                    handlingSearchQuery(NetworkResponse.Success(response))
+                else
+                    handlingSearchQuery(NetworkResponse.NoData)
             }
 
             override fun onError(t: Throwable) =
@@ -236,7 +233,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     private fun requestDataDebounce() {
         progress.visibility = VISIBLE
         handler.removeCallbacks(requestDataRunnable)
-        handler.postDelayed(requestDataRunnable, DELAY_1000)
+        handler.postDelayed(requestDataRunnable, DELAY_1500)
     }
 
     private fun setImage(image: Int) =

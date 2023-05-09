@@ -7,6 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
 import android.view.View
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 fun <T : Parcelable?> Intent.getParcelableFromIntent(key: String, clazz: Class<T>): T {
@@ -18,7 +20,6 @@ fun <T : Parcelable?> Intent.getParcelableFromIntent(key: String, clazz: Class<T
     }
 }
 
-
 fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         getParcelable(key, clazz)!!
@@ -28,7 +29,10 @@ fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T
     }
 }
 
-
 fun View.debounceClickListener(debouncer: Debouncer, listenerBlock: () -> Unit) {
     setOnClickListener { debouncer.onClick(listenerBlock) }
+}
+
+fun Int.getTimeFormat():String {
+    return SimpleDateFormat("mm:ss", Locale.US).format(this)
 }

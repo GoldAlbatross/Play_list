@@ -1,15 +1,15 @@
-package com.practicum.playlistmaker.storage
+package com.practicum.playlistmaker.data.not_processed
 
 import android.content.SharedPreferences
-import android.util.LruCache
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.model.Track
+import com.practicum.playlistmaker.models.domain.Track
 
 class TrackStoragePreferences(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson,
-    private val count: Int): TrackStorage {
+    private val count: Int
+    ): TrackStorage {
     override fun addTrack(track: Track) {
         val list: MutableList<Track> = getJsonString()?.toTrackList() ?: mutableListOf()
         if (list.contains(track)) list.remove(track)

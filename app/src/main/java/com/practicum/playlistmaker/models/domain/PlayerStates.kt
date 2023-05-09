@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.models.domain
 
 enum class PlayerStates {
     DEFAULT,
