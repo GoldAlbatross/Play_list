@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".settings.SettingsActivity">
+    tools:context=".settings.ui.activity.SettingsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -40,7 +40,7 @@
 
 
     <Button
-        android:id="@+id/btn_sharing"
+        android:id="@+id/sharing"
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_share"
@@ -54,51 +54,51 @@
         android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_sharing"
+        app:layout_constraintBottom_toBottomOf="@+id/sharing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_sharing"/>
+        app:layout_constraintTop_toTopOf="@+id/sharing"/>
 
 
     <Button
-        android:id="@+id/btn_support"
+        android:id="@+id/support"
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_head"
         android:contentDescription="@string/support"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_sharing" />
+        app:layout_constraintTop_toBottomOf="@+id/sharing" />
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/support"
         android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_support"
+        app:layout_constraintBottom_toBottomOf="@+id/support"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_support"/>
+        app:layout_constraintTop_toTopOf="@+id/support"/>
 
 
     <Button
-        android:id="@+id/btn_agreement"
+        android:id="@+id/agreement"
         style="@style/button_max_width"
         android:layout_height="@dimen/size_60dp"
         android:drawableEnd="@drawable/ic_array_go_to"
         android:contentDescription="@string/agreement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_support" />
+        app:layout_constraintTop_toBottomOf="@+id/support" />
     <TextView
         style="@style/text_for_btn_max_width"
         android:text="@string/terms_of_use"
         android:textSize="@dimen/text_size_16sp"
         android:fontFamily="@font/ys_display_regular"
         android:layout_marginStart="@dimen/size_16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_agreement"
+        app:layout_constraintBottom_toBottomOf="@+id/agreement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_agreement"/>
+        app:layout_constraintTop_toTopOf="@+id/agreement"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

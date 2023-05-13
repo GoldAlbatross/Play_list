@@ -28,13 +28,13 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_search"
+            android:id="@+id/search"
             style="@style/main_button"
             android:text="@string/search"
             app:icon="@drawable/ic_lens_19" />
 
         <Button
-            android:id="@+id/btn_media"
+            android:id="@+id/media"
             style="@style/main_button"
             android:layout_marginTop="16dp"
             android:text="@string/media_lib"
@@ -42,7 +42,7 @@
             app:iconPadding="@dimen/size_16dp" />
 
         <Button
-            android:id="@+id/btn_settings"
+            android:id="@+id/settings"
             style="@style/main_button"
             android:layout_marginTop="16dp"
             android:text="@string/settings"
