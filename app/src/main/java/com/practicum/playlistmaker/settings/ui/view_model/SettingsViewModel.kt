@@ -1,32 +1,40 @@
 package com.practicum.playlistmaker.settings.ui.view_model
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.application.App
 import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 
-class SettingsViewModel(application: Application): AndroidViewModel(application) {
+class SettingsViewModel(private val settingsInteractor: SettingsInteractor): ViewModel() {
 
-    private val router = Creator.provideSettingsRouter(getApplication<Application>())
-    private val settingsInteractor = Creator.provideSettingsInteractor()
+    private val themeSwitcherState = SingleLiveEvent<Boolean>()
+    init {
+        themeSwitcherState.value = settingsInteractor.getSwitcherState()
+    }
+    fun themeSwitcherState(): LiveData<Boolean> = themeSwitcherState
 
-//    private val themeSwitcherState = MutableLiveData<ThemeSwitcherState>()
-//    fun getThemeSwitcherState(): LiveData<ThemeSwitcherState> = themeSwitcherState
-
-    fun onClickedSharing() { router.sharingPlayListMaker() }
-    fun onClickedSupport() { router.getSupport() }
-    fun onClickedAgreement() { router.readAgreement() }
-
+    fun changeTheme(night: Boolean) {
+        if (night == themeSwitcherState.value) return
+        settingsInteractor.saveSwitcherState(night)
+        themeSwitcherState.postValue(night)
+        switchTheme(night)
+    }
+    private fun switchTheme(night: Boolean) {
+        AppCompatDelegate.setDefaultNightMode(
+            if (night) AppCompatDelegate.MODE_NIGHT_YES
+            else AppCompatDelegate.MODE_NIGHT_NO
+        )
+    }
 
     companion object {
         fun factory(): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as App)
-                    SettingsViewModel(application = app)
+                    SettingsViewModel(settingsInteractor = Creator.provideSettingsInteractor())
                 }
             }
     }

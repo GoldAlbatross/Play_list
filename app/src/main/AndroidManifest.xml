@@ -17,7 +17,7 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".media_lib.ui.MediaLibActivity"
+            android:name=".library.ui.activity.MediaLibActivity"
             android:exported="false" >
         </activity>
 

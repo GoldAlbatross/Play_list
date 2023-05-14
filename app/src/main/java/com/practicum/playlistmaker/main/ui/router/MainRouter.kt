@@ -1,26 +1,22 @@
 package com.practicum.playlistmaker.main.ui.router
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.media_lib.ui.MediaLibActivity
+import com.practicum.playlistmaker.library.ui.activity.MediaLibActivity
 import com.practicum.playlistmaker.search.ui.SearchActivity
 import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
 
-class MainRouter(private val context: Context) {
+class MainRouter(private val activity: AppCompatActivity) {
 
-    fun openSearchActivity() {
-        val intent = Intent(context, SearchActivity::class.java)
-        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    fun onClickedSearch() {
+        activity.startActivity(Intent(activity, SearchActivity::class.java))
     }
 
-    fun openMediaLibActivity() {
-        val intent = Intent(context, MediaLibActivity::class.java)
-        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    fun onClickedMediaLib() {
+        activity.startActivity(Intent(activity, MediaLibActivity::class.java))
     }
 
-    fun openSettingsActivity() {
-        val intent = Intent(context, SettingsActivity::class.java)
-        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    fun onClickedSettings() {
+        activity.startActivity(Intent(activity, SettingsActivity::class.java))
     }
 }
