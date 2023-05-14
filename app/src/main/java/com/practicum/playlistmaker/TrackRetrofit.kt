@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker
 
-import com.practicum.playlistmaker.models.domain.Track
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.models.data.TrackDto
 import com.practicum.playlistmaker.models.data.TrackResponse
 import com.practicum.playlistmaker.search.data.ApiITunes

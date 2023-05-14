@@ -10,6 +10,7 @@ class App: Application() {
 
     internal lateinit var sharedPreference: SharedPreferences
     private set
+
     internal lateinit var trackStorage: TrackStorage
     private set
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    tools:context=".search.ui.SearchActivity">
+    tools:context=".search.ui.activity.SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,7 +17,7 @@
         <TextView style="@style/text_for_toolbar" />
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText android:id="@+id/edit_search"
+    <EditText android:id="@+id/request"
         style="@style/edit_text"
         android:autofillHints="auto"
         android:focusable="true"
@@ -28,21 +28,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <ImageView android:id="@+id/icon_clear"
+    <ImageView android:id="@+id/clear"
         style="@style/image_clearing"
         android:visibility="invisible"
         android:contentDescription="@string/input_clearing"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_search"
-        app:layout_constraintEnd_toEndOf="@+id/edit_search"
-        app:layout_constraintTop_toTopOf="@+id/edit_search" />
+        app:layout_constraintBottom_toBottomOf="@+id/request"
+        app:layout_constraintEnd_toEndOf="@+id/request"
+        app:layout_constraintTop_toTopOf="@+id/request" />
 
-    <TextView android:id="@+id/txt_history"
+    <TextView android:id="@+id/header"
         style="@style/text_for_dummy"
         android:layout_marginTop="@dimen/size_46dp"
         android:text="@string/search_history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_search"
+        app:layout_constraintTop_toBottomOf="@+id/request"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -54,8 +54,8 @@
         android:layout_marginTop="@dimen/size_16dp"
         android:visibility="invisible"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/btn_clear_history"
-        app:layout_constraintTop_toBottomOf="@id/txt_history"
+        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed"
         tools:itemCount="25"
@@ -63,7 +63,7 @@
         tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_clear_history"
+        android:id="@+id/footer"
         style="@style/refresh_btn"
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="@dimen/size_16dp"
@@ -86,7 +86,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_search"
+        app:layout_constraintTop_toBottomOf="@+id/request"
         tools:visibility="invisible">
 
         <ImageView android:id="@+id/img_dummy"

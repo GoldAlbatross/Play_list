@@ -3,7 +3,7 @@ package com.practicum.playlistmaker
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.models.domain.Track
+import com.practicum.playlistmaker.search.domain.model.Track
 
 class TrackStoragePreferences(
     private val sharedPreferences: SharedPreferences,

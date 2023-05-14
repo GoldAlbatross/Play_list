@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.activity
 
 import android.content.Context
 import android.os.Bundle
@@ -10,40 +10,40 @@ import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.application.App
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.models.domain.Track
-import com.practicum.playlistmaker.models.domain.NetworkResponse
+import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.search.domain.model.NetworkResponse
 import com.practicum.playlistmaker.TrackRetrofit
 import com.practicum.playlistmaker.TrackRetrofitListener
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.search.ui.SearchRouter
+import com.practicum.playlistmaker.search.ui.SwipeHandlerCallback
+import com.practicum.playlistmaker.search.ui.TrackAdapter
+import com.practicum.playlistmaker.search.ui.model.UiState
+import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_500
 import com.practicum.playlistmaker.utils.KEY_STATE
 import com.practicum.playlistmaker.utils.getParcelableFromBundle
 import kotlinx.parcelize.Parcelize
 
-class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
+class SearchActivity: AppCompatActivity() {
 
-    private lateinit var searchEditText: EditText
-    private lateinit var clearingButton: ImageView
-    private lateinit var dummy: View
-    private lateinit var imgDummy: ImageView
-    private lateinit var txtDummy: TextView
-    private lateinit var header: TextView
-    private lateinit var btnDummy: Button
-    private lateinit var progress: ProgressBar
+    private val router by lazy { SearchRouter(this) }
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+    private val viewModel by lazy { ViewModelProvider(this,
+        SearchViewModel.factory())[SearchViewModel::class.java] }
+
+
+
     private val requestDataRunnable = Runnable { requestData() }
 
     // variables for save state of SearchActivity
@@ -52,41 +52,37 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
     private val handler = Handler(Looper.getMainLooper())
 
     // variables for RecyclerView
-    private lateinit var recycler: RecyclerView
     private val trackAdapter = TrackAdapter()
-    private lateinit var footer: Button
 
     //variables for Retrofit
     private val retrofit = TrackRetrofit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-        val presenter = SearchPresenter(
-            view = this,
-            router = SearchRouter(this),
-        )
+        binding.toolbar.setNavigationOnClickListener { router.goBack() }
+
+        viewModel.uiState().observe(this) { uiState ->
+            when (uiState) {
+                is UiState.Default -> { showEmptyList() }
+                is UiState.Error -> TODO()
+                is UiState.HistoryContent -> TODO()
+                is UiState.SearchContent -> TODO()
+            }
+        }
+
 
         //binds View
-        searchEditText = findViewById(R.id.edit_search)
-        clearingButton = findViewById(R.id.icon_clear)
-        recycler = findViewById(R.id.recycler)
-        dummy = findViewById(R.id.dummy)
-        imgDummy = findViewById(R.id.img_dummy)
-        txtDummy = findViewById(R.id.txt_dummy)
-        btnDummy = findViewById(R.id.btn_dummy)
-        footer = findViewById(R.id.btn_clear_history)
-        header = findViewById(R.id.txt_history)
-        progress = findViewById(R.id.progress_bar)
 
         //handling a state
         state = savedInstanceState?.getParcelableFromBundle(KEY_STATE, State::class.java) ?: State()
-        searchEditText.setText(state.searchText)
+        binding.request.setText(state.searchText)
         handler.postDelayed(callback, DELAY_500)
-        clearingButton.visibility = state.cross
+        binding.clear.visibility = state.cross
 
         // init the recyclerView
-        recycler.apply {
+        binding.recycler.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = trackAdapter
         }
@@ -94,11 +90,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
         // Handling a swipe or drag
         val swipeHandler = SwipeHandlerCallback(this, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recycler)
+        itemTouchHelper.attachToRecyclerView(binding.recycler)
 
         trackAdapter.listener = { track ->
             App.instance.trackStorage.addTrack(track)
-            presenter.onClickedTrack(track)
+            router.openPlayerActivity(track)
         }
     }
 
@@ -110,48 +106,44 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
         //if (recycler.adapter != null) recycler.adapter?.notifyDataSetChanged()
 
         // hide the cross button
-        searchEditText.doOnTextChanged { text, _, _, _ ->
-            if (searchEditText.hasFocus() && text?.isNotEmpty() == true) {
+        binding.request.doOnTextChanged { text, _, _, _ ->
+            if (binding.request.hasFocus() && text?.isNotEmpty() == true) {
                 requestDataDebounce()
                 showEmptyList()
             }
             else
-                showHistorySearch(searchEditText.hasFocus())
-            btnVisibility(text, clearingButton)
+                showHistorySearch(binding.request.hasFocus())
+            btnVisibility(text, binding.clear)
         }
 
         // catch the focus and set visibility
-        searchEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (searchEditText.text.isNullOrEmpty()) showHistorySearch(hasFocus)
+        binding.request.setOnFocusChangeListener { _, hasFocus ->
+            if (binding.request.text.isNullOrEmpty()) showHistorySearch(hasFocus)
         }
 
         // clearing search field and recycler
-        clearingButton.setOnClickListener {
-            searchEditText.setText("")
-            searchEditText.clearFocus()
+        binding.clear.setOnClickListener {
+            binding.request.setText("")
+            binding.request.clearFocus()
             state.focus = false
             renderState()
         }
 
 
         // refresh request
-        btnDummy.setOnClickListener {
-            retrofit.getResponseFromBackend(searchEditText.text.toString())
+        binding.btnDummy.setOnClickListener {
+            retrofit.getResponseFromBackend(binding.request.text.toString())
         }
 
-        footer.setOnClickListener {
-            App.instance.trackStorage.clearTrackList()
-            showEmptyList()
-        }
+        binding.footer.setOnClickListener { viewModel.onClickFooter() }
 
-        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        state.searchText = searchEditText.text.toString()
-        state.focus = searchEditText.hasFocus()
-        state.cross = clearingButton.visibility
+        state.searchText = binding.request.text.toString()
+        state.focus = binding.request.hasFocus()
+        state.cross = binding.clear.visibility
         outState.putParcelable(KEY_STATE, state)
     }
 
@@ -174,16 +166,16 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
             override fun onError(t: Throwable) =
                 handlingSearchQuery(NetworkResponse.Error(t.toString()))
         }
-        retrofit.getResponseFromBackend(searchEditText.text.toString())
+        retrofit.getResponseFromBackend(binding.request.text.toString())
     }
 
     private fun renderState() {
         if (state.focus) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(searchEditText, 0)
+            imm.showSoftInput(binding.request, 0)
         } else {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+            imm?.hideSoftInputFromWindow(binding.request.windowToken, 0)
         }
     }
 
@@ -192,47 +184,47 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchView {
     }
 
     private fun showEmptyList() {
-        recycler.visibility = INVISIBLE
-        header.visibility = GONE
-        footer.visibility = GONE
+        binding.recycler.visibility = INVISIBLE
+        binding.header.visibility = GONE
+        binding.footer.visibility = GONE
     }
 
     private fun showHistorySearch(hasFocus: Boolean) {
         if (hasFocus && trackAdapter.trackList.isNotEmpty()) {
-            recycler.visibility = VISIBLE
-            header.visibility = VISIBLE
-            footer.visibility = VISIBLE
+            binding.recycler.visibility = VISIBLE
+            binding.header.visibility = VISIBLE
+            binding.footer.visibility = VISIBLE
             setItems(App.instance.trackStorage.getTracks())
         } else showEmptyList()
     }
 
     private fun handlingSearchQuery(response: NetworkResponse) {
-        progress.visibility = GONE
-        recycler.visibility = VISIBLE
+        binding.progressBar.visibility = GONE
+        binding.recycler.visibility = VISIBLE
         when (response) {
             is NetworkResponse.Success -> {
                 setItems(response.listFromApi)
-                dummy.visibility = GONE
+                binding.dummy.visibility = GONE
             }
             is NetworkResponse.NoData -> {
                 trackAdapter.trackList.clear()
-                dummy.visibility = VISIBLE
-                imgDummy.background = setImage(R.drawable.search_dummy_empty)
-                txtDummy.text = getString(R.string.empty_list)
-                btnDummy.visibility = INVISIBLE
+                binding.dummy.visibility = VISIBLE
+                binding.imgDummy.background = setImage(R.drawable.search_dummy_empty)
+                binding.txtDummy.text = getString(R.string.empty_list)
+                binding.btnDummy.visibility = INVISIBLE
             }
             is NetworkResponse.Error -> {
                 trackAdapter.trackList.clear()
-                dummy.visibility = VISIBLE
-                imgDummy.background = setImage(R.drawable.search_dummy_error)
-                txtDummy.text = getString(R.string.error)
-                btnDummy.visibility = VISIBLE
+                binding.dummy.visibility = VISIBLE
+                binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
+                binding.txtDummy.text = getString(R.string.error)
+                binding.btnDummy.visibility = VISIBLE
             }
         }
     }
 
     private fun requestDataDebounce() {
-        progress.visibility = VISIBLE
+        binding.progressBar.visibility = VISIBLE
         handler.removeCallbacks(requestDataRunnable)
         handler.postDelayed(requestDataRunnable, DELAY_1500)
     }

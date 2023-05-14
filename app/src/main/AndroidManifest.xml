@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".search.ui.SearchActivity"
+            android:name=".search.ui.activity.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
