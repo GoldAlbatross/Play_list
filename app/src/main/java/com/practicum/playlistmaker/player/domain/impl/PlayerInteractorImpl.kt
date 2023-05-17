@@ -1,39 +1,39 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.models.domain.PlayerStates
+import com.practicum.playlistmaker.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.player.domain.api.PlayerRepository
+import com.practicum.playlistmaker.player.domain.api.Player
 
 class PlayerInteractorImpl(
-    private val mediaPlayer: PlayerRepository
+    private val player: Player
 ): PlayerInteractor {
 
     override fun prepareMediaPlayer(url: String, listener: () -> Unit) {
-        mediaPlayer.prepareMediaPlayer(url, listener)
+        player.prepareMediaPlayer(url, listener)
     }
 
     override fun getState(): PlayerStates {
-        return mediaPlayer.state
+        return player.state
     }
 
     override fun runPlayer() {
-        mediaPlayer.runTrack()
+        player.runTrack()
     }
 
     override fun getTime(): Int {
-        return mediaPlayer.getTime()
+        return player.getTime()
     }
 
     override fun setStopListenerOnMediaPlayer(listener: () -> Unit) {
-        mediaPlayer.setStopListener(listener)
+        player.setStopListener(listener)
     }
 
     override fun pauseMediaPlayer() {
-        mediaPlayer.stopTrack()
+        player.stopTrack()
     }
 
     override fun stopMediaPlayer() {
-        mediaPlayer.stop()
+        player.stop()
     }
 
 }

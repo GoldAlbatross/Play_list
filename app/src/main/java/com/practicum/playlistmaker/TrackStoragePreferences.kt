@@ -10,6 +10,7 @@ class TrackStoragePreferences(
     private val gson: Gson,
     private val count: Int
     ): TrackStorage {
+
     override fun addTrack(track: Track) {
         val list: MutableList<Track> = getJsonString()?.toTrackList() ?: mutableListOf()
         if (list.contains(track)) list.remove(track)
@@ -21,19 +22,14 @@ class TrackStoragePreferences(
     override fun getTracks(): List<Track> {
         return getJsonString()?.toTrackList() ?:  listOf()
     }
-
     override fun clearTrackList() {
-        sharedPreferences.edit()
-            .remove(TRACKS_KEY)
-            .apply()
+        sharedPreferences.edit().remove(TRACKS_KEY).apply()
     }
-
     override fun removeTrack(track: Track) {
         val list: MutableList<Track> = getJsonString()?.toTrackList() ?: return
         list.remove(track)
         saveList(list)
     }
-
     private fun getJsonString(): String? = sharedPreferences.getString(TRACKS_KEY, null)
     private fun String.toTrackList(): MutableList<Track> =
         gson.fromJson(this, object : TypeToken<MutableList<Track>>() {}.type)

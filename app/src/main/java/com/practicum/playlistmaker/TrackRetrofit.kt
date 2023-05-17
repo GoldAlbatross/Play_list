@@ -1,9 +1,8 @@
 package com.practicum.playlistmaker
 
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.models.data.TrackDto
-import com.practicum.playlistmaker.models.data.TrackResponse
-import com.practicum.playlistmaker.search.data.ApiITunes
+import com.practicum.playlistmaker.search.data.dto.TrackDto
+import com.practicum.playlistmaker.search.data.network.ApiITunes
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -28,19 +27,24 @@ class TrackRetrofit {
 
     internal fun getResponseFromBackend(query: String) {
         backendApi.getTrackList(query)
-            .enqueue(object : Callback<TrackResponse> {
+            .enqueue(object : Callback<com.practicum.playlistmaker.search.data.dto.SearchResponse> {
 
-            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>, ) {
+            override fun onResponse(call: Call<com.practicum.playlistmaker.search.data.dto.SearchResponse>, response: Response<com.practicum.playlistmaker.search.data.dto.SearchResponse>, ) {
                 if (response.isSuccessful)
-                    listener?.onSuccess(response.body()?.trackList!!.map { mapTrack(it) })
+                    listener?.onSuccess(
+                        response.body()
+                            ?.trackList!!
+                            .filter { it.previewUrl != null }
+                            .map { mapToTrack(it) }
+                    )
             }
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.practicum.playlistmaker.search.data.dto.SearchResponse>, t: Throwable) {
                 listener?.onError(t)
             }
         })
     }
-    private fun mapTrack(trackDto: TrackDto): Track {
+    private fun mapToTrack(trackDto: TrackDto): Track {
         return Track(
             trackDto.track,
             trackDto.artist,
@@ -50,7 +54,7 @@ class TrackRetrofit {
             trackDto.releaseDate,
             trackDto.primaryGenreName,
             trackDto.country,
-            trackDto.previewUrl,
+            trackDto.previewUrl!!,
         )
     }
 }

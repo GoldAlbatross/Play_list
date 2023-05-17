@@ -1,15 +1,16 @@
 package com.practicum.playlistmaker.creator
 
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.application.App
-import com.practicum.playlistmaker.player.data.PlayerRepositoryImpl
+import com.practicum.playlistmaker.player.data.PlayerImpl
+import com.practicum.playlistmaker.player.domain.api.Player
+import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
-import com.practicum.playlistmaker.player.ui.PlayerPresenter
-import com.practicum.playlistmaker.player.ui.PlayerRouter
-import com.practicum.playlistmaker.player.ui.PlayerView
+import com.practicum.playlistmaker.search.data.network.NetworkClient
+import com.practicum.playlistmaker.search.data.storage.LocalStorageImpl
+import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.SearchRepositoryImpl
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
+import com.practicum.playlistmaker.search.data.storage.LocalStorage
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.iml.SearchInteractorImpl
 import com.practicum.playlistmaker.settings.data.ThemeSwitcherImpl
@@ -24,36 +25,33 @@ object Creator {
     }
 
     private fun getSettingsRepository(): ThemeSwitcher {
-        return ThemeSwitcherImpl(sharedPreferences = getSharedPreferences())
+        return ThemeSwitcherImpl(sharedPreferences = App.instance.sharedPreference)
     }
 
-    private fun getSharedPreferences(): SharedPreferences {
-        return App.instance.sharedPreference
+    fun providePlayerInteractor(): PlayerInteractor {
+        return PlayerInteractorImpl(player = getPlayer())
     }
 
     fun provideSearchInteractor(): SearchInteractor {
-        return SearchInteractorImpl(searchRepository = getSearchRepository())
+        return SearchInteractorImpl(repository = getSearchRepository())
     }
 
     private fun getSearchRepository(): SearchRepository {
-        return SearchRepositoryImpl(sharedPreferences = getSharedPreferences())
-    }
-
-
-
-
-
-    fun createPresenter(
-        view: PlayerView,
-        activity: AppCompatActivity
-    ): PlayerPresenter {
-        return PlayerPresenter(
-            view = view,
-            interactor = PlayerInteractorImpl(PlayerRepositoryImpl()),
-            router = PlayerRouter(activity = activity),
+        return SearchRepositoryImpl(
+            localStorage = getLocalStorage(),
+            networkClient = getNetworkClient(),
         )
     }
-
-
-
+    private fun getPlayer(): Player {
+        return PlayerImpl()
+    }
+    private fun getNetworkClient(): NetworkClient {
+        return RetrofitNetworkClient()
+    }
+    private fun getLocalStorage(): LocalStorage {
+        return LocalStorageImpl(
+            sharedPreferences = App.instance.sharedPreference,
+            gson = App.instance.gson,
+        )
+    }
 }

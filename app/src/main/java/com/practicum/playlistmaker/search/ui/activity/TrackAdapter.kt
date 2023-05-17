@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.activity
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import java.util.Locale
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
-    internal var listener: ((Track) -> Unit)? = null
+    internal var listener: ((Track, Int) -> Unit)? = null
     private val debouncer = Debouncer()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
@@ -25,9 +25,10 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun getItemCount(): Int = trackList.size
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = trackList[holder.adapterPosition]
+        val pos = holder.adapterPosition
+        val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track) }
+        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track, pos) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {
@@ -35,11 +36,20 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         notifyItemMoved(sourcePosition, targetPosition)
     }
 
+    fun popItem(position: Int) {
+        val track = trackList[position]
+        trackList.remove(track)
+        notifyItemRemoved(position)
+        trackList.add(0, track)
+        notifyItemInserted(0)
+        notifyItemRangeChanged(0, position + 1)
+    }
+
     fun removeAt(position: Int) {
         trackList.removeAt(position)
         notifyItemRemoved(position)
+        notifyDataSetChanged()
     }
-
 }
 
 class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(

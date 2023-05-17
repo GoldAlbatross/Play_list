@@ -7,8 +7,10 @@ import com.practicum.playlistmaker.utils.getParcelableFromIntent
 
 class PlayerRouter(private val activity: AppCompatActivity) {
 
-    fun getTrackFromIntent(): Track =
-        activity.intent.getParcelableFromIntent(KEY_TRACK, Track::class.java)
 
-    fun goBack() { activity.finish() }
+    fun getTrackFromIntent(): Track {
+        return activity.intent.getParcelableFromIntent(KEY_TRACK, Track::class.java)
+    }
+
+    fun onClickedBack() { activity.finish() }
 }

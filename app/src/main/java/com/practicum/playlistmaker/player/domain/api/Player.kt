@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker.player.domain.api
 
-import com.practicum.playlistmaker.models.domain.PlayerStates
+import com.practicum.playlistmaker.player.domain.model.PlayerStates
 
-interface PlayerRepository {
+interface Player {
     
     var state: PlayerStates
 

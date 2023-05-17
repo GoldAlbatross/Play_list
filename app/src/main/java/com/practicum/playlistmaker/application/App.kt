@@ -9,14 +9,16 @@ import com.practicum.playlistmaker.TrackStoragePreferences
 class App: Application() {
 
     internal lateinit var sharedPreference: SharedPreferences
-    private set
-
+        private set
+    internal lateinit var gson: Gson
+        private set
     internal lateinit var trackStorage: TrackStorage
-    private set
+        private set
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+        gson = Gson()
         sharedPreference = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
 
         trackStorage = TrackStoragePreferences(

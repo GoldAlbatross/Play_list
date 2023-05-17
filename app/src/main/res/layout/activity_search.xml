@@ -9,7 +9,7 @@
     tools:context=".search.ui.activity.SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_btn"
         android:theme="@style/BaseRipple"
         style="@style/toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,24 +17,24 @@
         <TextView style="@style/text_for_toolbar" />
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText android:id="@+id/request"
+    <EditText android:id="@+id/input"
         style="@style/edit_text"
         android:autofillHints="auto"
         android:focusable="true"
         android:hint="@string/search"
-        android:imeOptions="actionDone"
+        android:imeOptions="flagNoExtractUi"
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/back_btn" />
 
     <ImageView android:id="@+id/clear"
         style="@style/image_clearing"
         android:visibility="invisible"
         android:contentDescription="@string/input_clearing"
-        app:layout_constraintBottom_toBottomOf="@+id/request"
-        app:layout_constraintEnd_toEndOf="@+id/request"
-        app:layout_constraintTop_toTopOf="@+id/request" />
+        app:layout_constraintBottom_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="@+id/input"
+        app:layout_constraintTop_toTopOf="@+id/input" />
 
     <TextView android:id="@+id/header"
         style="@style/text_for_dummy"
@@ -42,7 +42,7 @@
         android:text="@string/search_history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/request"
+        app:layout_constraintTop_toBottomOf="@+id/input"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -86,13 +86,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/request"
-        tools:visibility="invisible">
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        tools:visibility="visible">
 
         <ImageView android:id="@+id/img_dummy"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
+            tools:visibility="visible"
             android:background="@drawable/search_dummy_error" />
 
         <TextView android:id="@+id/txt_dummy"
@@ -101,7 +102,7 @@
             android:text="@string/empty_list" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_dummy"
+            android:id="@+id/refresh_btn"
             style="@style/refresh_btn"
             android:layout_marginTop="@dimen/size_21dp"
             android:text="@string/refresh" />

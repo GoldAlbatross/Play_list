@@ -37,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
             router.onClickedAgreement()
         }
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding.backBtn.setNavigationOnClickListener {
             router.onClickedBack()
         }
 

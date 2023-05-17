@@ -43,7 +43,7 @@
         app:layout_constraintGuide_end="@dimen/size_24dp" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_btn"
         android:theme="@style/BaseRipple"
         style="@style/toolbar"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
         app:srcCompat="@drawable/player_placeholder"
         app:layout_constraintEnd_toEndOf="@id/right_guideline_24"
         app:layout_constraintStart_toStartOf="@id/left_guideline_24"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_constraintBottom_toTopOf="@id/barrier" />
 
     <TextView

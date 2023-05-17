@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.router
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,6 @@ class SearchRouter(private val activity: AppCompatActivity) {
             putExtra(KEY_TRACK, track)
             activity.startActivity(this)
         }
-
     }
     fun goBack() { activity.finish() }
 }

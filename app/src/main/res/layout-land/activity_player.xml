@@ -24,7 +24,7 @@
         app:layout_constraintGuide_end="@dimen/size_24dp"/>
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_btn"
         style="@style/toolbar"
         android:layout_height="wrap_content"
         android:theme="@style/BaseRipple"

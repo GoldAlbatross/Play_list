@@ -9,19 +9,19 @@
     tools:context=".search.ui.activity.SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_btn"
         style="@style/toolbar"
         android:layout_width="0dp"
         android:theme="@style/BaseRipple"
-        app:layout_constraintBottom_toBottomOf="@+id/request"
-        app:layout_constraintEnd_toStartOf="@id/request"
+        app:layout_constraintBottom_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toStartOf="@id/input"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/request">
+        app:layout_constraintTop_toTopOf="@+id/input">
         <TextView style="@style/text_for_toolbar" />
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText android:id="@+id/request"
+    <EditText android:id="@+id/input"
         style="@style/edit_text"
         android:layout_width="0dp"
         android:layout_marginStart="@dimen/size_0dp"
@@ -30,28 +30,28 @@
         android:autofillHints="auto"
         android:focusable="true"
         android:hint="@string/search"
-        android:imeOptions="actionDone"
+        android:imeOptions="flagNoExtractUi"
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintStart_toEndOf="@id/toolbar"
+        app:layout_constraintStart_toEndOf="@id/back_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView android:id="@+id/clear"
         style="@style/image_clearing"
         android:visibility="invisible"
         android:contentDescription="@string/input_clearing"
-        app:layout_constraintBottom_toBottomOf="@+id/request"
-        app:layout_constraintEnd_toEndOf="@+id/request"
-        app:layout_constraintTop_toTopOf="@+id/request" />
+        app:layout_constraintBottom_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="@+id/input"
+        app:layout_constraintTop_toTopOf="@+id/input" />
 
     <TextView android:id="@+id/header"
         style="@style/text_for_dummy"
         android:layout_marginTop="@dimen/size_16dp"
         android:text="@string/search_history"
-        app:layout_constraintEnd_toEndOf="@id/request"
-        app:layout_constraintStart_toStartOf="@id/request"
-        app:layout_constraintTop_toBottomOf="@+id/request"
+        app:layout_constraintEnd_toEndOf="@id/input"
+        app:layout_constraintStart_toStartOf="@id/input"
+        app:layout_constraintTop_toBottomOf="@+id/input"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/request"
+        app:layout_constraintTop_toBottomOf="@+id/input"
         tools:visibility="invisible">
 
         <ImageView android:id="@+id/img_dummy"
@@ -110,7 +110,7 @@
             android:text="@string/empty_list" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_dummy"
+            android:id="@+id/refresh_btn"
             style="@style/refresh_btn"
             android:layout_marginTop="@dimen/size_21dp"
             android:text="@string/refresh" />

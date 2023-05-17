@@ -5,6 +5,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import com.practicum.playlistmaker.search.data.dto.TrackDto
+import com.practicum.playlistmaker.search.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -34,3 +36,4 @@ fun View.debounceClickListener(debouncer: Debouncer, listenerBlock: () -> Unit) 
 fun Int.getTimeFormat():String {
     return SimpleDateFormat("mm:ss", Locale.US).format(this)
 }
+

@@ -1,30 +1,35 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.activity
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
+import android.os.Handler
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.application.App
-import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.utils.KEY_STATE
+import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.search.ui.router.SearchRouter
+import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
+import com.practicum.playlistmaker.utils.DELAY_800
 
 
 class SwipeHandlerCallback(
-    private val context: Context,
-    private val trackAdapter: TrackAdapter
+    private val context: SearchActivity,
+    private val handler: Handler,
+    private val router: SearchRouter,
+    private val viewModel: SearchViewModel,
+    private val trackAdapter: TrackAdapter,
 ) : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN,
     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
 ) {
+
+    internal val swipeListener: ((Track, Int) -> Unit)? = null
     private val background = ColorDrawable()
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
@@ -72,14 +77,8 @@ class SwipeHandlerCallback(
             background.draw(c)
 
             // Draw the icon
-            if (dX > 280f) {
-                drawLeftIcon(R.drawable.player_notes1, 44, itemView, itemHeight, c)
-                if (dX > 350f) {
-                    drawLeftIcon(R.drawable.player_notes3, 160, itemView, itemHeight, c)
-                    if (dX > 450f) {
-                        drawLeftIcon(R.drawable.player_notes2, 300, itemView, itemHeight, c)
-                    }
-                }
+            if (dX > 150f) {
+                drawLeftIcon(R.drawable.player_swipe_play, 44, itemView, itemHeight, c)
             }
         }
 
@@ -152,19 +151,21 @@ class SwipeHandlerCallback(
         val track = trackAdapter.trackList[position]
 
         // play item
-        if (direction == 8) {
-            val intent = Intent(viewHolder.itemView.context, PlayerActivity::class.java)
-            intent.putExtra(KEY_STATE, track)
-            startActivity(viewHolder.itemView.context, intent, intent.extras)
-            App.instance.trackStorage.addTrack(track)
-            trackAdapter.replaceItem(position, position)
+        if (direction == RIGHT) {
+            viewModel.onSwipeRight(track = track,position = position)
+            handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)
         }
 
         // delete item
-        if (direction == 4) {
-            App.instance.trackStorage.removeTrack(track)
+        if (direction == LEFT) {
+            viewModel.onSwipeLeft(track = track)
             trackAdapter.removeAt(position)
         }
+    }
+
+    private companion object {
+        const val RIGHT = 8
+        const val LEFT = 4
     }
 
 
