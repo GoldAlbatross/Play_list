@@ -43,7 +43,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
     fun onClickTrack(track: Track, position: Int) {
         pushedItemState.postValue(position)
-        keyboardState.postValue(KeyboardState.HIDE)
+        //keyboardState.postValue(KeyboardState.HIDE)
         searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
     }
     fun onSwipeRight(track: Track, position: Int) {

@@ -94,16 +94,13 @@ class SearchActivity: AppCompatActivity() {
         viewModel.keyboardStateLiveData().observe(this) { state ->
             when (state!!) {
                 KeyboardState.SHOW -> {
-                    //btnVisibility(visibility = true)
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.showSoftInput(binding.input, 0)
+                    showKeyboard(show = true)
                 }
                 KeyboardState.HIDE -> {
                     btnVisibility(visibility = false)
                     binding.input.setText("")
                     binding.input.clearFocus()
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    imm?.hideSoftInputFromWindow(binding.input.windowToken, 0)
+                    showKeyboard(show = false)
                 }
             }
         }
@@ -176,6 +173,14 @@ class SearchActivity: AppCompatActivity() {
         binding.imgDummy.background = setImage(R.drawable.search_dummy_empty)
         binding.txtDummy.text = getString(R.string.empty_list)
         binding.refreshBtn.visibility = INVISIBLE
+    }
+
+    private fun showKeyboard(show: Boolean) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (show)
+            imm.showSoftInput(binding.input, 0)
+        else
+            imm.hideSoftInputFromWindow(binding.input.windowToken, 0)
     }
 
     private fun setImage(image: Int) =
