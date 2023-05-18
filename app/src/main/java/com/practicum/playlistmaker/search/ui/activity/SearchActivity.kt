@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -61,11 +62,6 @@ class SearchActivity: AppCompatActivity() {
             handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)
         }
 
-        // Catch the focus
-        binding.input.setOnFocusChangeListener { _,hasFocus ->
-            if (hasFocus) viewModel.onClickInput()
-        }
-
         // Clear the search field and recycler
         binding.clear.setOnClickListener {
             viewModel.onClickClearInput()
@@ -83,8 +79,14 @@ class SearchActivity: AppCompatActivity() {
             when (state) {
                 is UiState.Default -> showEmptyList()
                 is UiState.Loading -> showLoadingState()
-                is UiState.HistoryContent -> showHistoryTracks(list = state.list)
-                is UiState.SearchContent -> showNewTracks(list = state.list)
+                is UiState.HistoryContent -> {
+                    Log.d("TEST","+++history -> ${state.list.size}")
+                    showHistoryTracks(list = state.list)
+                }
+                is UiState.SearchContent -> {
+                    Log.d("TEST","+++new -> ${state.list.size}")
+                    showNewTracks(list = state.list)
+                }
                 is UiState.Offline -> showNoDataState()
                 is UiState.Error -> showErrorState()
             }
@@ -108,6 +110,15 @@ class SearchActivity: AppCompatActivity() {
         // Handle the animation after a track tap
         viewModel.pushedItemStateLiveData().observe(this) { position ->
             trackAdapter.popItem(position = position)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Catch the focus
+        binding.input.setOnFocusChangeListener { _,hasFocus ->
+            if (hasFocus) viewModel.onClickInput()
         }
     }
 
