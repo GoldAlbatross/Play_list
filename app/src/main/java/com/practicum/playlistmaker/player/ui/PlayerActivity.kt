@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.TextView
@@ -11,11 +12,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.player.ui.model.AddButtonModel
 import com.practicum.playlistmaker.player.ui.model.LikeButtonModel
-import com.practicum.playlistmaker.player.ui.model.PlayButtonModel
-import com.practicum.playlistmaker.player.ui.model.PlayButtonModel.*
+import com.practicum.playlistmaker.player.ui.model.PlayButtonState
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_2000
@@ -39,8 +38,6 @@ class PlayerActivity : AppCompatActivity() {
         val track = router.getTrackFromIntent()
         drawScreen(track = track)
         viewModel.preparePlayer(trackLink = track.previewUrl)
-        startAnimationAlfa()
-
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
         binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
@@ -59,20 +56,24 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
-            startAnimationScale()
-            when (state!!) {
-                PlayerStates.DEFAULT -> {
-                    showToast()
+            when (state) {
+                is PlayButtonState.Prepare -> {
                     changeImageForPlayButton(R.drawable.player_play)
+                    if (state.clicked) {
+                        showToast()
+                        startAnimationScale()
+                    }
                 }
-                PlayerStates.PREPARED -> {
+                PlayButtonState.PrepareDone -> {
+                    startAnimationAlfa()
+                }
+                PlayButtonState.Play -> {
+                    startAnimationScale()
                     changeImageForPlayButton(R.drawable.player_pause)
                 }
-                PlayerStates.PLAYING -> {
+                PlayButtonState.Pause -> {
+                    startAnimationScale()
                     changeImageForPlayButton(R.drawable.player_play)
-                }
-                PlayerStates.PAUSED -> {
-
                 }
             }
         }

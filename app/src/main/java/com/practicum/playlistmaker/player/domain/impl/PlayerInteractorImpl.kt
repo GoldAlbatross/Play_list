@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.player.domain.impl
 import com.practicum.playlistmaker.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.api.Player
+import com.practicum.playlistmaker.utils.getTimeFormat
 
 class PlayerInteractorImpl(
     private val player: Player
@@ -20,8 +21,8 @@ class PlayerInteractorImpl(
         player.runTrack()
     }
 
-    override fun getTime(): Int {
-        return player.getTime()
+    override fun getTime(): String {
+        return player.getTime().getTimeFormat()
     }
 
     override fun setStopListenerOnMediaPlayer(listener: () -> Unit) {

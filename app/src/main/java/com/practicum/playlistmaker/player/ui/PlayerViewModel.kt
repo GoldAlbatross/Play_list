@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.player.ui.model.AddButtonModel
 import com.practicum.playlistmaker.player.ui.model.LikeButtonModel
-import com.practicum.playlistmaker.player.ui.model.PlayButtonModel
+import com.practicum.playlistmaker.player.ui.model.PlayButtonState
+import com.practicum.playlistmaker.utils.DELAY_1000
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
 import com.practicum.playlistmaker.utils.getTimeFormat
@@ -23,12 +23,12 @@ class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
 
 
     private val handler = Handler(Looper.getMainLooper())
-    private val playButtonState = MutableLiveData<PlayerStates>()
+    private val playButtonState = SingleLiveEvent<PlayButtonState>()
     private val likeButtonState = SingleLiveEvent<LikeButtonModel>()
     private val addButtonState = SingleLiveEvent<AddButtonModel>()
     private val timeState = MutableLiveData<String>()
 
-    fun playButtonStateLiveData(): LiveData<PlayerStates> = playButtonState
+    fun playButtonStateLiveData(): LiveData<PlayButtonState> = playButtonState
     fun likeButtonStateLiveData(): LiveData<LikeButtonModel> = likeButtonState
     fun addButtonStateLiveData(): LiveData<AddButtonModel> = addButtonState
     fun timeStateLiveData(): LiveData<String> = timeState
@@ -40,11 +40,12 @@ class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
     }
 
     fun preparePlayer(trackLink: String) {
+        playButtonState.postValue(PlayButtonState.Prepare(clicked = false))
         interactor.prepareMediaPlayer(trackLink) {
-            playButtonState.postValue(PlayerStates.PREPARED)
+            playButtonState.postValue(PlayButtonState.PrepareDone)
         }
         interactor.setStopListenerOnMediaPlayer {
-            playButtonState.postValue(PlayerStates.PREPARED)
+            playButtonState.postValue(PlayButtonState.PrepareDone)
             handler.removeCallbacksAndMessages(null)
         }
     }
@@ -59,7 +60,7 @@ class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
 
     fun onClickedPlay() {
         when (interactor.getState()) {
-            PlayerStates.DEFAULT -> playButtonState.postValue(PlayerStates.DEFAULT)
+            PlayerStates.DEFAULT -> playButtonState.postValue(PlayButtonState.Prepare(clicked = true))
             PlayerStates.PREPARED -> playMusic()
             PlayerStates.PLAYING -> pauseMusic()
             PlayerStates.PAUSED -> playMusic()
@@ -67,18 +68,18 @@ class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
     }
 
     private fun playMusic() {
-        playButtonState.postValue(PlayerStates.PREPARED)
+        playButtonState.postValue(PlayButtonState.Play)
         interactor.runPlayer()
         handler.post(object : Runnable {
             override fun run() {
-                timeState.postValue(interactor.getTime().getTimeFormat())
+                timeState.postValue(interactor.getTime())
                 handler.postDelayed(this, DELAY_300)
             }
         })
     }
 
     fun pauseMusic() {
-        playButtonState.postValue(PlayerStates.PAUSED)
+        playButtonState.postValue(PlayButtonState.Pause)
         interactor.pauseMediaPlayer()
         handler.removeCallbacksAndMessages(null)
     }
