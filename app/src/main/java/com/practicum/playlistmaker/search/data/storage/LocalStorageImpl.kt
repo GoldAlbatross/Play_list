@@ -10,17 +10,13 @@ class LocalStorageImpl(
     private val sharedPreferences: SharedPreferences
     ): LocalStorage {
 
-    override fun addTrack(key: String, list: List<Track>) {
-        clearTrackList(key = key)
+    override fun saveData(key: String, list: List<Track>) {
         saveList(key = key,list = list)
     }
-    override fun getTracks(key: String): MutableList<Track> {
+    override fun getData(key: String): MutableList<Track> {
         return getJsonString(key = key)?.toTrackList() ?:  mutableListOf()
     }
 
-    override fun clearTrackList(key: String) {
-        sharedPreferences.edit().remove(key).apply()
-    }
 
     private fun getJsonString(key: String): String? = sharedPreferences.getString(key, null)
     private fun String.toTrackList(): MutableList<Track> =

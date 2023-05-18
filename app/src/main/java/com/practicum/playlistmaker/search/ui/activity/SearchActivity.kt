@@ -15,11 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.ui.router.SearchRouter
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.model.KeyboardState
 import com.practicum.playlistmaker.search.ui.model.UiState
+import com.practicum.playlistmaker.search.ui.router.SearchRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker.utils.DELAY_800
 
@@ -55,7 +55,7 @@ class SearchActivity: AppCompatActivity() {
             viewModel.onClickedRefresh(binding.input.text.toString())
         }
 
-        // Add track to history on tap
+        // Tap to track
         trackAdapter.listener = { track, position ->
             viewModel.onClickTrack(track, position)
             handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)

@@ -9,6 +9,7 @@ class SearchInteractorImpl(
     private val repository: SearchRepository
     ): SearchInteractor {
 
+
     private val executor = Executors.newCachedThreadPool()
 
     override fun removeTrackFromLocalStorage(key: String, track: Track) {

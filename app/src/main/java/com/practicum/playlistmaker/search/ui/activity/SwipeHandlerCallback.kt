@@ -10,9 +10,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.application.App
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.router.SearchRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker.utils.DELAY_800
@@ -29,7 +27,6 @@ class SwipeHandlerCallback(
     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
 ) {
 
-    internal val swipeListener: ((Track, Int) -> Unit)? = null
     private val background = ColorDrawable()
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 

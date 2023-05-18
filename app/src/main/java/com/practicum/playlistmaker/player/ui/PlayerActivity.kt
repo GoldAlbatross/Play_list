@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.TextView
@@ -37,7 +36,6 @@ class PlayerActivity : AppCompatActivity() {
 
         val track = router.getTrackFromIntent()
         drawScreen(track = track)
-        viewModel.preparePlayer(trackLink = track.previewUrl)
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
         binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
@@ -59,19 +57,16 @@ class PlayerActivity : AppCompatActivity() {
             when (state) {
                 is PlayButtonState.Prepare -> {
                     changeImageForPlayButton(R.drawable.player_play)
-                    if (state.clicked) {
-                        showToast()
-                        startAnimationScale()
-                    }
+                    if (state.clicked) { startAnimationScale(); showToast() }
                 }
-                PlayButtonState.PrepareDone -> {
+                is PlayButtonState.PrepareDone -> {
                     startAnimationAlfa()
                 }
-                PlayButtonState.Play -> {
+                is PlayButtonState.Play -> {
                     startAnimationScale()
                     changeImageForPlayButton(R.drawable.player_pause)
                 }
-                PlayButtonState.Pause -> {
+                is PlayButtonState.Pause -> {
                     startAnimationScale()
                     changeImageForPlayButton(R.drawable.player_play)
                 }
@@ -101,6 +96,7 @@ class PlayerActivity : AppCompatActivity() {
         view.animate().apply { duration = DELAY_2000; rotationYBy(1080f) }
     }
     private fun drawScreen(track: Track) {
+        viewModel.preparePlayer(trackLink = track.previewUrl)
         Glide.with(this)
             .load(track.url.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.player_placeholder)

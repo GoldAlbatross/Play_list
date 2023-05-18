@@ -42,8 +42,9 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         searchInteractor.clearTrackList(HISTORY_KEY)
     }
     fun onClickTrack(track: Track, position: Int) {
-        searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
         pushedItemState.postValue(position)
+        keyboardState.postValue(KeyboardState.HIDE)
+        searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
     }
     fun onSwipeRight(track: Track, position: Int) {
         onClickTrack(track = track,position = position)
@@ -52,12 +53,12 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         searchInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
     }
     fun onClickClearInput() {
-        keyboardState.postValue(KeyboardState.HIDE)
+        keyboardState.value = KeyboardState.HIDE
         showHistoryContent()
     }
 
     fun onClickInput() {
-        keyboardState.postValue(KeyboardState.SHOW)
+        keyboardState.value = KeyboardState.SHOW
         showHistoryContent()
     }
 

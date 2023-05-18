@@ -14,10 +14,8 @@ import com.practicum.playlistmaker.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.player.ui.model.AddButtonModel
 import com.practicum.playlistmaker.player.ui.model.LikeButtonModel
 import com.practicum.playlistmaker.player.ui.model.PlayButtonState
-import com.practicum.playlistmaker.utils.DELAY_1000
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
-import com.practicum.playlistmaker.utils.getTimeFormat
 
 class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
 

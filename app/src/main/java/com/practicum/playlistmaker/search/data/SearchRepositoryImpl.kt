@@ -29,15 +29,15 @@ class SearchRepositoryImpl(
     }
 
     override fun getTracks(key: String): MutableList<Track> {
-        return localStorage.getTracks(key)
+        return localStorage.getData(key)
     }
 
     override fun clearTrackList(key: String) {
-        localStorage.clearTrackList(key)
+        localStorage.saveData(key, emptyList())
     }
 
     override fun saveData(key: String, list: MutableList<Track>) {
-        localStorage.addTrack(key = key, list = list)
+        localStorage.saveData(key = key, list = list)
     }
 
     private fun mapToTrack(trackDto: TrackDto): Track {
