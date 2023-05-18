@@ -8,6 +8,6 @@ sealed interface UiState{
     object Loading: UiState
     data class SearchContent(val list: List<Track>): UiState
     data class HistoryContent(val list: List<Track>): UiState
-    data class Error(val message: String): UiState
-    data class Offline(val message: String): UiState
+    object Error: UiState
+    object NoData: UiState
 }

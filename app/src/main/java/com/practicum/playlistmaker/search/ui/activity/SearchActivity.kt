@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -50,6 +51,11 @@ class SearchActivity: AppCompatActivity() {
         binding.backBtn.setNavigationOnClickListener { router.goBack() }
         binding.footer.setOnClickListener { viewModel.onClickFooter() }
 
+        // Catch the focus
+        binding.input.setOnFocusChangeListener { _,hasFocus ->
+            if (hasFocus) viewModel.onClickInput()
+        }
+
         // Send the new search request
         binding.refreshBtn.setOnClickListener {
             viewModel.onClickedRefresh(binding.input.text.toString())
@@ -79,8 +85,18 @@ class SearchActivity: AppCompatActivity() {
                 is UiState.Default -> showEmptyList()
                 is UiState.Loading -> showLoadingState()
                 is UiState.HistoryContent -> showHistoryTracks(list = state.list)
-                is UiState.SearchContent -> showNewTracks(list = state.list)
-                is UiState.Offline -> showNoDataState()
+                is UiState.SearchContent -> {
+                    Log.d("TEST","UiState.SearchContent.isEmpty")
+                    if (state.list.isEmpty()) showNoDataState()
+                    else {
+                        Log.d("TEST","UiState.SearchContent${binding.input.text.length}")
+                        showNewTracks(list = state.list)
+                    }
+                }
+                is UiState.NoData -> {
+                    Log.d("TEST","UiState.NoData")
+                    showNoDataState()
+                }
                 is UiState.Error -> showErrorState()
             }
         }
@@ -92,9 +108,8 @@ class SearchActivity: AppCompatActivity() {
                     showKeyboard(show = true)
                 }
                 KeyboardState.HIDE -> {
-                    btnVisibility(visibility = false)
                     binding.input.setText("")
-                    binding.input.clearFocus()
+                    clearButtonVisibility()
                     showKeyboard(show = false)
                 }
             }
@@ -106,41 +121,29 @@ class SearchActivity: AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // Catch the focus
-        binding.input.setOnFocusChangeListener { _,hasFocus ->
-            if (hasFocus) viewModel.onClickInput()
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         trackAdapter.listener = null
     }
 
-    private fun btnVisibility(visibility: Boolean) {
+    private fun clearButtonVisibility() {
         binding.clear.visibility =
-            if (binding.input.text.length > MIN_LENGTH && visibility)
-                VISIBLE
-            else INVISIBLE
-    }
-
-    private fun showLoadingState() {
-        btnVisibility(visibility = true)
-        binding.progressBar.visibility = VISIBLE
-        showEmptyList()
+            if (binding.input.text.length > MIN_LENGTH) VISIBLE
+            else { binding.input.clearFocus(); INVISIBLE }
     }
 
     private fun showEmptyList() {
+        binding.progressBar.visibility = GONE
+        binding.dummy.visibility = GONE
         binding.recycler.visibility = INVISIBLE
         binding.header.visibility = GONE
         binding.footer.visibility = GONE
+        trackAdapter.trackList.clear()
     }
 
     private fun showHistoryTracks(list: List<Track>) {
-        trackAdapter.trackList.clear()
+        clearButtonVisibility()
+        binding.progressBar.visibility = GONE
         trackAdapter.trackList.addAll(list)
         trackAdapter.notifyDataSetChanged()
         binding.recycler.visibility = VISIBLE
@@ -150,26 +153,30 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun showNewTracks(list: List<Track>) {
-        btnVisibility(visibility = true)
+        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         binding.recycler.visibility = VISIBLE
         setItems(list)
-        binding.dummy.visibility = GONE
     }
 
-    private fun showNoDataState() {
-        btnVisibility(visibility = true)
+    private fun showErrorState() {
+        clearButtonVisibility()
         binding.progressBar.visibility = GONE
-        binding.recycler.visibility = VISIBLE
-        trackAdapter.trackList.clear()
         binding.dummy.visibility = VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
         binding.txtDummy.text = getString(R.string.error)
         binding.refreshBtn.visibility = VISIBLE
     }
 
-    private fun showErrorState() {
-        btnVisibility(visibility = true)
+    private fun showLoadingState() {
+        clearButtonVisibility()
+        showEmptyList()
+        binding.progressBar.visibility = VISIBLE
+    }
+
+
+    private fun showNoDataState() {
+        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         binding.recycler.visibility = VISIBLE
         trackAdapter.trackList.clear()

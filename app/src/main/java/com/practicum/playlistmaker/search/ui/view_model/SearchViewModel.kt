@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.search.ui.view_model
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,7 +44,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
     fun onClickTrack(track: Track, position: Int) {
         pushedItemState.postValue(position)
-        //keyboardState.postValue(KeyboardState.HIDE)
         searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
     }
     fun onSwipeRight(track: Track, position: Int) {
@@ -63,6 +63,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
 
     fun onClickedRefresh(text: String) {
+        uiState.value = UiState.Loading
         requestDataFromApi(query = text)
     }
 
@@ -71,6 +72,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
 
     fun showHistoryContent() {
+        uiState.value = UiState.Loading
         uiState.value = UiState.HistoryContent(searchInteractor.getTracksFromLocalStorage(HISTORY_KEY))
     }
 
@@ -78,11 +80,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         uiState.value = UiState.Loading
         searchInteractor.getTracksFromApi(query) { networkResponse ->
             when (networkResponse) {
-                is NetworkResponse.Error -> uiState.postValue(UiState.Error(networkResponse.error!!))
-                is NetworkResponse.Offline -> uiState.postValue(UiState.Offline(networkResponse.offline!!))
+                is NetworkResponse.Error -> uiState.postValue(UiState.Error)
+                is NetworkResponse.Offline -> uiState.postValue(UiState.Error)
                 is NetworkResponse.Success -> {
                     if (networkResponse.data!!.isEmpty())
-                        uiState.value = UiState.SearchContent(emptyList())
+                        uiState.postValue(UiState.SearchContent(emptyList()))
                     else
                         uiState.postValue(UiState.SearchContent(networkResponse.data))
                 }
