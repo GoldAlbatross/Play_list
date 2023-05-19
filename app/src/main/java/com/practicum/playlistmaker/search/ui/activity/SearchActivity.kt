@@ -36,9 +36,6 @@ class SearchActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // restore input text
-        binding.input.setText(savedInstanceState?.getString(QUERY_KEY) ?: "")
-
         // Initialize recycler
         binding.recycler.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
@@ -114,17 +111,6 @@ class SearchActivity: AppCompatActivity() {
             trackAdapter.popItem(position = position)
         }
     }
-
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(QUERY_KEY, binding.input.text.toString())
-    }
-
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()

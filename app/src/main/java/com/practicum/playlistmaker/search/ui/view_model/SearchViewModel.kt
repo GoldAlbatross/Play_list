@@ -18,12 +18,14 @@ import com.practicum.playlistmaker.search.ui.model.ClearButtonState
 import com.practicum.playlistmaker.search.ui.model.UiState
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.SingleLiveEvent
+import java.util.concurrent.Executors
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
     private val trackList = mutableListOf<Track>()
     private val handler = Handler(Looper.getMainLooper())
     private var latestText: String = ""
+    private val executor = Executors.newCachedThreadPool()
 
     private val uiState = MutableLiveData<UiState>()
     private val pushedItemState = SingleLiveEvent<Int>()
@@ -78,20 +80,28 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
     private fun showHistoryContent() {
         uiState.value = UiState.Loading
-        uiState.value = UiState.HistoryContent(searchInteractor.getTracksFromLocalStorage(HISTORY_KEY))
+        executor.execute {
+            uiState.postValue(
+                UiState.HistoryContent(
+                    searchInteractor.getTracksFromLocalStorage(HISTORY_KEY)
+                )
+            )
+        }
     }
 
     private fun requestDataFromApi(query: String) {
         uiState.value = UiState.Loading
-        searchInteractor.getTracksFromApi(query) { networkResponse ->
-            when (networkResponse) {
-                is NetworkResponse.Error -> uiState.postValue(UiState.Error)
-                is NetworkResponse.Offline -> uiState.postValue(UiState.Error)
-                is NetworkResponse.Success -> {
-                    if (networkResponse.data!!.isEmpty())
-                        uiState.postValue(UiState.SearchContent(emptyList()))
-                    else
-                        uiState.postValue(UiState.SearchContent(networkResponse.data))
+        executor.execute{
+            searchInteractor.getTracksFromApi(query) { networkResponse ->
+                when (networkResponse) {
+                    is NetworkResponse.Error -> uiState.postValue(UiState.Error)
+                    is NetworkResponse.Offline -> uiState.postValue(UiState.Error)
+                    is NetworkResponse.Success -> {
+                        if (networkResponse.data!!.isEmpty())
+                            uiState.postValue(UiState.SearchContent(emptyList()))
+                        else
+                            uiState.postValue(UiState.SearchContent(networkResponse.data))
+                    }
                 }
             }
         }

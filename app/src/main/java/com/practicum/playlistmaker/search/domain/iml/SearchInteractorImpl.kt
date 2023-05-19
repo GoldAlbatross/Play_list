@@ -31,10 +31,7 @@ class SearchInteractorImpl(
     }
 
     override fun getTracksFromApi(query: String, consumer: SearchInteractor.TracksConsumer) {
-        executor.execute {
-            val response = repository.searchTracks(query)
-            consumer.consume(response)
-        }
+        consumer.consume(repository.searchTracks(query))
     }
 
     override fun clearTrackList(key: String) {
