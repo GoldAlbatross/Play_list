@@ -32,5 +32,6 @@
     <string name="button_like">Кнопка нравится</string>
     <string name="button_add">Кнопка добавить</string>
     <string name="loading">Всё ещё загружается …</string>
+    <string name="server_error">Ошибка сервера</string>
 
 </resources>

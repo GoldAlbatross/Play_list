@@ -1,12 +1,9 @@
 package com.practicum.playlistmaker.search.domain.model
 
-sealed class NetworkResponse<T>(
-    val data: T? = null,
-    val error: String? = null,
-    val offline: String? = null,
-) {
+sealed interface NetworkResponse<T> {
 
-    class Success<T>(data: T): NetworkResponse<T>(data = data)
-    class Error<T>(error: String): NetworkResponse<T>(error = error)
-    class Offline<T>(offline: String): NetworkResponse<T>(offline = offline)
+    data class Success<T>(val data: T): NetworkResponse<T>
+    class NoData<T>(val message: String): NetworkResponse<T>
+    class Error<T>(val message: String): NetworkResponse<T>
+    class Offline<T>(val message: String): NetworkResponse<T>
 }

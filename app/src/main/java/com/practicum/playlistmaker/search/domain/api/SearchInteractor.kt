@@ -9,7 +9,7 @@ interface SearchInteractor {
     fun clearTrackList(key: String)
     fun saveTrack(key: String, list: MutableList<Track>, track: Track): List<Track>
     fun getTracksFromLocalStorage(key: String): List<Track>
-    fun getTracksFromApi(query: String, consumer: TracksConsumer)
+    fun getTracksFromBackendApi(query: String, consumer: TracksConsumer)
 
     fun interface TracksConsumer {
         fun consume(response: NetworkResponse<List<Track>>)

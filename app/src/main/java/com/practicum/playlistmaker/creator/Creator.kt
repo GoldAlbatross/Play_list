@@ -40,6 +40,7 @@ object Creator {
         return SearchRepositoryImpl(
             localStorage = getLocalStorage(),
             networkClient = getNetworkClient(),
+            context = App.instance
         )
     }
     private fun getPlayer(): Player {

@@ -85,12 +85,9 @@ class SearchActivity: AppCompatActivity() {
                     if (state.list.isEmpty()) showEmptyList()
                     else showHistoryTracks(list = state.list)
                 }
-                is UiState.SearchContent -> {
-                    if (state.list.isEmpty()) showNoDataState()
-                    else showNewTracks(list = state.list)
-                }
-                is UiState.NoData -> showNoDataState()
-                is UiState.Error -> showErrorState()
+                is UiState.SearchContent -> showNewTracks(list = state.list)
+                is UiState.NoData -> showNoDataState(message = state.message)
+                is UiState.Error -> showErrorState(message = state.message)
             }
         }
 
@@ -152,11 +149,11 @@ class SearchActivity: AppCompatActivity() {
         setItems(list)
     }
 
-    private fun showErrorState() {
+    private fun showErrorState(message: String) {
         binding.progressBar.visibility = GONE
         binding.dummy.visibility = VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
-        binding.txtDummy.text = getString(R.string.error)
+        binding.txtDummy.text = message
         binding.refreshBtn.visibility = VISIBLE
     }
 
@@ -166,13 +163,13 @@ class SearchActivity: AppCompatActivity() {
     }
 
 
-    private fun showNoDataState() {
+    private fun showNoDataState(message: String) {
         binding.progressBar.visibility = GONE
         binding.recycler.visibility = VISIBLE
         trackAdapter.trackList.clear()
         binding.dummy.visibility = VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_empty)
-        binding.txtDummy.text = getString(R.string.empty_list)
+        binding.txtDummy.text = message
         binding.refreshBtn.visibility = INVISIBLE
     }
 

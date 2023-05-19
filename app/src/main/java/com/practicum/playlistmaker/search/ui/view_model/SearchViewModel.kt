@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.search.ui.view_model
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,7 +65,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
     fun onClickedRefresh(text: String) {
         uiState.value = UiState.Loading
-        requestDataFromApi(query = text)
+        getTracksFromBackendApi(query = text)
     }
 
     fun onTextChange(text: String) {
@@ -89,18 +88,22 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         }
     }
 
-    private fun requestDataFromApi(query: String) {
+    private fun getTracksFromBackendApi(query: String) {
         uiState.value = UiState.Loading
         executor.execute{
-            searchInteractor.getTracksFromApi(query) { networkResponse ->
+            searchInteractor.getTracksFromBackendApi(query) { networkResponse ->
                 when (networkResponse) {
-                    is NetworkResponse.Error -> uiState.postValue(UiState.Error)
-                    is NetworkResponse.Offline -> uiState.postValue(UiState.Error)
+                    is NetworkResponse.Error -> {
+                        uiState.postValue(UiState.Error(networkResponse.message))
+                    }
+                    is NetworkResponse.Offline -> {
+                        uiState.postValue(UiState.Error(networkResponse.message))
+                    }
                     is NetworkResponse.Success -> {
-                        if (networkResponse.data!!.isEmpty())
-                            uiState.postValue(UiState.SearchContent(emptyList()))
-                        else
-                            uiState.postValue(UiState.SearchContent(networkResponse.data))
+                        uiState.postValue(UiState.SearchContent(networkResponse.data))
+                    }
+                    is NetworkResponse.NoData -> {
+                        uiState.postValue(UiState.NoData(message = networkResponse.message))
                     }
                 }
             }
@@ -112,7 +115,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         latestText = text
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val runnable = Runnable { requestDataFromApi(query = text) }
+        val runnable = Runnable { getTracksFromBackendApi(query = text) }
         val postTime = SystemClock.uptimeMillis() + DELAY_1500
         handler.postAtTime(runnable, SEARCH_REQUEST_TOKEN, postTime)
     }

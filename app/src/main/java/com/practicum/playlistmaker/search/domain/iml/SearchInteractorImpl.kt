@@ -3,15 +3,12 @@ package com.practicum.playlistmaker.search.domain.iml
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.model.Track
-import java.util.concurrent.Executors
 
 class SearchInteractorImpl(
     private val repository: SearchRepository
     ): SearchInteractor {
-
-
-    private val executor = Executors.newCachedThreadPool()
-
+    
+    
     override fun removeTrackFromLocalStorage(key: String, track: Track) {
         val tracksFromStorage = getData(key = key)
         tracksFromStorage.remove(track)
@@ -30,7 +27,7 @@ class SearchInteractorImpl(
         return getData(key = key)
     }
 
-    override fun getTracksFromApi(query: String, consumer: SearchInteractor.TracksConsumer) {
+    override fun getTracksFromBackendApi(query: String, consumer: SearchInteractor.TracksConsumer) {
         consumer.consume(repository.searchTracks(query))
     }
 
