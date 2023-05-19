@@ -62,7 +62,7 @@
         tools:listitem="@layout/artist_card"
         tools:visibility="visible" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <!--androidx.appcompat.widget.AppCompatButton
         android:id="@+id/footer"
         style="@style/refresh_btn"
         android:layout_marginEnd="60dp"
@@ -71,6 +71,17 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler"
+        tools:visibility="visible" /-->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/footer"
+        style="@style/refresh_btn"
+        android:layout_marginBottom="@dimen/size_16dp"
+        android:text="@string/clear_history"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler"
         tools:visibility="visible" />
 

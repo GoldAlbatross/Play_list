@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -84,19 +83,15 @@ class SearchActivity: AppCompatActivity() {
             when (state) {
                 is UiState.Default -> showEmptyList()
                 is UiState.Loading -> showLoadingState()
-                is UiState.HistoryContent -> showHistoryTracks(list = state.list)
+                is UiState.HistoryContent -> {
+                    if (state.list.isEmpty()) showEmptyList()
+                    else showHistoryTracks(list = state.list)
+                }
                 is UiState.SearchContent -> {
-                    Log.d("TEST","UiState.SearchContent.isEmpty")
                     if (state.list.isEmpty()) showNoDataState()
-                    else {
-                        Log.d("TEST","UiState.SearchContent${binding.input.text.length}")
-                        showNewTracks(list = state.list)
-                    }
+                    else showNewTracks(list = state.list)
                 }
-                is UiState.NoData -> {
-                    Log.d("TEST","UiState.NoData")
-                    showNoDataState()
-                }
+                is UiState.NoData -> showNoDataState()
                 is UiState.Error -> showErrorState()
             }
         }
