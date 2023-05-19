@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker.search.data
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.dto.Response
 import com.practicum.playlistmaker.search.data.dto.SearchRequest
@@ -16,6 +18,7 @@ class SearchRepositoryImpl(
     private val localStorage: LocalStorage,
     private val networkClient: NetworkClient,
     private val context: Context,
+    private val gson: Gson,
 ): SearchRepository {
 
 
@@ -29,16 +32,12 @@ class SearchRepositoryImpl(
         }
     }
 
-    override fun getTracks(key: String): MutableList<Track> {
-        return localStorage.getData(key)
+    override fun getTracksList(key: String): MutableList<Track> {
+        val jsonString = localStorage.getData(key)
+        return  jsonString?.toTrackList() ?: mutableListOf()
     }
-
-    override fun clearTrackList(key: String) {
-        localStorage.saveData(key, emptyList())
-    }
-
-    override fun saveData(key: String, list: MutableList<Track>) {
-        localStorage.saveData(key = key, list = list)
+    override fun saveTrackList(key: String, list: MutableList<Track>) {
+        localStorage.saveData(key = key, data = list)
     }
 
     private fun checkNonEmptyData(response: Response): NetworkResponse<List<Track>> {
@@ -63,4 +62,7 @@ class SearchRepositoryImpl(
             previewUrl = trackDto.previewUrl!!,
         )
     }
+
+    private fun String?.toTrackList(): MutableList<Track> =
+        gson.fromJson(this, object : TypeToken<MutableList<Track>>() {}.type)
 }

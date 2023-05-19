@@ -174,7 +174,7 @@ class SearchActivity: AppCompatActivity() {
         binding.refreshBtn.visibility = INVISIBLE
     }
 
-    fun showKeyboard(show: Boolean) {
+    private fun showKeyboard(show: Boolean) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (show)
             imm.showSoftInput(binding.input, 0)

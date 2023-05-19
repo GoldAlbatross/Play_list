@@ -5,7 +5,6 @@ import com.practicum.playlistmaker.search.domain.model.Track
 
 interface SearchRepository {
     fun searchTracks(query: String): NetworkResponse<List<Track>>
-    fun getTracks(key: String): MutableList<Track>
-    fun clearTrackList(key: String)
-    fun saveData(key: String, list: MutableList<Track>)
+    fun getTracksList(key: String): MutableList<Track>
+    fun saveTrackList(key: String, list: MutableList<Track>)
 }

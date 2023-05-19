@@ -19,7 +19,7 @@ class SearchInteractorImpl(
         list.remove(track)
         list.add(0, track)
         if (list.size > maxSizeOfHistoryList) list.removeAt(9)
-        repository.saveData(key = key, list = list)
+        repository.saveTrackList(key = key, list = list)
         return list
     }
 
@@ -32,13 +32,14 @@ class SearchInteractorImpl(
     }
 
     override fun clearTrackList(key: String) {
-        repository.clearTrackList(key)
+        repository.saveTrackList(key, mutableListOf())
     }
+
     private fun getData(key: String): MutableList<Track> {
-        return repository.getTracks(key)
+        return repository.getTracksList(key)
     }
     private fun saveData(key: String, list: MutableList<Track>) {
-        repository.saveData(key = key, list = list)
+        repository.saveTrackList(key = key, list = list)
     }
 
     private companion object { const val maxSizeOfHistoryList = 10 }
