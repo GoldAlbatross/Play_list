@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.ui.model.KeyboardState
+import com.practicum.playlistmaker.search.ui.model.ClearButtonState
 import com.practicum.playlistmaker.search.ui.model.UiState
 import com.practicum.playlistmaker.search.ui.router.SearchRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
@@ -36,6 +36,9 @@ class SearchActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // restore input text
+        binding.input.setText(savedInstanceState?.getString(QUERY_KEY) ?: "")
+
         // Initialize recycler
         binding.recycler.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
@@ -52,12 +55,12 @@ class SearchActivity: AppCompatActivity() {
 
         // Catch the focus
         binding.input.setOnFocusChangeListener { _,hasFocus ->
-            if (hasFocus) viewModel.onClickInput()
+            if (hasFocus) viewModel.onClickInput("${binding.input.text}")
         }
 
         // Send the new search request
         binding.refreshBtn.setOnClickListener {
-            viewModel.onClickedRefresh(binding.input.text.toString())
+            viewModel.onClickedRefresh("${binding.input.text}")
         }
 
         // Tap to track
@@ -73,9 +76,7 @@ class SearchActivity: AppCompatActivity() {
 
         // Hide the cross button
         binding.input.doOnTextChanged { text,_,_,_ ->
-            if (text!!.length > MIN_LENGTH) {
-                viewModel.startSearchRequest("$text")
-            } else viewModel.showHistoryContent()
+            viewModel.onTextChange("$text")
         }
 
         // Handle the UI state
@@ -97,15 +98,13 @@ class SearchActivity: AppCompatActivity() {
         }
 
         // Handle the keyboard show state
-        viewModel.keyboardStateLiveData().observe(this) { state ->
+        viewModel.clearButtonStateLiveData().observe(this) { state ->
             when (state!!) {
-                KeyboardState.SHOW -> {
-                    showKeyboard(show = true)
-                }
-                KeyboardState.HIDE -> {
-                    binding.input.setText("")
-                    clearButtonVisibility()
-                    showKeyboard(show = false)
+                ClearButtonState.FOCUS -> showKeyboard(true)
+                ClearButtonState.TEXT -> clearButtonVisibility(true)
+                ClearButtonState.DEFAULT -> {
+                    showKeyboard(false)
+                    clearButtonVisibility(false)
                 }
             }
         }
@@ -116,15 +115,30 @@ class SearchActivity: AppCompatActivity() {
         }
     }
 
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(QUERY_KEY, binding.input.text.toString())
+    }
+
+
+
+
+
     override fun onDestroy() {
         super.onDestroy()
         trackAdapter.listener = null
     }
 
-    private fun clearButtonVisibility() {
+    private fun clearButtonVisibility(show: Boolean) {
         binding.clear.visibility =
-            if (binding.input.text.length > MIN_LENGTH) VISIBLE
-            else { binding.input.clearFocus(); INVISIBLE }
+            if (show) VISIBLE
+            else {
+                binding.input.setText("")
+                binding.input.clearFocus()
+                INVISIBLE
+            }
     }
 
     private fun showEmptyList() {
@@ -137,7 +151,6 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun showHistoryTracks(list: List<Track>) {
-        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         trackAdapter.trackList.addAll(list)
         trackAdapter.notifyDataSetChanged()
@@ -148,14 +161,12 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun showNewTracks(list: List<Track>) {
-        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         binding.recycler.visibility = VISIBLE
         setItems(list)
     }
 
     private fun showErrorState() {
-        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         binding.dummy.visibility = VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
@@ -164,14 +175,12 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun showLoadingState() {
-        clearButtonVisibility()
         showEmptyList()
         binding.progressBar.visibility = VISIBLE
     }
 
 
     private fun showNoDataState() {
-        clearButtonVisibility()
         binding.progressBar.visibility = GONE
         binding.recycler.visibility = VISIBLE
         trackAdapter.trackList.clear()
@@ -198,5 +207,5 @@ class SearchActivity: AppCompatActivity() {
         trackAdapter.notifyDataSetChanged()
     }
 
-    private companion object { const val MIN_LENGTH = 1 }
+    private companion object { const val QUERY_KEY = "query_key" }
 }
