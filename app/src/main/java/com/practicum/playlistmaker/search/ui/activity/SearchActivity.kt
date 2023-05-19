@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -173,7 +174,7 @@ class SearchActivity: AppCompatActivity() {
         binding.refreshBtn.visibility = INVISIBLE
     }
 
-    private fun showKeyboard(show: Boolean) {
+    fun showKeyboard(show: Boolean) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (show)
             imm.showSoftInput(binding.input, 0)

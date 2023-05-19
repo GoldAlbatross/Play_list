@@ -25,7 +25,7 @@ class SearchRepositoryImpl(
         return when (response.resultCode) {
             200 -> checkNonEmptyData(response)
             -1 -> NetworkResponse.Offline(message = context.getString(R.string.error))
-            else -> NetworkResponse.Error(message = context.getString(R.string.server_error))
+            else -> NetworkResponse.Error(message = context.getString(R.string.error))
         }
     }
 
