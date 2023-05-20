@@ -126,10 +126,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         }
     }
 
-    fun onSwipeUp() {
-        //clearBtnState.value = ClearButtonState.KEYBOARD_HIDE
-    }
-
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
         private const val HISTORY_KEY = "history_tracks"

@@ -135,6 +135,7 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun showHistoryTracks(list: List<Track>) {
+        trackAdapter.trackList.clear()
         binding.progressBar.visibility = GONE
         trackAdapter.trackList.addAll(list)
         trackAdapter.notifyDataSetChanged()
