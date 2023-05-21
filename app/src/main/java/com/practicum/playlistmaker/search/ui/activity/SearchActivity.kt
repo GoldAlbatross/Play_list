@@ -105,11 +105,6 @@ class SearchActivity: AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        trackAdapter.notifyDataSetChanged()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         trackAdapter.listener = null
