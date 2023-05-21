@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    tools:context=".player.presentation.PlayerActivity">
+    tools:context=".player.ui.PlayerActivity">
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
@@ -24,7 +24,7 @@
         app:layout_constraintGuide_end="@dimen/size_24dp"/>
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_btn"
         style="@style/toolbar"
         android:layout_height="wrap_content"
         android:theme="@style/BaseRipple"

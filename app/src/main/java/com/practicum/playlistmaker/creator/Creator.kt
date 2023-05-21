@@ -1,21 +1,63 @@
 package com.practicum.playlistmaker.creator
 
-import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.player.domain.interactor.PlayerInteractorImpl
-import com.practicum.playlistmaker.player.presentation.PlayerPresenter
-import com.practicum.playlistmaker.player.presentation.PlayerRouter
-import com.practicum.playlistmaker.player.presentation.PlayerView
-import com.practicum.playlistmaker.player.repository.PlayerRepositoryImpl
+import com.practicum.playlistmaker.application.App
+import com.practicum.playlistmaker.player.data.PlayerImpl
+import com.practicum.playlistmaker.player.domain.api.Player
+import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
+import com.practicum.playlistmaker.search.data.SearchRepositoryImpl
+import com.practicum.playlistmaker.search.data.network.NetworkClient
+import com.practicum.playlistmaker.search.data.shared_preferences.LocalStorage
+import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.practicum.playlistmaker.search.data.shared_preferences.DataConverter
+import com.practicum.playlistmaker.search.data.shared_preferences.GsonDataConverter
+import com.practicum.playlistmaker.search.domain.api.SearchInteractor
+import com.practicum.playlistmaker.search.domain.api.SearchRepository
+import com.practicum.playlistmaker.search.domain.iml.SearchInteractorImpl
+import com.practicum.playlistmaker.settings.data.ThemeSwitcherImpl
+import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
+import com.practicum.playlistmaker.settings.domain.api.ThemeSwitcher
+import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 
 object Creator {
-    fun createPresenter(
-        view: PlayerView,
-        activity: AppCompatActivity
-    ): PlayerPresenter {
-        return PlayerPresenter(
-            view = view,
-            interactor = PlayerInteractorImpl(PlayerRepositoryImpl()),
-            router = PlayerRouter(activity = activity),
+
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(repository = getSettingsRepository())
+    }
+
+    private fun getSettingsRepository(): ThemeSwitcher {
+        return ThemeSwitcherImpl(sharedPreferences = App.instance.sharedPreference)
+    }
+
+    fun providePlayerInteractor(): PlayerInteractor {
+        return PlayerInteractorImpl(player = getPlayer())
+    }
+
+    fun provideSearchInteractor(): SearchInteractor {
+        return SearchInteractorImpl(repository = getSearchRepository())
+    }
+
+    private fun getSearchRepository(): SearchRepository {
+        return SearchRepositoryImpl(
+            localStorage = getLocalStorage(),
+            networkClient = getNetworkClient(),
+            context = App.instance,
         )
+    }
+    private fun getPlayer(): Player {
+        return PlayerImpl()
+    }
+    private fun getNetworkClient(): NetworkClient {
+        return RetrofitNetworkClient()
+    }
+    private fun <T> getLocalStorage(): LocalStorage<T> {
+        return LocalStorage(
+            sharedPreferences = App.instance.sharedPreference,
+            dataConverter = getDataConverter(),
+        )
+    }
+
+    private fun <T> getDataConverter(): DataConverter<T> {
+        return GsonDataConverter(gson = App.instance.gson)
     }
 }
