@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.search.data
 
 import android.content.Context
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.dto.Response
@@ -9,35 +8,35 @@ import com.practicum.playlistmaker.search.data.dto.SearchRequest
 import com.practicum.playlistmaker.search.data.dto.SearchResponse
 import com.practicum.playlistmaker.search.data.dto.TrackDto
 import com.practicum.playlistmaker.search.data.network.NetworkClient
-import com.practicum.playlistmaker.search.data.storage.LocalStorage
+import com.practicum.playlistmaker.search.data.shared_preferences.LocalStorage
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.model.NetworkResponse
 import com.practicum.playlistmaker.search.domain.model.Track
 
 class SearchRepositoryImpl(
-    private val localStorage: LocalStorage,
+    private val localStorage: LocalStorage<MutableList<Track>>,
     private val networkClient: NetworkClient,
     private val context: Context,
-    private val gson: Gson,
 ): SearchRepository {
 
+    override fun getTracksList(key: String): MutableList<Track> {
+        return localStorage.readData(
+            key = key,
+            type = object : TypeToken<MutableList<Track>>() {}.type
+        ) ?: mutableListOf()
+    }
+
+    override fun saveTrackList(key: String, list: MutableList<Track>) {
+        localStorage.writeData(key = key, data = list)
+    }
 
     override fun searchTracks(query: String): NetworkResponse<List<Track>> {
-
         val response = networkClient.getResponseFromBackend(SearchRequest(query = query))
         return when (response.resultCode) {
             200 -> checkNonEmptyData(response)
             -1 -> NetworkResponse.Offline(message = context.getString(R.string.error))
-            else -> NetworkResponse.Error(message = context.getString(R.string.error))
+            else -> NetworkResponse.Error(message = context.getString(R.string.server_error))
         }
-    }
-
-    override fun getTracksList(key: String): MutableList<Track> {
-        val jsonString = localStorage.getData(key)
-        return  jsonString?.toTrackList() ?: mutableListOf()
-    }
-    override fun saveTrackList(key: String, list: MutableList<Track>) {
-        localStorage.saveData(key = key, data = list)
     }
 
     private fun checkNonEmptyData(response: Response): NetworkResponse<List<Track>> {
@@ -62,7 +61,4 @@ class SearchRepositoryImpl(
             previewUrl = trackDto.previewUrl!!,
         )
     }
-
-    private fun String?.toTrackList(): MutableList<Track> =
-        gson.fromJson(this, object : TypeToken<MutableList<Track>>() {}.type)
 }
