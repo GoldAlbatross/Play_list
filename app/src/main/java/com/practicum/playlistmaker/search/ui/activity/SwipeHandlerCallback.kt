@@ -150,7 +150,8 @@ class SwipeHandlerCallback(
         // play item
         if (direction == RIGHT) {
             viewModel.onSwipeRight(track = track)
-            handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)
+            router.openPlayerActivity(track)
+            trackAdapter.notifyItemRangeChanged(0,position+1)
         }
 
         // delete item
