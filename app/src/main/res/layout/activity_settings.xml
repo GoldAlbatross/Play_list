@@ -24,8 +24,6 @@
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/night_swtch"
         style="@style/switcher"
-        app:thumbTint="?attr/colorSecondaryVariant"
-        app:trackTint="#E6E8EB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_btn" />

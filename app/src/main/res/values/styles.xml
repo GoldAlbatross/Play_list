@@ -80,8 +80,8 @@
         <item name="android:layout_marginTop">@dimen/size_24dp</item>
         <item name="android:paddingStart">@dimen/size_16dp</item>
         <item name="android:paddingEnd">@dimen/size_16dp</item>
-        <!--item name="track">@drawable/switch_track</item>
-        <item name="android:thumb">@drawable/switch_circle</item-->
+        <item name="track">@drawable/switch_track</item>
+        <item name="android:thumb">@drawable/switch_circle</item>
     </style>
 
     <style name="toolbar">

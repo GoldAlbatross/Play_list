@@ -6,11 +6,11 @@ import com.practicum.playlistmaker.player.domain.api.Player
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.search.data.network.NetworkClient
-import com.practicum.playlistmaker.search.data.storage.LocalStorageImpl
+import com.practicum.playlistmaker.search.data.shared_preferences.LocalStorageImpl
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.SearchRepositoryImpl
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker.search.data.storage.LocalStorage
+import com.practicum.playlistmaker.search.data.shared_preferences.LocalStorage
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.iml.SearchInteractorImpl
 import com.practicum.playlistmaker.settings.data.ThemeSwitcherImpl
@@ -41,7 +41,6 @@ object Creator {
             localStorage = getLocalStorage(),
             networkClient = getNetworkClient(),
             context = App.instance,
-            gson = App.instance.gson,
         )
     }
     private fun getPlayer(): Player {
@@ -50,7 +49,7 @@ object Creator {
     private fun getNetworkClient(): NetworkClient {
         return RetrofitNetworkClient()
     }
-    private fun getLocalStorage(): LocalStorage {
+    private fun <T> getLocalStorage(): LocalStorage<T> {
         return LocalStorageImpl(
             sharedPreferences = App.instance.sharedPreference,
             gson = App.instance.gson,
