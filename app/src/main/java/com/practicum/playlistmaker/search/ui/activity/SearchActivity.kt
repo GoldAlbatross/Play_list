@@ -62,9 +62,9 @@ class SearchActivity: AppCompatActivity() {
         }
 
         // Tap to track
-        trackAdapter.listener = { track, position ->
-            viewModel.onClickTrack(track, position)
-            handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)
+        trackAdapter.listener = { track ->
+            viewModel.onClickTrack(track)
+            router.openPlayerActivity(track)
         }
 
         // Clear the search field and recycler
@@ -103,11 +103,11 @@ class SearchActivity: AppCompatActivity() {
                 }
             }
         }
+    }
 
-        // Handle the animation after a track tap
-        viewModel.pushedItemStateLiveData().observe(this) { position ->
-            trackAdapter.popItem(position = position)
-        }
+    override fun onStart() {
+        super.onStart()
+        trackAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

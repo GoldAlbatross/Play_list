@@ -149,7 +149,7 @@ class SwipeHandlerCallback(
 
         // play item
         if (direction == RIGHT) {
-            viewModel.onSwipeRight(track = track,position = position)
+            viewModel.onSwipeRight(track = track)
             handler.postDelayed({router.openPlayerActivity(track)}, DELAY_800)
         }
 

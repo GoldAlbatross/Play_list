@@ -27,7 +27,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     private val executor = Executors.newCachedThreadPool()
 
     private val uiState = MutableLiveData<UiState>()
-    private val pushedItemState = SingleLiveEvent<Int>()
     private val clearBtnState = SingleLiveEvent<ClearButtonState>()
     init {
         trackList.addAll(searchInteractor.getTracksFromLocalStorage(HISTORY_KEY))
@@ -36,19 +35,17 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
     fun uiStateLiveData(): LiveData<UiState> = uiState
-    fun pushedItemStateLiveData(): LiveData<Int> = pushedItemState
     fun clearButtonStateLiveData(): LiveData<ClearButtonState> = clearBtnState
 
     fun onClickFooter() {
         uiState.postValue(UiState.Default)
         searchInteractor.clearTrackList(HISTORY_KEY)
     }
-    fun onClickTrack(track: Track, position: Int) {
-        //pushedItemState.postValue(position)
+    fun onClickTrack(track: Track) {
         searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
     }
-    fun onSwipeRight(track: Track, position: Int) {
-        onClickTrack(track = track,position = position)
+    fun onSwipeRight(track: Track) {
+        onClickTrack(track = track)
     }
     fun onSwipeLeft(track: Track) {
         searchInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
