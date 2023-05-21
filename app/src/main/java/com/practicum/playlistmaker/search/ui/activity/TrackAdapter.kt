@@ -17,7 +17,7 @@ import java.util.Locale
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     internal val trackList = mutableListOf<Track>()
-    internal var listener: ((Track, Int) -> Unit)? = null
+    internal var listener: ((Track) -> Unit)? = null
     private val debouncer = Debouncer()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
@@ -28,7 +28,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track, pos) }
+        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {

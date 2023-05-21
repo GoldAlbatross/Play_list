@@ -13,7 +13,7 @@ class Debouncer(
             available = false
             handler.postDelayed({ available = true }, DELAY_1000)
             listener.invoke()
-        } else {handler.removeCallbacksAndMessages(null)}
+        }
     }
 }
 
