@@ -74,6 +74,10 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
             searchDebounce(text = text)
     }
 
+    fun onStop(text: String) {
+        if (text.isEmpty()) showHistoryContent()
+    }
+
     private fun showHistoryContent() {
         uiState.value = UiState.Loading
         executor.execute {

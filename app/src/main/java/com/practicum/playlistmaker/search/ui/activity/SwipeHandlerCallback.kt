@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.ui.router.SearchRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
-import com.practicum.playlistmaker.utils.DELAY_800
 
 
 class SwipeHandlerCallback(

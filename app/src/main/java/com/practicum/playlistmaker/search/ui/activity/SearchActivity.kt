@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -22,7 +21,6 @@ import com.practicum.playlistmaker.search.ui.model.ClearButtonState
 import com.practicum.playlistmaker.search.ui.model.UiState
 import com.practicum.playlistmaker.search.ui.router.SearchRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
-import com.practicum.playlistmaker.utils.DELAY_800
 
 class SearchActivity: AppCompatActivity() {
 
@@ -105,6 +103,11 @@ class SearchActivity: AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.onStop("${binding.input.text}")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         trackAdapter.listener = null
@@ -115,7 +118,6 @@ class SearchActivity: AppCompatActivity() {
             if (show) VISIBLE
             else {
                 binding.input.setText("")
-                binding.input.clearFocus()
                 INVISIBLE
             }
     }

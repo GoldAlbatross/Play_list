@@ -11,6 +11,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
+import com.practicum.playlistmaker.utils.getTimeFormat
 import java.text.SimpleDateFormat
 import java.util.Collections
 import java.util.Locale
@@ -63,8 +64,7 @@ class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     fun bind(model: Track) {
         trackName.text = model.track
         artistName.text = model.artist
-        trackTime.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTime).toString()
+        trackTime.text = model.trackTime.getTimeFormat()
         Glide
             .with(itemView.context)
             .load(model.url)

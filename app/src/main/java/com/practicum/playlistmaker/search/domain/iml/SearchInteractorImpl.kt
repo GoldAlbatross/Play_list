@@ -7,10 +7,9 @@ import com.practicum.playlistmaker.search.domain.model.Track
 class SearchInteractorImpl(
     private val repository: SearchRepository
     ): SearchInteractor {
-    
-    
+
     override fun removeTrackFromLocalStorage(key: String, track: Track) {
-        val tracksFromStorage = getData(key = key)
+        val tracksFromStorage = getData(key = key).toMutableList()
         tracksFromStorage.remove(track)
         saveData(key = key, list = tracksFromStorage)
     }
@@ -19,7 +18,7 @@ class SearchInteractorImpl(
         list.remove(track)
         list.add(0, track)
         if (list.size > maxSizeOfHistoryList) list.removeAt(9)
-        repository.saveTrackList(key = key, list = list)
+        saveData(key = key, list = list)
         return list
     }
 
