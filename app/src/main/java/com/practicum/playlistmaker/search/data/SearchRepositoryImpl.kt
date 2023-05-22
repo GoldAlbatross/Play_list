@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.data
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.dto.Response
@@ -14,7 +15,7 @@ import com.practicum.playlistmaker.search.domain.model.NetworkResponse
 import com.practicum.playlistmaker.search.domain.model.Track
 
 class SearchRepositoryImpl(
-    private val localStorage: LocalStorage<MutableList<Track>>,
+    private val localStorage: LocalStorage,
     private val networkClient: NetworkClient,
     private val context: Context,
 ): SearchRepository {
@@ -35,6 +36,7 @@ class SearchRepositoryImpl(
         return when (response.resultCode) {
             200 -> checkNonEmptyData(response)
             -1 -> NetworkResponse.Offline(message = context.getString(R.string.error))
+            in (400..500) -> NetworkResponse.NoData(message = context.getString(R.string.empty_list))
             else -> NetworkResponse.Error(message = context.getString(R.string.server_error))
         }
     }

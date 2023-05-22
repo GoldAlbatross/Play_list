@@ -56,11 +56,11 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.playButtonStateLiveData().observe(this) { state ->
             when (state) {
                 is PlayButtonState.Prepare -> {
-                    changeImageForPlayButton(R.drawable.player_play)
                     if (state.clicked) { startAnimationScale(); showToast() }
                 }
                 is PlayButtonState.PrepareDone -> {
                     startAnimationAlfa()
+                    changeImageForPlayButton(R.drawable.player_play)
                 }
                 is PlayButtonState.Play -> {
                     startAnimationScale()

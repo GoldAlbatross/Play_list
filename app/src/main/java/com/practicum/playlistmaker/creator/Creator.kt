@@ -50,14 +50,14 @@ object Creator {
     private fun getNetworkClient(): NetworkClient {
         return RetrofitNetworkClient()
     }
-    private fun <T> getLocalStorage(): LocalStorage<T> {
+    private fun getLocalStorage(): LocalStorage {
         return LocalStorage(
             sharedPreferences = App.instance.sharedPreference,
             dataConverter = getDataConverter(),
         )
     }
 
-    private fun <T> getDataConverter(): DataConverter<T> {
+    private fun getDataConverter(): DataConverter {
         return GsonDataConverter(gson = App.instance.gson)
     }
 }

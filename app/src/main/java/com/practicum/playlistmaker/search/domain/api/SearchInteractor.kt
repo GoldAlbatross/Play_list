@@ -7,8 +7,8 @@ interface SearchInteractor {
 
     fun removeTrackFromLocalStorage(key: String, track: Track)
     fun clearTrackList(key: String)
-    fun saveTrack(key: String, list: MutableList<Track>, track: Track): List<Track>
-    fun getTracksFromLocalStorage(key: String): List<Track>
+    fun saveTrackAsFirst(key: String, track: Track)
+    fun getTracksFromLocalStorage(key: String): MutableList<Track>
     fun getTracksFromBackendApi(query: String, consumer: TracksConsumer)
 
     fun interface TracksConsumer {

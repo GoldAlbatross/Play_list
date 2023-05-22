@@ -49,7 +49,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     fun removeAt(position: Int) {
         trackList.removeAt(position)
         notifyItemRemoved(position)
-        notifyDataSetChanged()
     }
 }
 

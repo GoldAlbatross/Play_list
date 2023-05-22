@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -139,6 +140,7 @@ class SwipeHandlerCallback(
         target: RecyclerView.ViewHolder
     ): Boolean {
         trackAdapter.replaceItem(source.adapterPosition, target.adapterPosition)
+        trackAdapter.notifyItemMoved(source.adapterPosition, target.adapterPosition)
         return true
     }
 
@@ -146,24 +148,17 @@ class SwipeHandlerCallback(
         val position = viewHolder.adapterPosition
         val track = trackAdapter.trackList[position]
 
-        // play item
-        if (direction == RIGHT) {
+        // play item onSwipeRight
+        if (direction == ItemTouchHelper.RIGHT) {
             viewModel.onSwipeRight(track = track)
             router.openPlayerActivity(track)
             trackAdapter.notifyItemRangeChanged(0,position+1)
         }
 
-        // delete item
-        if (direction == LEFT) {
+        // delete item onSwipeLeft
+        if (direction == ItemTouchHelper.LEFT) {
             viewModel.onSwipeLeft(track = track)
             trackAdapter.removeAt(position)
         }
     }
-
-    private companion object {
-        const val RIGHT = 8
-        const val LEFT = 4
-    }
-
-
 }

@@ -1,16 +1,21 @@
 package com.practicum.playlistmaker.search.data.shared_preferences
 
 import android.content.SharedPreferences
+import android.util.Log
+import com.practicum.playlistmaker.search.domain.model.Track
 import java.lang.reflect.Type
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
-class LocalStorage<T>(
-    private val dataConverter: DataConverter<T>,
+class LocalStorage(
+    private val dataConverter: DataConverter,
     private val sharedPreferences: SharedPreferences
 ) {
 
-
-    internal fun writeData(key: String, data: T) {
-        synchronized(key) {
+    private val lock = ReentrantReadWriteLock()
+    internal fun <T> writeData(key: String, data: T) {
+        lock.write {
             when (data) {
                 is Boolean, is Byte, is Char, is Short, is Int, is Long, is Float, is Double ->
                     sharedPreferences.edit().putString(key, "$data").apply()
@@ -20,8 +25,8 @@ class LocalStorage<T>(
         }
     }
 
-    internal fun readData(key: String, type: Type): T? {
-        synchronized(key) {
+    internal fun <T> readData(key: String, type: Type): T? {
+        lock.read {
             val json = sharedPreferences.getString(key, null)
             return if (json == null) null
             else dataConverter.dataFromJson(json, type)

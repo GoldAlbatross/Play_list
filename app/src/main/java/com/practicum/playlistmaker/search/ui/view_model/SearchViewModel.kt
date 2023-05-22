@@ -21,43 +21,41 @@ import java.util.concurrent.Executors
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
-    private val trackList = mutableListOf<Track>()
     private val handler = Handler(Looper.getMainLooper())
     private var latestText: String = ""
     private val executor = Executors.newCachedThreadPool()
 
     private val uiState = MutableLiveData<UiState>()
-    private val clearBtnState = SingleLiveEvent<ClearButtonState>()
-    init {
-        trackList.addAll(searchInteractor.getTracksFromLocalStorage(HISTORY_KEY))
-    }
+    private val keyboardAndClearBtnState = SingleLiveEvent<ClearButtonState>()
+
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
     fun uiStateLiveData(): LiveData<UiState> = uiState
-    fun clearButtonStateLiveData(): LiveData<ClearButtonState> = clearBtnState
+    fun keyboardAndClearBtnStateLiveData(): LiveData<ClearButtonState> = keyboardAndClearBtnState
 
     fun onClickFooter() {
         uiState.postValue(UiState.Default)
         searchInteractor.clearTrackList(HISTORY_KEY)
     }
     fun onClickTrack(track: Track) {
-        searchInteractor.saveTrack(HISTORY_KEY, trackList, track)
+        executor.execute { searchInteractor.saveTrackAsFirst(HISTORY_KEY, track) }
     }
     fun onSwipeRight(track: Track) {
         onClickTrack(track = track)
     }
     fun onSwipeLeft(track: Track) {
-        searchInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
+        executor.execute { searchInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track) }
     }
     fun onClickClearInput() {
-        clearBtnState.value = ClearButtonState.DEFAULT
+        keyboardAndClearBtnState.value = ClearButtonState.DEFAULT
         latestText = ""
-        showHistoryContent()
     }
 
-    fun onClickInput(query: String) {
-        if (query.isEmpty()) showHistoryContent()
+    fun onCatchFocus(query: String) {
+        if (query.isEmpty()) {
+            showHistoryContent()
+        }
     }
 
     fun onClickedRefresh(text: String) {
@@ -66,12 +64,12 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
 
     fun onTextChange(text: String) {
-        defineState(text = text)
-        if (text.isEmpty())
+        if (text.isEmpty()) {
             showHistoryContent()
-
-        else
+        } else {
             searchDebounce(text = text)
+            keyboardAndClearBtnState.value = ClearButtonState.TEXT
+        }
     }
 
     fun onStop(text: String) {
@@ -101,10 +99,10 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
                         uiState.postValue(UiState.Error(networkResponse.message))
                     }
                     is NetworkResponse.Success -> {
-                        uiState.postValue(UiState.SearchContent(networkResponse.data))
+                            uiState.postValue(UiState.SearchContent(networkResponse.data))
                     }
                     is NetworkResponse.NoData -> {
-                        uiState.postValue(UiState.NoData(message = networkResponse.message))
+                            uiState.postValue(UiState.NoData(message = networkResponse.message))
                     }
                 }
             }
@@ -119,12 +117,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         val runnable = Runnable { getTracksFromBackendApi(query = text) }
         val postTime = SystemClock.uptimeMillis() + DELAY_1500
         handler.postAtTime(runnable, SEARCH_REQUEST_TOKEN, postTime)
-    }
-
-    private fun defineState(text: String) {
-        if (text.isNotEmpty()) {
-            clearBtnState.value = ClearButtonState.TEXT
-        }
     }
 
     companion object {

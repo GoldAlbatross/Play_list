@@ -51,7 +51,7 @@ class SearchActivity: AppCompatActivity() {
 
         // Catch the focus
         binding.input.setOnFocusChangeListener { _,hasFocus ->
-            if (hasFocus) viewModel.onClickInput("${binding.input.text}")
+            if (hasFocus) viewModel.onCatchFocus("${binding.input.text}")
         }
 
         // Send the new search request
@@ -59,7 +59,7 @@ class SearchActivity: AppCompatActivity() {
             viewModel.onClickedRefresh("${binding.input.text}")
         }
 
-        // Tap to track
+        // On tap to track
         trackAdapter.listener = { track ->
             viewModel.onClickTrack(track)
             router.openPlayerActivity(track)
@@ -91,7 +91,7 @@ class SearchActivity: AppCompatActivity() {
         }
 
         // Handle the keyboard show state
-        viewModel.clearButtonStateLiveData().observe(this) { state ->
+        viewModel.keyboardAndClearBtnStateLiveData().observe(this) { state ->
             when (state!!) {
                 ClearButtonState.FOCUS -> showKeyboard(true)
                 ClearButtonState.TEXT -> clearButtonVisibility(true)
@@ -105,7 +105,7 @@ class SearchActivity: AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.onStop("${binding.input.text}")
+        //viewModel.onStop("${binding.input.text}")
     }
 
     override fun onDestroy() {
@@ -188,6 +188,4 @@ class SearchActivity: AppCompatActivity() {
         trackAdapter.trackList.addAll(items)
         trackAdapter.notifyDataSetChanged()
     }
-
-    private companion object { const val QUERY_KEY = "query_key" }
 }
