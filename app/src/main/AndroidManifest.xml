@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".application.App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,12 +18,12 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".library.ui.activity.MediaLibActivity"
+            android:name=".screens.media_lib.activity.MediaLibActivity"
             android:exported="false" >
         </activity>
 
         <activity
-            android:name=".search.ui.activity.SearchActivity"
+            android:name=".screens.search.activity.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".player.ui.PlayerActivity"
+            android:name=".screens.player.activity.PlayerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -39,7 +39,7 @@
         </activity>
 
         <activity
-            android:name=".settings.ui.activity.SettingsActivity"
+            android:name=".screens.settings.activity.SettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -47,7 +47,7 @@
         </activity>
 
         <activity
-            android:name=".main.ui.activity.MainActivity"
+            android:name=".screens.main.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

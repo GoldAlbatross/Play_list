@@ -9,3 +9,4 @@ const val DELAY_3000 = 3000L
 
 // Const from SearchActivity/PlayerActivity
 const val KEY_TRACK = "searchActivity_track"
+const val DARK_THEME_KEY = "dark_theme"
