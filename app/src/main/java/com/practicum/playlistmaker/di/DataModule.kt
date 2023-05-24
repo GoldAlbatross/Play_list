@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.di
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.practicum.playlistmaker.app.App
 import com.practicum.playlistmaker.features.itunes_api.data.SearchRepositoryImpl
 import com.practicum.playlistmaker.features.itunes_api.data.network.ApiITunes
 import com.practicum.playlistmaker.features.itunes_api.data.network.NetworkClient
@@ -24,6 +23,8 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val PREF_KEY = "app_preferences"
+
 val dataModule = module {
 
     single { Gson() }
@@ -43,7 +44,7 @@ val dataModule = module {
             .create(ApiITunes::class.java)
     }
     single {
-        androidContext().getSharedPreferences(App.PREF_KEY, AppCompatActivity.MODE_PRIVATE)
+        androidContext().getSharedPreferences(PREF_KEY, AppCompatActivity.MODE_PRIVATE)
     }
 
     singleOf(::LocalStorageImpl).bind<LocalStorage>()
@@ -51,5 +52,4 @@ val dataModule = module {
     singleOf(::PlayerImpl).bind<Player>()
     singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
     singleOf(::RetrofitNetworkClient).bind<NetworkClient>()
-
 }

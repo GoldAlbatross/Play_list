@@ -16,5 +16,4 @@ class App : Application() {
             modules(dataModule, interactorModule, viewModelModule)
         }
     }
-    companion object { const val PREF_KEY = "app_preferences" }
 }
