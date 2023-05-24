@@ -82,10 +82,6 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.timeStateLiveData().observe(this) { updateTime(it)}
-
-
-
-
     }
 
     override fun onPause() {

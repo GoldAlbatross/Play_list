@@ -11,8 +11,9 @@ class PlayerImpl(private val mediaPlayer: MediaPlayer):
 
     override fun prepareMediaPlayer(url: String, listener: () -> Unit) {
         mediaPlayer.apply {
-            setDataSource(url)
             setOnPreparedListener { state = PlayerStates.PREPARED; listener.invoke() }
+            mediaPlayer.reset()
+            setDataSource(url)
             prepareAsync()
         }
     }
@@ -41,7 +42,8 @@ class PlayerImpl(private val mediaPlayer: MediaPlayer):
     }
 
     override fun stop() {
-        mediaPlayer.release()
+        mediaPlayer.stop()
+        mediaPlayer.reset()
     }
 
     override fun getState(): PlayerStates {
