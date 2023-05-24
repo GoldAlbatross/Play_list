@@ -28,16 +28,17 @@ val dataModule = module {
 
     single { Gson() }
     single { MediaPlayer() }
+    single { HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY) }
     single {
-        val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        val logging = get<HttpLoggingInterceptor>()
         OkHttpClient.Builder().addInterceptor(logging).build()
     }
     single<ApiITunes> {
-        val client: OkHttpClient = get()
+        //val client = get<OkHttpClient>()
         Retrofit.Builder()
             .baseUrl(RetrofitNetworkClient.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            //.client(client)
             .build()
             .create(ApiITunes::class.java)
     }
