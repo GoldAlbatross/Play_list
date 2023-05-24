@@ -16,7 +16,7 @@ import com.practicum.playlistmaker.utils.SingleLiveEvent
 
 class PlayerViewModel(
     val interactor: PlayerInteractor
-): ViewModel() {
+): ViewModel()  {
 
 
     private val handler = Handler(Looper.getMainLooper())
