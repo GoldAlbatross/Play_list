@@ -14,7 +14,9 @@ import com.practicum.playlistmaker.screens.player.model.PlayButtonState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
 
-class PlayerViewModel(val interactor: PlayerInteractor): ViewModel() {
+class PlayerViewModel(
+    val interactor: PlayerInteractor
+): ViewModel() {
 
 
     private val handler = Handler(Looper.getMainLooper())
