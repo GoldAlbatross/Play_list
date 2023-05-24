@@ -19,15 +19,14 @@ class LocalStorageInteractorImpl(
     }
 
     override fun getSwitcherState(key: String): Boolean {
-        return localStorage.readData(key = key, type = Boolean::class.java) ?: false
+        return localStorage.readData(key = key, defaultValue = false)
     }
 
     override fun removeTrackFromLocalStorage(key: String, track: Track) {
         lock.write {
             val tracks = localStorage
-                .readData(key = key, type = Array<Track>::class.java)
-                ?.toMutableList()
-                ?: mutableListOf()
+                .readData(key = key, defaultValue = arrayOf<Track>())
+                .toMutableList()
             tracks.remove(track)
             localStorage.writeData(key = key, data = tracks.toTypedArray())
         }
@@ -36,9 +35,8 @@ class LocalStorageInteractorImpl(
     override fun saveTrackAsFirstToLocalStorage(key: String, track: Track) {
         lock.write {
             val tracks = localStorage
-                .readData(key = key, type = Array<Track>::class.java)
-                ?.toMutableList()
-                ?: mutableListOf()
+                .readData(key = key, defaultValue = arrayOf<Track>())
+                .toMutableList()
             tracks.remove(track)
             tracks.add(0, track)
             if (tracks.size > HISTORY_MAX_SIZE) tracks.removeAt(9)
@@ -49,9 +47,8 @@ class LocalStorageInteractorImpl(
     override fun getTracksFromLocalStorage(key: String): MutableList<Track> {
         lock.read {
             return localStorage
-                .readData(key = key, type = Array<Track>::class.java)
-                ?.toMutableList()
-                ?: mutableListOf()
+                .readData(key = key, defaultValue = arrayOf<Track>())
+                .toMutableList()
         }
     }
 
