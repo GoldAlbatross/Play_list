@@ -27,10 +27,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 val dataModule = module {
 
     single { Gson() }
-    factory { MediaPlayer() }
-    single<ApiITunes> {
+    single { MediaPlayer() }
+    single {
         val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client = OkHttpClient.Builder().addInterceptor(logging).build()
+        OkHttpClient.Builder().addInterceptor(logging).build()
+    }
+    single<ApiITunes> {
+        val client: OkHttpClient = get()
         Retrofit.Builder()
             .baseUrl(RetrofitNetworkClient.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
