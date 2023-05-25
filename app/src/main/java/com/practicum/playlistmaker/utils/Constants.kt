@@ -7,5 +7,6 @@ const val DELAY_1500 = 1500L
 const val DELAY_2000 = 2000L
 const val DELAY_3000 = 3000L
 
-// Const from SearchActivity/PlayerActivity
+// Const from Activities
 const val KEY_TRACK = "searchActivity_track"
+const val DARK_THEME_KEY = "dark_theme"
