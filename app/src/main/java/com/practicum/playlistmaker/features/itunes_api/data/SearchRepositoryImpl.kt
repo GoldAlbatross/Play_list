@@ -10,7 +10,6 @@ import com.practicum.playlistmaker.features.itunes_api.data.network.NetworkClien
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
 import com.practicum.playlistmaker.features.itunes_api.domain.model.NetworkResponse
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.features.shared_preferences.domain.api.LocalStorage
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchInteractor
 import com.practicum.playlistmaker.features.itunes_api.domain.model.NetworkResponse
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.features.shared_preferences.domain.api.LocalStorageInteractor
+import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
 import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.utils.DELAY_1500
@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
 
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
-    private val localStorageInteractor: LocalStorageInteractor,
+    private val storageInteractor: StorageInteractor,
 ): ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -36,11 +36,11 @@ class SearchViewModel(
 
     fun onClickFooter() {
         uiState.postValue(UiState.Default)
-        localStorageInteractor.clearTrackList(HISTORY_KEY)
+        storageInteractor.clearTrackList(HISTORY_KEY)
     }
     fun onClickTrack(track: Track) {
         executor.execute {
-            localStorageInteractor.saveTrackAsFirstToLocalStorage(HISTORY_KEY, track)
+            storageInteractor.saveTrackAsFirstToLocalStorage(HISTORY_KEY, track)
         }
     }
     fun onSwipeRight(track: Track) {
@@ -48,7 +48,7 @@ class SearchViewModel(
     }
     fun onSwipeLeft(track: Track) {
         executor.execute {
-            localStorageInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
+            storageInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
         }
     }
     fun onClickClearInput() {
@@ -81,7 +81,7 @@ class SearchViewModel(
         executor.execute {
             uiState.postValue(
                 UiState.HistoryContent(
-                    localStorageInteractor.getTracksFromLocalStorage(HISTORY_KEY)
+                    storageInteractor.getTracksFromLocalStorage(HISTORY_KEY)
                 )
             )
         }

@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker.features.shared_preferences.domain.api
+package com.practicum.playlistmaker.features.storage.domain.api
 
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 
-interface LocalStorageInteractor {
+interface StorageInteractor {
     fun saveSwitcherState(key: String, themeState: Boolean)
     fun getSwitcherState (key: String): Boolean
     fun removeTrackFromLocalStorage(key: String, track: Track)

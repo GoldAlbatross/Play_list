@@ -23,5 +23,10 @@
     <string name="button_add">button add the track</string>
     <string name="loading">Track is still loading ...</string>
     <string name="server_error">Server error</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="create_playlist">You haven\'t\ncreated any playlists.</string>
+    <string name="empty_library">Your media library is empty</string>
+    <string name="favorite_tracks">Favorite Tracks</string>
+    <string name="playlists">Playlists</string>
 
 </resources>

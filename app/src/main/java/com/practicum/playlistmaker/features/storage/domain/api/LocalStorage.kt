@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.features.shared_preferences.domain.api
+package com.practicum.playlistmaker.features.storage.domain.api
 
 interface LocalStorage {
 

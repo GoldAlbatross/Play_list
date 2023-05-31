@@ -4,14 +4,17 @@ import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchInteract
 import com.practicum.playlistmaker.features.itunes_api.domain.iml.SearchInteractorImpl
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.features.player.domain.impl.PlayerInteractorImpl
-import com.practicum.playlistmaker.features.shared_preferences.domain.api.LocalStorageInteractor
-import com.practicum.playlistmaker.features.shared_preferences.domain.impl.LocalStorageInteractorImpl
+import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
+import com.practicum.playlistmaker.features.storage.domain.impl.StorageInteractorImpl
+import com.practicum.playlistmaker.utils.Debouncer
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val interactorModule = module {
+
     singleOf(::SearchInteractorImpl).bind<SearchInteractor>()
-    singleOf(::LocalStorageInteractorImpl).bind<LocalStorageInteractor>()
+    singleOf(::StorageInteractorImpl).bind<StorageInteractor>()
     singleOf(::PlayerInteractorImpl).bind<PlayerInteractor>()
 }

@@ -1,7 +1,6 @@
-package com.practicum.playlistmaker.features.shared_preferences.data.converter
+package com.practicum.playlistmaker.features.storage.data.converter
 
 import com.google.gson.Gson
-import java.lang.reflect.Type
 
 class GsonDataConverter(
     private val gson: Gson,
