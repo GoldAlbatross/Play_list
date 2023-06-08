@@ -1,20 +1,18 @@
-package com.practicum.playlistmaker.screens.search.activity
+package com.practicum.playlistmaker.screens.search
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View.GONE
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
@@ -22,30 +20,35 @@ import com.practicum.playlistmaker.screens.search.router.SearchRouter
 import com.practicum.playlistmaker.screens.search.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity: AppCompatActivity() {
+class SearchFragment: Fragment() {
 
-    private val router by lazy { SearchRouter(this) }
-    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        FragmentSearchBinding.inflate(layoutInflater)
+    }
+    private val router by lazy { SearchRouter(requireContext()) }
     private val viewModel by viewModel<SearchViewModel>()
-    private val handler = Handler(Looper.getMainLooper())
     private val trackAdapter = TrackAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = binding.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Initialize recycler
         binding.recycler.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = trackAdapter
         }
 
         // Handling a swipe or drag for RecyclerView
-        val swipeHandler = SwipeHandlerCallback(this,handler, router, viewModel, trackAdapter)
+        val swipeHandler = SwipeHandlerCallback(requireContext(), viewModel, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(binding.recycler)
 
-        binding.backBtn.setNavigationOnClickListener { router.goBack() }
         binding.footer.setOnClickListener { viewModel.onClickFooter() }
 
         // Catch the focus
@@ -75,7 +78,7 @@ class SearchActivity: AppCompatActivity() {
         }
 
         // Handle the UI state
-        viewModel.uiStateLiveData().observe(this) { state ->
+        viewModel.uiStateLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Default -> showEmptyList()
                 is UiState.Loading -> showLoadingState()
@@ -90,7 +93,7 @@ class SearchActivity: AppCompatActivity() {
         }
 
         // Handle the keyboard show state
-        viewModel.keyboardAndClearBtnStateLiveData().observe(this) { state ->
+        viewModel.keyboardAndClearBtnStateLiveData().observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 ClearButtonState.FOCUS -> showKeyboard(true)
                 ClearButtonState.TEXT -> clearButtonVisibility(true)
@@ -102,72 +105,72 @@ class SearchActivity: AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         trackAdapter.listener = null
     }
 
     private fun clearButtonVisibility(show: Boolean) {
         binding.clear.visibility =
-            if (show) VISIBLE
+            if (show) View.VISIBLE
             else {
                 binding.input.setText("")
-                INVISIBLE
+                View.INVISIBLE
             }
     }
 
     private fun showEmptyList() {
-        binding.progressBar.visibility = GONE
-        binding.dummy.visibility = GONE
-        binding.recycler.visibility = INVISIBLE
-        binding.header.visibility = GONE
-        binding.footer.visibility = GONE
+        binding.progressBar.visibility = View.GONE
+        binding.dummy.visibility = View.GONE
+        binding.recycler.visibility = View.INVISIBLE
+        binding.header.visibility = View.GONE
+        binding.footer.visibility = View.GONE
         trackAdapter.trackList.clear()
     }
 
     private fun showHistoryTracks(list: List<Track>) {
         trackAdapter.trackList.clear()
-        binding.progressBar.visibility = GONE
+        binding.progressBar.visibility = View.GONE
         trackAdapter.trackList.addAll(list)
         trackAdapter.notifyDataSetChanged()
-        binding.recycler.visibility = VISIBLE
-        binding.header.visibility = VISIBLE
-        binding.footer.visibility = VISIBLE
+        binding.recycler.visibility = View.VISIBLE
+        binding.header.visibility = View.VISIBLE
+        binding.footer.visibility = View.VISIBLE
 
     }
 
     private fun showNewTracks(list: List<Track>) {
-        binding.progressBar.visibility = GONE
-        binding.recycler.visibility = VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.recycler.visibility = View.VISIBLE
         setItems(list)
     }
 
     private fun showErrorState(message: String) {
-        binding.progressBar.visibility = GONE
-        binding.dummy.visibility = VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.dummy.visibility = View.VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
         binding.txtDummy.text = message
-        binding.refreshBtn.visibility = VISIBLE
+        binding.refreshBtn.visibility = View.VISIBLE
     }
 
     private fun showLoadingState() {
         showEmptyList()
-        binding.progressBar.visibility = VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
     }
 
 
     private fun showNoDataState(message: String) {
-        binding.progressBar.visibility = GONE
-        binding.recycler.visibility = VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.recycler.visibility = View.VISIBLE
         trackAdapter.trackList.clear()
-        binding.dummy.visibility = VISIBLE
+        binding.dummy.visibility = View.VISIBLE
         binding.imgDummy.background = setImage(R.drawable.search_dummy_empty)
         binding.txtDummy.text = message
-        binding.refreshBtn.visibility = INVISIBLE
+        binding.refreshBtn.visibility = View.INVISIBLE
     }
 
     private fun showKeyboard(show: Boolean) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (show)
             imm.showSoftInput(binding.input, 0)
         else
@@ -175,7 +178,7 @@ class SearchActivity: AppCompatActivity() {
     }
 
     private fun setImage(image: Int) =
-        AppCompatResources.getDrawable(this, image)
+        AppCompatResources.getDrawable(requireContext(), image)
 
     private fun setItems(items: List<Track>) {
         trackAdapter.trackList.clear()

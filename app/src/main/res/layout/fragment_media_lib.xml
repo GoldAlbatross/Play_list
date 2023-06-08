@@ -6,14 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".screens.media_lib.activity.MediaLibActivity">
+    tools:context="com.practicum.playlistmaker.screens.media_lib.MediaLibFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/back_btn"
-        android:theme="@style/BaseRipple"
-        style="@style/toolbar">
-        <TextView style="@style/text_for_toolbar" />
-    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/Title"
+        style="@style/text_for_toolbar"
+        android:text="@string/media_lib"
+        android:layout_margin="@dimen/size_16dp"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.screens.media_lib.fragment
+package com.practicum.playlistmaker.screens.media_lib.childFragments
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels

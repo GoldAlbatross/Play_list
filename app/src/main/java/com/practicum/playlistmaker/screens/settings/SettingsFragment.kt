@@ -1,26 +1,35 @@
-package com.practicum.playlistmaker.screens.settings.activity
+package com.practicum.playlistmaker.screens.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.screens.settings.router.SettingsRouter
 import com.practicum.playlistmaker.screens.settings.view_model.SettingsViewModel
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment: Fragment() {
 
     private val debouncer = Debouncer()
-    private val router by lazy { SettingsRouter(this) }
-    private val binding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
+    private val router by lazy { SettingsRouter(requireContext()) }
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        FragmentSettingsBinding.inflate(layoutInflater) }
     private val viewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View { return binding.root }
 
-        viewModel.themeSwitcherState().observe(this) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.themeSwitcherState().observe(viewLifecycleOwner) {
             binding.nightSwtch.isChecked = it
         }
 
@@ -34,10 +43,6 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.agreement.debounceClickListener(debouncer) {
             router.onClickedAgreement()
-        }
-
-        binding.backBtn.setNavigationOnClickListener {
-            router.onClickedBack()
         }
 
         binding.nightSwtch.setOnCheckedChangeListener { _,night ->

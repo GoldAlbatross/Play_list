@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.screens.main.view_model.MainViewModel
+import com.practicum.playlistmaker.screens.root.view_model.RootViewModel
 import com.practicum.playlistmaker.screens.media_lib.view_model.FavoriteListViewModel
 import com.practicum.playlistmaker.screens.media_lib.view_model.PlayListViewModel
 import com.practicum.playlistmaker.screens.player.view_model.PlayerViewModel
@@ -11,7 +11,7 @@ import org.koin.dsl.module
 import org.koin.dsl.bind
 
 val viewModelModule = module {
-    viewModelOf(::MainViewModel).bind()
+    viewModelOf(::RootViewModel).bind()
     viewModelOf(::PlayerViewModel).bind()
     viewModelOf(::SearchViewModel).bind()
     viewModelOf(::SettingsViewModel).bind()

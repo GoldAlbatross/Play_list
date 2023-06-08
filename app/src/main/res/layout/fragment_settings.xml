@@ -7,18 +7,16 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".screens.settings.activity.SettingsActivity">
+    tools:context="com.practicum.playlistmaker.screens.settings.SettingsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/back_btn"
-        android:theme="@style/BaseRipple"
-        style="@style/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/title"
+        style="@style/text_for_toolbar"
+        android:text="@string/settings"
+        android:layout_marginTop="@dimen/size_16dp"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-        <TextView
-            style="@style/text_for_toolbar" />
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
     <androidx.appcompat.widget.SwitchCompat
@@ -26,7 +24,7 @@
         style="@style/switcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
         style="@style/text_for_btn_max_width"

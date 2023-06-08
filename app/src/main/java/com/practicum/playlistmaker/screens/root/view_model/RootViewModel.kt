@@ -1,11 +1,11 @@
-package com.practicum.playlistmaker.screens.main.view_model
+package com.practicum.playlistmaker.screens.root.view_model
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
 import com.practicum.playlistmaker.utils.DARK_THEME_KEY
 
-class MainViewModel(
+class RootViewModel(
     private val storageInteractor: StorageInteractor
 ): ViewModel() {
 

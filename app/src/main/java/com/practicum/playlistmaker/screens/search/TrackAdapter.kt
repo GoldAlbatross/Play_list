@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.screens.search.activity
+package com.practicum.playlistmaker.screens.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
