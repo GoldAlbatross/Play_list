@@ -17,8 +17,8 @@ class MLViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> FavoriteListFragment.new()
-            else -> PlayListFragment.new()
+            0 -> FavoriteListFragment.newInstance()
+            else -> PlayListFragment.newInstance()
         }
     }
 }

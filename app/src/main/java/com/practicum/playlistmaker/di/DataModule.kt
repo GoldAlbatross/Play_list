@@ -24,6 +24,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val PREF_KEY = "app_preferences"
+private const val BASE_URL = "https://itunes.apple.com"
 
 val dataModule = module {
 
@@ -37,7 +38,7 @@ val dataModule = module {
     single<ApiITunes> {
         val client = get<OkHttpClient>()
         Retrofit.Builder()
-            .baseUrl(RetrofitNetworkClient.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

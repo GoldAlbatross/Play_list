@@ -36,6 +36,4 @@ class RetrofitNetworkClient(
         }
         return false
     }
-
-    companion object { const val BASE_URL = "https://itunes.apple.com" }
 }
