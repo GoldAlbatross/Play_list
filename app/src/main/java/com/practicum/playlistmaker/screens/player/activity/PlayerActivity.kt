@@ -29,8 +29,7 @@ class PlayerActivity : AppCompatActivity() {
     private val debouncer = Debouncer()
     private val router by lazy { PlayerRouter(this) }
     private val binding by lazy { ActivityPlayerBinding.inflate(layoutInflater) }
-    private val viewModel: PlayerViewModel by viewModel()
-    private val currentTime: TextView by lazy { findViewById(R.id.current_time) }
+    private val viewModel by viewModel<PlayerViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -45,13 +44,6 @@ class PlayerActivity : AppCompatActivity() {
             alpha = 0.1f
             binding.btnPlay.animate().apply { duration = DELAY_3000; rotationYBy(360f) }
             debounceClickListener(debouncer) { viewModel.onClickedPlay() }
-        }
-
-        viewModel.addButtonStateLiveData().observe(this) { state ->
-            when (state) {
-                AddButtonModel.Add -> flipAnimation(binding.btnAdd)
-                AddButtonModel.Remove -> { /*TODO*/ }
-            }
         }
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
@@ -78,6 +70,13 @@ class PlayerActivity : AppCompatActivity() {
             when (state) {
                 LikeButtonModel.DisLike -> { /*TODO*/ }
                 LikeButtonModel.Like -> flipAnimation(binding.btnLike)
+            }
+        }
+
+        viewModel.addButtonStateLiveData().observe(this) { state ->
+            when (state) {
+                AddButtonModel.Add -> flipAnimation(binding.btnAdd)
+                AddButtonModel.Remove -> { /*TODO*/ }
             }
         }
 
@@ -121,6 +120,6 @@ class PlayerActivity : AppCompatActivity() {
         binding.btnPlay.setImageResource(image)
     }
     private fun updateTime(time: String) {
-        currentTime.text = time
+        binding.currentTime.text = time
     }
 }

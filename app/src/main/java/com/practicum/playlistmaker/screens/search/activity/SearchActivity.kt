@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
@@ -21,12 +20,13 @@ import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.screens.search.router.SearchRouter
 import com.practicum.playlistmaker.screens.search.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity: AppCompatActivity() {
 
     private val router by lazy { SearchRouter(this) }
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
-    private val viewModel: SearchViewModel by viewModel()
+    private val viewModel by viewModel<SearchViewModel>()
     private val handler = Handler(Looper.getMainLooper())
     private val trackAdapter = TrackAdapter()
 

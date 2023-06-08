@@ -14,11 +14,10 @@ class MainActivity : AppCompatActivity() {
     private val debouncer = Debouncer()
     private val router by lazy { MainRouter(this) }
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel by viewModel<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         viewModel.setTheme()
 
         binding.search.debounceClickListener(debouncer) {

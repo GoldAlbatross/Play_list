@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.features.shared_preferences.data.converter
+package com.practicum.playlistmaker.features.storage.data.converter
 
 
 interface DataConverter {

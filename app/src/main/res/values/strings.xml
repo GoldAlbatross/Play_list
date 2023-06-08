@@ -9,11 +9,11 @@
     <string name="terms_of_use">Пользовательское соглашение</string>
     <string name="yes" translatable="false">Да</string>
     <string name="no" translatable="false">Нет</string>
-    <string name="question">Вопрос</string>
-    <string name="input_clearing">Очистить строку поиска</string>
-    <string name="theme_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
-    <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
-    <string name="picture_of_album">Picture of album</string>
+    <string name="question" translatable="false">Вопрос</string>
+    <string name="input_clearing" translatable="false">Очистить строку поиска</string>
+    <string name="theme_email" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="picture_of_album" translatable="false">Picture of album</string>
     <string name="empty" translatable="false" />
     <string name="go_to" translatable="false">Go to</string>
     <string name="agreement">Соглашение</string>
@@ -33,5 +33,10 @@
     <string name="button_add">Кнопка добавить</string>
     <string name="loading">Всё ещё загружается …</string>
     <string name="server_error">Ошибка сервера</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="create_playlist">Вы не создали\nни одного плейлиста</string>
+    <string name="empty_library">Ваша медиатека пуста</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
 
 </resources>

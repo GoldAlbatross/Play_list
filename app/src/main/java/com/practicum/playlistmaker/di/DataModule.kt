@@ -10,10 +10,10 @@ import com.practicum.playlistmaker.features.itunes_api.data.network.RetrofitNetw
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
 import com.practicum.playlistmaker.features.player.data.PlayerImpl
 import com.practicum.playlistmaker.features.player.domain.api.Player
-import com.practicum.playlistmaker.features.shared_preferences.data.LocalStorageImpl
-import com.practicum.playlistmaker.features.shared_preferences.data.converter.DataConverter
-import com.practicum.playlistmaker.features.shared_preferences.data.converter.GsonDataConverter
-import com.practicum.playlistmaker.features.shared_preferences.domain.api.LocalStorage
+import com.practicum.playlistmaker.features.storage.data.LocalStorageImpl
+import com.practicum.playlistmaker.features.storage.data.converter.DataConverter
+import com.practicum.playlistmaker.features.storage.data.converter.GsonDataConverter
+import com.practicum.playlistmaker.features.storage.domain.api.LocalStorage
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -35,11 +35,11 @@ val dataModule = module {
         OkHttpClient.Builder().addInterceptor(logging).build()
     }
     single<ApiITunes> {
-        //val client = get<OkHttpClient>()
+        val client = get<OkHttpClient>()
         Retrofit.Builder()
             .baseUrl(RetrofitNetworkClient.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            //.client(client)
+            .client(client)
             .build()
             .create(ApiITunes::class.java)
     }
