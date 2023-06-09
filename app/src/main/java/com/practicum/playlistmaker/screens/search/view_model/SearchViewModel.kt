@@ -76,6 +76,11 @@ class SearchViewModel(
         }
     }
 
+    fun updateHistoryList() {
+        if (latestText.isEmpty())
+            showHistoryContent()
+    }
+
     private fun showHistoryContent() {
         uiState.value = UiState.Loading
         executor.execute {

@@ -11,11 +11,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.screens.search.router.SearchRouter
 import com.practicum.playlistmaker.screens.search.view_model.SearchViewModel
 
 
 class SwipeHandlerCallback(
     private val context: Context,
+    private val router: SearchRouter,
     private val viewModel: SearchViewModel,
     private val trackAdapter: TrackAdapter,
 ) : ItemTouchHelper.SimpleCallback(
@@ -147,7 +149,7 @@ class SwipeHandlerCallback(
         // play item onSwipeRight
         if (direction == ItemTouchHelper.RIGHT) {
             viewModel.onSwipeRight(track = track)
-            //router.openPlayerActivity(track) todo
+            router.openPlayerActivity(track)
             trackAdapter.notifyItemRangeChanged(0,position+1)
         }
 

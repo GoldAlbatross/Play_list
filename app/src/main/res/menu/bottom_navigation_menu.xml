@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/search"
         android:icon="@drawable/ic_lens_19"
         android:title="@string/search" />
 
@@ -12,7 +12,7 @@
         android:title="@string/media_lib" />
 
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settings"
         android:icon="@drawable/ic_gearwheel"
         android:title="@string/settings" />
 

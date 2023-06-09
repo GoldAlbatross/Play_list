@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/searchFragment">
+    app:startDestination="@+id/search">
 
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/search"
         android:name="com.practicum.playlistmaker.screens.search.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search"/>
@@ -17,7 +17,7 @@
         android:label="fragment_media_lib"
         tools:layout="@layout/fragment_media_lib" />
     <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settings"
         android:name="com.practicum.playlistmaker.screens.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />

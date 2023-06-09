@@ -45,7 +45,7 @@ class SearchFragment: Fragment() {
         }
 
         // Handling a swipe or drag for RecyclerView
-        val swipeHandler = SwipeHandlerCallback(requireContext(), viewModel, trackAdapter)
+        val swipeHandler = SwipeHandlerCallback(requireContext(), router, viewModel, trackAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(binding.recycler)
 
@@ -103,6 +103,11 @@ class SearchFragment: Fragment() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.updateHistoryList()
     }
 
     override fun onDestroyView() {
