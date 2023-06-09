@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    tools:context="com.practicum.playlistmaker.screens.search.SearchFragment">
+
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/text_for_toolbar"
+        android:layout_marginStart="@dimen/size_46dp"
+        android:layout_marginEnd="@dimen/size_46dp"
+        app:layout_constraintBottom_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toStartOf="@id/input"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/input"/>
+
+    <EditText android:id="@+id/input"
+        style="@style/edit_text"
+        android:layout_width="0dp"
+        android:layout_marginStart="@dimen/size_0dp"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_marginEnd="@dimen/size_24dp"
+        android:autofillHints="auto"
+        android:focusable="true"
+        android:hint="@string/search"
+        android:imeOptions="flagNoExtractUi"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView android:id="@+id/clear"
+        style="@style/image_clearing"
+        android:visibility="invisible"
+        android:contentDescription="@string/input_clearing"
+        app:layout_constraintBottom_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="@+id/input"
+        app:layout_constraintTop_toTopOf="@+id/input" />
+
+    <TextView android:id="@+id/header"
+        style="@style/text_for_dummy"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:text="@string/search_history"
+        app:layout_constraintEnd_toEndOf="@id/input"
+        app:layout_constraintStart_toStartOf="@id/input"
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:theme="@style/BaseRipple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_marginHorizontal="@dimen/size_12dp"
+        android:visibility="invisible"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:itemCount="25"
+        tools:listitem="@layout/artist_card"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/footer"
+        style="@style/refresh_btn"
+        android:layout_marginEnd="@dimen/size_90dp"
+        android:layout_marginBottom="@dimen/size_16dp"
+        android:text="@string/clear_history"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_marginBottom="@dimen/size_16dp"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        tools:visibility="invisible">
+
+        <ImageView android:id="@+id/img_dummy"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/search_dummy_error" />
+
+        <TextView android:id="@+id/txt_dummy"
+            style="@style/text_for_dummy"
+            android:layout_marginTop="@dimen/size_21dp"
+            android:text="@string/empty_list" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/refresh_btn"
+            style="@style/refresh_btn"
+            android:layout_marginTop="@dimen/size_21dp"
+            android:text="@string/refresh" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ProgressBar android:id="@+id/progress_bar"
+        style="@style/progress_bar"
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

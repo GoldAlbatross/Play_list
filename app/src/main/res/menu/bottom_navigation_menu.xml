@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_lens_19"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/media_lib"
+        android:icon="@drawable/ic_media_lib"
+        android:title="@string/media_lib" />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_gearwheel"
+        android:title="@string/settings" />
+
+</menu>

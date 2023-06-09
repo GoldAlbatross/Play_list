@@ -18,16 +18,13 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".screens.media_lib.activity.MediaLibActivity"
-            android:exported="false" >
-        </activity>
-
-        <activity
-            android:name=".screens.search.activity.SearchActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:name=".screens.root.activity.RootActivity"
+            android:windowSoftInputMode="adjustNothing"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -37,27 +34,5 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <activity
-            android:name=".screens.settings.activity.SettingsActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".screens.main.activity.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
     </application>
-
 </manifest>

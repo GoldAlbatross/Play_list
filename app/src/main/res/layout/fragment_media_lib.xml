@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.practicum.playlistmaker.screens.mediaLib.MediaLibFragment">
+
+    <TextView
+        android:id="@+id/Title"
+        style="@style/text_for_toolbar"
+        android:text="@string/media_lib"
+        android:layout_margin="@dimen/size_16dp"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16dp"
+        android:background="@android:color/transparent"
+        app:tabIndicatorColor="?attr/colorPrimaryVariant"
+        app:tabIndicatorFullWidth="true"
+        app:tabTextAppearance="@style/tab_layout"
+        app:tabTextColor="?attr/colorPrimaryVariant"
+        app:tabRippleColor="@color/blue" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/size_16dp"/>
+
+</LinearLayout>

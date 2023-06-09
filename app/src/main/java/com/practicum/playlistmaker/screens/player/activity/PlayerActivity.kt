@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.screens.player.activity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -12,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.screens.player.router.PlayerRouter
-import com.practicum.playlistmaker.screens.player.view_model.PlayerViewModel
+import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
 import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayButtonState
@@ -28,10 +27,12 @@ class PlayerActivity : AppCompatActivity() {
 
     private val debouncer = Debouncer()
     private val router by lazy { PlayerRouter(this) }
-    private val binding by lazy { ActivityPlayerBinding.inflate(layoutInflater) }
+    private var viewBinding: ActivityPlayerBinding? = null
+    private val binding get() = viewBinding!!
     private val viewModel by viewModel<PlayerViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val track = router.getTrackFromIntent()
@@ -86,6 +87,11 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pauseMusic()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewBinding = null
     }
 
     private fun flipAnimation(view: ImageButton) {
