@@ -1,8 +1,9 @@
-package com.practicum.playlistmaker.screens.search.view_model
+package com.practicum.playlistmaker.screens.search.viewModel
 
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ class SearchViewModel(
 ): ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
-    private var latestText: String = ""
+    private var latestText: String? = null
     private val executor = Executors.newCachedThreadPool()
 
     private val uiState = MutableLiveData<UiState>()
@@ -58,6 +59,7 @@ class SearchViewModel(
 
     fun onCatchFocus(query: String) {
         if (query.isEmpty()) {
+            latestText = ""
             showHistoryContent()
         }
     }
@@ -77,8 +79,10 @@ class SearchViewModel(
     }
 
     fun updateHistoryList() {
-        if (latestText.isEmpty())
+        if (latestText == null) return
+        if (latestText!!.isEmpty()) {
             showHistoryContent()
+        }
     }
 
     private fun showHistoryContent() {

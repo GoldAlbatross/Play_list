@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.screens.search.router.SearchRouter
-import com.practicum.playlistmaker.screens.search.view_model.SearchViewModel
+import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
 
 
 class SwipeHandlerCallback(

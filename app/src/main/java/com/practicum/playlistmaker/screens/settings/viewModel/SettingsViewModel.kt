@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.screens.settings.view_model
+package com.practicum.playlistmaker.screens.settings.viewModel
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData

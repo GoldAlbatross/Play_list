@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/search">
+    app:startDestination="@+id/media_lib">
 
     <fragment
         android:id="@+id/search"
@@ -13,7 +13,7 @@
         tools:layout="@layout/fragment_search"/>
     <fragment
         android:id="@+id/media_lib"
-        android:name="com.practicum.playlistmaker.screens.media_lib.MediaLibFragment"
+        android:name="com.practicum.playlistmaker.screens.mediaLib.MediaLibFragment"
         android:label="fragment_media_lib"
         tools:layout="@layout/fragment_media_lib" />
     <fragment
@@ -23,10 +23,10 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/favoriteListFragment"
-        android:name="com.practicum.playlistmaker.screens.media_lib.childFragments.FavoriteListFragment"
+        android:name="com.practicum.playlistmaker.screens.mediaLib.childFragments.FavoriteListFragment"
         android:label="FavoriteListFragment" />
     <fragment
         android:id="@+id/playListFragment"
-        android:name="com.practicum.playlistmaker.screens.media_lib.childFragments.PlayListFragment"
+        android:name="com.practicum.playlistmaker.screens.mediaLib.childFragments.PlayListFragment"
         android:label="PlayListFragment" />
 </navigation>

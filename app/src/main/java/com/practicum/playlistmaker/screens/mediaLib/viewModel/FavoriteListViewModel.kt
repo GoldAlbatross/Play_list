@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.screens.media_lib.view_model
+package com.practicum.playlistmaker.screens.mediaLib.viewModel
 
 import androidx.lifecycle.ViewModel
 

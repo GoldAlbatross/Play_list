@@ -1,11 +1,11 @@
-package com.practicum.playlistmaker.screens.media_lib
+package com.practicum.playlistmaker.screens.mediaLib
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.practicum.playlistmaker.screens.media_lib.childFragments.FavoriteListFragment
-import com.practicum.playlistmaker.screens.media_lib.childFragments.PlayListFragment
+import com.practicum.playlistmaker.screens.mediaLib.childFragments.FavoriteListFragment
+import com.practicum.playlistmaker.screens.mediaLib.childFragments.PlayListFragment
 
 class MediaLibViewPagerAdapter(
     fragmentManager: FragmentManager,

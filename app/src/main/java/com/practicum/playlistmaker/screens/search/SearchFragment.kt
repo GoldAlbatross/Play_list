@@ -2,11 +2,13 @@ package com.practicum.playlistmaker.screens.search
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,26 +19,20 @@ import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.screens.search.router.SearchRouter
-import com.practicum.playlistmaker.screens.search.view_model.SearchViewModel
+import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: Fragment() {
+class SearchFragment: Fragment(R.layout.fragment_search) {
 
-    private val binding by lazy(LazyThreadSafetyMode.NONE) {
-        FragmentSearchBinding.inflate(layoutInflater)
-    }
+    private var viewBinding: FragmentSearchBinding? = null
+    private val binding get() = viewBinding!!
     private val router by lazy { SearchRouter(requireContext()) }
     private val viewModel by viewModel<SearchViewModel>()
     private val trackAdapter = TrackAdapter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View = binding.root
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentSearchBinding.bind(view)
 
         // Initialize recycler
         binding.recycler.apply {
@@ -113,62 +109,67 @@ class SearchFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         trackAdapter.listener = null
+        viewBinding = null
     }
 
     private fun clearButtonVisibility(show: Boolean) {
         binding.clear.visibility =
             if (show) View.VISIBLE
             else {
-                binding.input.setText("")
+                clearInput()
                 View.INVISIBLE
             }
     }
 
+    private fun clearInput() {
+        binding.input.setText("")
+    }
+
     private fun showEmptyList() {
-        binding.progressBar.visibility = View.GONE
-        binding.dummy.visibility = View.GONE
+        binding.progressBar.isVisible = false
+        binding.dummy.isVisible = false
         binding.recycler.visibility = View.INVISIBLE
-        binding.header.visibility = View.GONE
-        binding.footer.visibility = View.GONE
+        binding.header.isVisible = false
+        binding.footer.isVisible = false
         trackAdapter.trackList.clear()
     }
 
     private fun showHistoryTracks(list: List<Track>) {
         trackAdapter.trackList.clear()
-        binding.progressBar.visibility = View.GONE
+        binding.progressBar.isVisible = false
         trackAdapter.trackList.addAll(list)
         trackAdapter.notifyDataSetChanged()
-        binding.recycler.visibility = View.VISIBLE
-        binding.header.visibility = View.VISIBLE
-        binding.footer.visibility = View.VISIBLE
+        binding.recycler.isVisible = true
+        binding.header.isVisible = true
+        binding.footer.isVisible = true
 
     }
 
     private fun showNewTracks(list: List<Track>) {
-        binding.progressBar.visibility = View.GONE
-        binding.recycler.visibility = View.VISIBLE
+        binding.progressBar.isVisible = false
+        binding.recycler.isVisible = true
         setItems(list)
     }
 
     private fun showErrorState(message: String) {
-        binding.progressBar.visibility = View.GONE
-        binding.dummy.visibility = View.VISIBLE
+        binding.progressBar.isVisible = false
+        binding.dummy.isVisible = true
         binding.imgDummy.background = setImage(R.drawable.search_dummy_error)
         binding.txtDummy.text = message
-        binding.refreshBtn.visibility = View.VISIBLE
+        binding.refreshBtn.isVisible = true
     }
 
     private fun showLoadingState() {
         showEmptyList()
-        binding.progressBar.visibility = View.VISIBLE
+        binding.progressBar.isVisible = true
     }
 
 
     private fun showNoDataState(message: String) {
-        binding.progressBar.visibility = View.GONE
-        binding.recycler.visibility = View.VISIBLE
+        binding.progressBar.isVisible = false
+        binding.recycler.isVisible = true
         trackAdapter.trackList.clear()
-        binding.dummy.visibility = View.VISIBLE
+        binding.dummy.isVisible = true
         binding.imgDummy.background = setImage(R.drawable.search_dummy_empty)
         binding.txtDummy.text = message
         binding.refreshBtn.visibility = View.INVISIBLE

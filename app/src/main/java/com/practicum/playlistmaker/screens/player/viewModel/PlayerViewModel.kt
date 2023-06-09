@@ -1,8 +1,7 @@
-package com.practicum.playlistmaker.screens.player.view_model
+package com.practicum.playlistmaker.screens.player.viewModel
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
