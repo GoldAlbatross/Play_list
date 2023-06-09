@@ -86,7 +86,6 @@ class SearchViewModel(
     }
 
     private fun showHistoryContent() {
-        uiState.value = UiState.Loading
         executor.execute {
             uiState.postValue(
                 UiState.HistoryContent(
