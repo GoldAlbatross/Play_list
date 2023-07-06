@@ -1,22 +1,22 @@
 package com.practicum.playlistmaker.screens.mediaLib
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMediaLibBinding
+import com.practicum.playlistmaker.utils.viewBinding
 
 
 class MediaLibFragment : Fragment(R.layout.fragment_media_lib) {
 
     private lateinit var tabMediator: TabLayoutMediator
-    private var viewBinding: FragmentMediaLibBinding? = null
-    private val binding get() = viewBinding!!
+    private val binding by viewBinding<FragmentMediaLibBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding = FragmentMediaLibBinding.bind(view)
 
         binding.viewPager.adapter = MediaLibViewPagerAdapter(
             fragmentManager = childFragmentManager,
@@ -34,6 +34,5 @@ class MediaLibFragment : Fragment(R.layout.fragment_media_lib) {
     override fun onDestroyView() {
         super.onDestroyView()
         tabMediator.detach()
-        viewBinding = null
     }
 }

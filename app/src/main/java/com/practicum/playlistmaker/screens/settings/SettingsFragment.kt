@@ -9,19 +9,19 @@ import com.practicum.playlistmaker.screens.settings.router.SettingsRouter
 import com.practicum.playlistmaker.screens.settings.viewModel.SettingsViewModel
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
+import com.practicum.playlistmaker.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.absoluteValue
 
 class SettingsFragment: Fragment(R.layout.fragment_settings) {
 
     private val debouncer = Debouncer()
     private val router by lazy { SettingsRouter(requireContext()) }
     private val viewModel: SettingsViewModel by viewModel()
-    private var viewBinding: FragmentSettingsBinding? = null
-    private val binding get() = viewBinding!!
+    private val binding by viewBinding<FragmentSettingsBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding = FragmentSettingsBinding.bind(view)
 
         viewModel.themeSwitcherState().observe(viewLifecycleOwner) {
             binding.nightSwtch.isChecked = it
@@ -42,10 +42,5 @@ class SettingsFragment: Fragment(R.layout.fragment_settings) {
         binding.nightSwtch.setOnCheckedChangeListener { _,night ->
             viewModel.changeTheme(night)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewBinding = null
     }
 }

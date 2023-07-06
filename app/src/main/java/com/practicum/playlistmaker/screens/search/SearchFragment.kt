@@ -2,10 +2,7 @@ package com.practicum.playlistmaker.screens.search
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
@@ -20,19 +17,18 @@ import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.screens.search.router.SearchRouter
 import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
+import com.practicum.playlistmaker.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment: Fragment(R.layout.fragment_search) {
 
-    private var viewBinding: FragmentSearchBinding? = null
-    private val binding get() = viewBinding!!
+    private val binding by viewBinding<FragmentSearchBinding>()
     private val router by lazy { SearchRouter(requireContext()) }
     private val viewModel by viewModel<SearchViewModel>()
     private val trackAdapter = TrackAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding = FragmentSearchBinding.bind(view)
 
         // Initialize recycler
         binding.recycler.apply {
@@ -109,7 +105,6 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
     override fun onDestroyView() {
         super.onDestroyView()
         trackAdapter.listener = null
-        viewBinding = null
     }
 
     private fun clearButtonVisibility(show: Boolean) {
