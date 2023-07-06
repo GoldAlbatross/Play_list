@@ -11,10 +11,10 @@ import org.koin.dsl.module
 import org.koin.dsl.bind
 
 val viewModelModule = module {
-    viewModelOf(::RootViewModel).bind()
-    viewModelOf(::PlayerViewModel).bind()
-    viewModelOf(::SearchViewModel).bind()
-    viewModelOf(::SettingsViewModel).bind()
-    viewModelOf(::PlayListViewModel).bind()
-    viewModelOf(::FavoriteListViewModel).bind()
+    viewModelOf(::RootViewModel)
+    viewModelOf(::PlayerViewModel)
+    viewModelOf(::SearchViewModel)
+    viewModelOf(::SettingsViewModel)
+    viewModelOf(::PlayListViewModel)
+    viewModelOf(::FavoriteListViewModel)
 }
