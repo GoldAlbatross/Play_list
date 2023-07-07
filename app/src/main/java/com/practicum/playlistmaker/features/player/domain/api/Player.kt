@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.features.player.domain.api
 
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
+import com.practicum.playlistmaker.screens.player.model.PlayButtonState
 
 
 interface Player {
@@ -11,5 +11,5 @@ interface Player {
     fun setStopListener(listener: () -> Unit)
     fun stopTrack()
     fun stop()
-    fun getState(): PlayerStates
+    fun getState(): PlayButtonState
 }

@@ -1,11 +1,11 @@
 package com.practicum.playlistmaker.features.player.domain.api
 
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
+import com.practicum.playlistmaker.screens.player.model.PlayButtonState
 
 interface PlayerInteractor {
 
     fun prepareMediaPlayer(url: String, listener:() -> Unit)
-    fun getState(): PlayerStates
+    fun getState(): PlayButtonState
     fun runPlayer()
     fun getTime(): String
     fun setStopListenerOnMediaPlayer(listener: () -> Unit)

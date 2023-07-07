@@ -2,11 +2,11 @@ package com.practicum.playlistmaker.screens.player.viewModel
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
 import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayButtonState
@@ -23,6 +23,13 @@ class PlayerViewModel(
     private val likeButtonState = SingleLiveEvent<LikeButtonModel>()
     private val addButtonState = SingleLiveEvent<AddButtonModel>()
     private val timeState = MutableLiveData<String>()
+    private var prepareListener: (() -> Unit)? = {
+        playButtonState.postValue(interactor.getState())
+    }
+    private var completionListener: (() -> Unit)? = {
+        playButtonState.postValue(PlayButtonState.PrepareDone)
+        handler.removeCallbacksAndMessages(null)
+    }
 
     fun playButtonStateLiveData(): LiveData<PlayButtonState> = playButtonState
     fun likeButtonStateLiveData(): LiveData<LikeButtonModel> = likeButtonState
@@ -33,17 +40,14 @@ class PlayerViewModel(
         super.onCleared()
         handler.removeCallbacksAndMessages(null)
         interactor.stopMediaPlayer()
+        prepareListener = null
+        completionListener = null
     }
 
     fun preparePlayer(trackLink: String) {
-        playButtonState.postValue(PlayButtonState.Prepare(clicked = false))
-        interactor.prepareMediaPlayer(trackLink) {
-            playButtonState.postValue(PlayButtonState.PrepareDone)
-        }
-        interactor.setStopListenerOnMediaPlayer {
-            playButtonState.postValue(PlayButtonState.PrepareDone)
-            handler.removeCallbacksAndMessages(null)
-        }
+        playButtonState.value = PlayButtonState.Loading()
+        interactor.prepareMediaPlayer(trackLink) { prepareListener?.invoke() }
+        interactor.setStopListenerOnMediaPlayer { completionListener?.invoke() }
     }
 
     fun onClickLike() {
@@ -55,11 +59,12 @@ class PlayerViewModel(
     }
 
     fun onClickedPlay() {
-        when (interactor.getState()) {
-            PlayerStates.DEFAULT -> playButtonState.postValue(PlayButtonState.Prepare(clicked = true))
-            PlayerStates.PREPARED -> playMusic()
-            PlayerStates.PLAYING -> pauseMusic()
-            PlayerStates.PAUSED -> playMusic()
+        when (val state = interactor.getState()) {
+            is PlayButtonState.Loading -> playButtonState.postValue(state)
+            is PlayButtonState.Error -> playButtonState.postValue(state)
+            is PlayButtonState.PrepareDone -> playMusic()
+            is PlayButtonState.Play -> pauseMusic()
+            is PlayButtonState.Pause -> playMusic()
         }
     }
 

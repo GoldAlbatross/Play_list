@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.screens.player.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.Toast
@@ -22,7 +23,9 @@ import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
+import java.io.IOException
 
+const val TAG = "qqq"
 class PlayerActivity : AppCompatActivity() {
 
     private val debouncer = Debouncer()
@@ -42,26 +45,29 @@ class PlayerActivity : AppCompatActivity() {
         binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
         binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
         binding.btnPlay.apply {
-            alpha = 0.1f
-            binding.btnPlay.animate().apply { duration = DELAY_3000; rotationYBy(360f) }
+            binding.btnPlay.alpha = 0.1f
             debounceClickListener(debouncer) { viewModel.onClickedPlay() }
+            binding.btnPlay.animate().apply { duration = DELAY_3000; rotationYBy(360f) }
         }
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
             when (state) {
-                is PlayButtonState.Prepare -> {
-                    if (state.clicked) { startAnimationScale(); showToast() }
+                is PlayButtonState.Loading -> {
+                    showToast(state.message)
+                }
+                is PlayButtonState.Error -> {
+                    showToast(state.message)
                 }
                 is PlayButtonState.PrepareDone -> {
                     startAnimationAlfa()
                     changeImageForPlayButton(R.drawable.player_play)
                 }
                 is PlayButtonState.Play -> {
-                    startAnimationScale()
+                    startPressAnimation()
                     changeImageForPlayButton(R.drawable.player_pause)
                 }
                 is PlayButtonState.Pause -> {
-                    startAnimationScale()
+                    startPressAnimation()
                     changeImageForPlayButton(R.drawable.player_play)
                 }
             }
@@ -116,12 +122,15 @@ class PlayerActivity : AppCompatActivity() {
     private fun startAnimationAlfa() {
         binding.btnPlay.animate().apply { duration = DELAY_1500; alpha(1.0f) }
     }
-    private fun startAnimationScale() {
+    private fun startPressAnimation() {
         binding.btnPlay.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale))
     }
-    private fun showToast() {
-        Toast.makeText(this, getString(R.string.loading),Toast.LENGTH_LONG).show()
+    private fun showToast(message: String?) {
+        message?.let {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        }
     }
+
     private fun changeImageForPlayButton(image: Int) {
         binding.btnPlay.setImageResource(image)
     }

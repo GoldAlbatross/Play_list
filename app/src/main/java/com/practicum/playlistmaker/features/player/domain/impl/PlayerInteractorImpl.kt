@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker.features.player.domain.impl
 
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
-import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.features.player.domain.api.Player
+import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.screens.player.model.PlayButtonState
 import com.practicum.playlistmaker.utils.getTimeFormat
 
 class PlayerInteractorImpl(
@@ -13,7 +13,7 @@ class PlayerInteractorImpl(
         player.prepareMediaPlayer(url, listener)
     }
 
-    override fun getState(): PlayerStates {
+    override fun getState(): PlayButtonState {
         return player.getState()
     }
 

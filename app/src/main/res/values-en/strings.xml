@@ -28,5 +28,6 @@
     <string name="empty_library">Your media library is empty</string>
     <string name="favorite_tracks">Favorite Tracks</string>
     <string name="playlists">Playlists</string>
+    <string name="check_network">Check your network connection!</string>
 
 </resources>
