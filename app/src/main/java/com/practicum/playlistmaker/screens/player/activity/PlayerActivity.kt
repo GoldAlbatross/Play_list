@@ -1,34 +1,34 @@
 package com.practicum.playlistmaker.screens.player.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.screens.player.router.PlayerRouter
-import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
+import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
 import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
-import com.practicum.playlistmaker.screens.player.model.PlayButtonState
-import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
+import com.practicum.playlistmaker.screens.player.model.PlayerState
+import com.practicum.playlistmaker.screens.player.router.PlayerRouter
+import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_2000
 import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
-import java.io.IOException
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val TAG = "qqq"
 class PlayerActivity : AppCompatActivity() {
 
-    private val debouncer = Debouncer()
+    private val debouncer: Debouncer by lazy {
+        Debouncer(coroutineScope = lifecycleScope)
+    }
     private val router by lazy { PlayerRouter(this) }
     private var viewBinding: ActivityPlayerBinding? = null
     private val binding get() = viewBinding!!
@@ -38,35 +38,30 @@ class PlayerActivity : AppCompatActivity() {
         viewBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = router.getTrackFromIntent()
-        drawScreen(track = track)
+        drawScreen(track = router.getTrackFromIntent())
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
         binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
         binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
         binding.btnPlay.apply {
-            binding.btnPlay.alpha = 0.1f
+            alpha = 0.1f
             debounceClickListener(debouncer) { viewModel.onClickedPlay() }
-            binding.btnPlay.animate().apply { duration = DELAY_3000; rotationYBy(360f) }
+            animate().apply { duration = DELAY_3000; rotationYBy(360f) }
         }
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
             when (state) {
-                is PlayButtonState.Loading -> {
-                    showToast(state.message)
-                }
-                is PlayButtonState.Error -> {
-                    showToast(state.message)
-                }
-                is PlayButtonState.PrepareDone -> {
+                is PlayerState.Loading -> { showToast(state.message) }
+                is PlayerState.Error -> { showToast(state.message) }
+                is PlayerState.Ready -> {
                     startAnimationAlfa()
                     changeImageForPlayButton(R.drawable.player_play)
                 }
-                is PlayButtonState.Play -> {
+                is PlayerState.Play -> {
                     startPressAnimation()
                     changeImageForPlayButton(R.drawable.player_pause)
                 }
-                is PlayButtonState.Pause -> {
+                is PlayerState.Pause -> {
                     startPressAnimation()
                     changeImageForPlayButton(R.drawable.player_play)
                 }

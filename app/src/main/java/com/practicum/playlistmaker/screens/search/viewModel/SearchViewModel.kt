@@ -1,12 +1,9 @@
 package com.practicum.playlistmaker.screens.search.viewModel
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchInteractor
 import com.practicum.playlistmaker.features.itunes_api.domain.model.NetworkResponse
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
@@ -15,6 +12,10 @@ import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.SingleLiveEvent
+import com.practicum.playlistmaker.utils.debounce
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 class SearchViewModel(
@@ -22,16 +23,20 @@ class SearchViewModel(
     private val storageInteractor: StorageInteractor,
 ): ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
     private var latestText: String? = null
-    private val executor = Executors.newCachedThreadPool()
 
     private val uiState = MutableLiveData<UiState>()
     private val keyboardAndClearBtnState = SingleLiveEvent<ClearButtonState>()
 
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
+    private var searchJob: Job? = null
+
+    private val deferredAction = debounce<String>(
+        delayMillis = DELAY_1500,
+        coroutineScope = viewModelScope,
+        deferredUsing = true,
+        action = { text -> getTracksFromBackendApi(query = text) }
+    )
+
     fun uiStateLiveData(): LiveData<UiState> = uiState
     fun keyboardAndClearBtnStateLiveData(): LiveData<ClearButtonState> = keyboardAndClearBtnState
 
@@ -40,7 +45,7 @@ class SearchViewModel(
         storageInteractor.clearTrackList(HISTORY_KEY)
     }
     fun onClickTrack(track: Track) {
-        executor.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             storageInteractor.saveTrackAsFirstToLocalStorage(HISTORY_KEY, track)
         }
     }
@@ -48,7 +53,7 @@ class SearchViewModel(
         onClickTrack(track = track)
     }
     fun onSwipeLeft(track: Track) {
-        executor.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             storageInteractor.removeTrackFromLocalStorage(HISTORY_KEY, track = track)
         }
     }
@@ -86,7 +91,7 @@ class SearchViewModel(
     }
 
     private fun showHistoryContent() {
-        executor.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             uiState.postValue(
                 UiState.HistoryContent(
                     storageInteractor.getTracksFromLocalStorage(HISTORY_KEY)
@@ -97,8 +102,9 @@ class SearchViewModel(
 
     private fun getTracksFromBackendApi(query: String) {
         uiState.value = UiState.Loading
-        executor.execute{
-            searchInteractor.getTracksFromBackendApi(query) { networkResponse ->
+
+        searchJob = viewModelScope.launch(Dispatchers.IO) {
+            searchInteractor.getTracksFromBackendApi(query).collect { networkResponse ->
                 when (networkResponse) {
                     is NetworkResponse.Error -> {
                         uiState.postValue(UiState.Error(networkResponse.message))
@@ -107,10 +113,10 @@ class SearchViewModel(
                         uiState.postValue(UiState.Error(networkResponse.message))
                     }
                     is NetworkResponse.Success -> {
-                            uiState.postValue(UiState.SearchContent(networkResponse.data))
+                        uiState.postValue(UiState.SearchContent(networkResponse.data))
                     }
                     is NetworkResponse.NoData -> {
-                            uiState.postValue(UiState.NoData(message = networkResponse.message))
+                        uiState.postValue(UiState.NoData(message = networkResponse.message))
                     }
                 }
             }
@@ -118,17 +124,13 @@ class SearchViewModel(
     }
 
     private fun searchDebounce(text: String) {
-        if (latestText == text) return
-
-        latestText = text
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val runnable = Runnable { getTracksFromBackendApi(query = text) }
-        val postTime = SystemClock.uptimeMillis() + DELAY_1500
-        handler.postAtTime(runnable, SEARCH_REQUEST_TOKEN, postTime)
+        if (latestText != text) {
+            latestText = text
+            deferredAction(text)
+        }
     }
 
     companion object {
-        private val SEARCH_REQUEST_TOKEN = Any()
         private const val HISTORY_KEY = "history_tracks"
     }
 }

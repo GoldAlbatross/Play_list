@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.screens.settings
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.screens.settings.router.SettingsRouter
@@ -15,7 +16,9 @@ import kotlin.math.absoluteValue
 
 class SettingsFragment: Fragment(R.layout.fragment_settings) {
 
-    private val debouncer = Debouncer()
+    private val debouncer: Debouncer by lazy {
+        Debouncer(coroutineScope = viewLifecycleOwner.lifecycleScope)
+    }
     private val router by lazy { SettingsRouter(requireContext()) }
     private val viewModel: SettingsViewModel by viewModel()
     private val binding by viewBinding<FragmentSettingsBinding>()

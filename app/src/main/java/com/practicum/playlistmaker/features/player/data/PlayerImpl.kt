@@ -1,38 +1,50 @@
 package com.practicum.playlistmaker.features.player.data
 
 import android.app.Application
-import android.content.Context
 import android.media.MediaPlayer
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.features.itunes_api.data.network.InternetController
 import com.practicum.playlistmaker.features.player.domain.api.Player
-import com.practicum.playlistmaker.screens.player.model.PlayButtonState
-import java.io.IOException
+import com.practicum.playlistmaker.screens.player.model.PlayerState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 
 class PlayerImpl(
     private val appContext: Application,
-    private val mediaPlayer: MediaPlayer
+    private val mediaPlayer: MediaPlayer,
+    private val netChecker: InternetController,
 ): Player {
 
-    private var state: PlayButtonState = PlayButtonState.Loading(message = appContext.getString(R.string.loading))
-    override fun prepareMediaPlayer(url: String, listener: () -> Unit) {
-        if (isInternetAvailable()) {
-            try {
-                mediaPlayer.apply {
-                    setOnPreparedListener { state = PlayButtonState.PrepareDone; listener.invoke() }
-                    mediaPlayer.reset()
-                    setDataSource(url)
-                    prepareAsync()
-                }
-            } catch (e: IOException) {
-                state = PlayButtonState.Error(message = appContext.getString(R.string.check_network)); listener.invoke()
+    private var state: PlayerState = PlayerState.Loading(message = appContext.getString(R.string.loading))
+
+override fun prepareMediaPlayer(url: String): Flow<PlayerState> = callbackFlow {
+    if (netChecker.isInternetAvailable()) {
+        mediaPlayer.apply {
+            reset()
+            setOnPreparedListener { state = PlayerState.Ready; trySend(state) }
+            setOnErrorListener { _,_,_ ->
+                state = PlayerState.Error(message = appContext.getString(R.string.check_network))
+                trySend(state)
+                true
             }
-        } else { state = PlayButtonState.Error(message = appContext.getString(R.string.check_network)); listener.invoke() }
+            setDataSource(url)
+            prepare()
+        }
+    } else {
+        state = PlayerState.Error(message = appContext.getString(R.string.check_network))
+        trySend(state)
     }
+    awaitClose {
+        mediaPlayer.setOnPreparedListener(null)
+        mediaPlayer.setOnErrorListener(null)
+    }
+}.flowOn(Dispatchers.IO)
 
     override fun runTrack() {
-        state = PlayButtonState.Play
+        state = PlayerState.Play
         mediaPlayer.start()
     }
 
@@ -40,40 +52,31 @@ class PlayerImpl(
         return mediaPlayer.currentPosition
     }
 
-    override fun setStopListener(listener: () -> Unit) {
-        mediaPlayer.setOnCompletionListener {
-            state = PlayButtonState.PrepareDone
-            listener.invoke()
+    override fun setStopListener(): Flow<PlayerState> = callbackFlow {
+        mediaPlayer.setOnCompletionListener{
+            state = PlayerState.Ready
+            trySend(state)
+        }
+        awaitClose {
+            mediaPlayer.setOnCompletionListener(null)
         }
     }
 
     override fun stopTrack() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
-            state = PlayButtonState.Pause
+            state = PlayerState.Pause
         }
     }
 
     override fun stop() {
-        mediaPlayer.stop()
-        mediaPlayer.reset()
-    }
-
-    override fun getState(): PlayButtonState = state
-
-
-    private fun isInternetAvailable(): Boolean {
-        val connectivityManager = appContext.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-
-        if (capabilities != null) {
-            when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-            }
+        if (state is PlayerState.Pause) {
+            mediaPlayer.stop()
         }
-        return false
+        mediaPlayer.reset()
+        state = PlayerState.Loading(message = appContext.getString(R.string.loading))
     }
+
+    override fun getState(): PlayerState = state
+
 }

@@ -10,20 +10,22 @@ import com.practicum.playlistmaker.features.itunes_api.data.network.NetworkClien
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
 import com.practicum.playlistmaker.features.itunes_api.domain.model.NetworkResponse
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
     private val context: Context,
 ): SearchRepository {
 
-    override fun searchTracks(query: String): NetworkResponse<List<Track>> {
+    override fun searchTracks(query: String): Flow<NetworkResponse<List<Track>>> = flow {
         val response = networkClient.getResponseFromBackend(SearchRequest(query = query))
-        return when (response.resultCode) {
+        emit (when (response.resultCode) {
             200 -> checkNonEmptyData(response)
             -1 -> NetworkResponse.Offline(message = context.getString(R.string.error))
             in (400..500) -> NetworkResponse.NoData(message = context.getString(R.string.empty_list))
             else -> NetworkResponse.Error(message = context.getString(R.string.server_error))
-        }
+        })
     }
 
     private fun checkNonEmptyData(response: Response): NetworkResponse<List<Track>> {
