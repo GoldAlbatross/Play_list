@@ -9,14 +9,14 @@ class RetrofitNetworkClient(
 ): NetworkClient {
 
 
-    override fun getResponseFromBackend(dto: Any): Response {
+    override suspend fun getResponseFromBackend(dto: Any): Response {
         if (!netChecker.isInternetAvailable()) return Response().apply { resultCode = -1 }
 
         if (dto !is SearchRequest) return Response().apply { resultCode = 400 }
 
-        val response = backendApi.getTrackList(dto.query).execute()
-        return response.body()?.apply { resultCode = response.code() }
-            ?: Response().apply { resultCode = response.code() }
+        val response = backendApi.getTrackList(dto.query)
+        return response?.body()?.apply { resultCode = response.code() }
+            ?: Response().apply { resultCode = response?.code() ?: 400 }
     }
 
 }
