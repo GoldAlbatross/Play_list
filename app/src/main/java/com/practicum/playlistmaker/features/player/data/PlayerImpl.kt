@@ -1,27 +1,50 @@
 package com.practicum.playlistmaker.features.player.data
 
+import android.app.Application
 import android.media.MediaPlayer
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.features.itunes_api.data.network.InternetController
 import com.practicum.playlistmaker.features.player.domain.api.Player
+import com.practicum.playlistmaker.screens.player.model.PlayerState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 
 class PlayerImpl(
-    private val mediaPlayer: MediaPlayer
-):
-    Player {
+    private val appContext: Application,
+    private val mediaPlayer: MediaPlayer,
+    private val netChecker: InternetController,
+): Player {
 
-    private var state = PlayerStates.DEFAULT
+    private var state: PlayerState = PlayerState.Loading(message = appContext.getString(R.string.loading))
 
-    override fun prepareMediaPlayer(url: String, listener: () -> Unit) {
+override fun prepareMediaPlayer(url: String): Flow<PlayerState> = callbackFlow {
+    if (netChecker.isInternetAvailable()) {
         mediaPlayer.apply {
-            setOnPreparedListener { state = PlayerStates.PREPARED; listener.invoke() }
-            mediaPlayer.reset()
+            reset()
+            setOnPreparedListener { state = PlayerState.Ready; trySend(state) }
+            setOnErrorListener { _,_,_ ->
+                state = PlayerState.Error(message = appContext.getString(R.string.check_network))
+                trySend(state)
+                true
+            }
             setDataSource(url)
-            prepareAsync()
+            prepare()
         }
+    } else {
+        state = PlayerState.Error(message = appContext.getString(R.string.check_network))
+        trySend(state)
     }
+    awaitClose {
+        mediaPlayer.setOnPreparedListener(null)
+        mediaPlayer.setOnErrorListener(null)
+    }
+}.flowOn(Dispatchers.IO)
 
     override fun runTrack() {
-        state = PlayerStates.PLAYING
+        state = PlayerState.Play
         mediaPlayer.start()
     }
 
@@ -29,26 +52,31 @@ class PlayerImpl(
         return mediaPlayer.currentPosition
     }
 
-    override fun setStopListener(listener: () -> Unit) {
-        mediaPlayer.setOnCompletionListener {
-            state = PlayerStates.PREPARED
-            listener.invoke()
+    override fun setStopListener(): Flow<PlayerState> = callbackFlow {
+        mediaPlayer.setOnCompletionListener{
+            state = PlayerState.Ready
+            trySend(state)
+        }
+        awaitClose {
+            mediaPlayer.setOnCompletionListener(null)
         }
     }
 
     override fun stopTrack() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
-            state = PlayerStates.PAUSED
+            state = PlayerState.Pause
         }
     }
 
     override fun stop() {
-        mediaPlayer.stop()
+        if (state is PlayerState.Pause) {
+            mediaPlayer.stop()
+        }
         mediaPlayer.reset()
+        state = PlayerState.Loading(message = appContext.getString(R.string.loading))
     }
 
-    override fun getState(): PlayerStates {
-        return state
-    }
+    override fun getState(): PlayerState = state
+
 }

@@ -27,8 +27,8 @@ fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T
     }
 }
 
-fun View.debounceClickListener(debouncer: Debouncer, listenerBlock: () -> Unit) {
-    setOnClickListener { debouncer.onClick(listenerBlock) }
+fun View.debounceClickListener(debouncer: Debouncer, action: () -> Unit) {
+    setOnClickListener { debouncer.onClick(action) }
 }
 
 fun Int.getTimeFormat():String {

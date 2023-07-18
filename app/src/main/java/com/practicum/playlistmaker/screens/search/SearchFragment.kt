@@ -8,6 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
@@ -17,6 +18,7 @@ import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.screens.search.router.SearchRouter
 import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
+import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,7 +27,10 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
     private val binding by viewBinding<FragmentSearchBinding>()
     private val router by lazy { SearchRouter(requireContext()) }
     private val viewModel by viewModel<SearchViewModel>()
-    private val trackAdapter = TrackAdapter()
+    private val debouncer: Debouncer by lazy {
+        Debouncer(coroutineScope = viewLifecycleOwner.lifecycleScope)
+    }
+    private val trackAdapter by lazy { TrackAdapter(debouncer) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,7 +59,7 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
         }
 
         // On tap to track
-        trackAdapter.listener = { track ->
+        trackAdapter.action = { track ->
             viewModel.onClickTrack(track)
             router.openPlayerActivity(track)
         }
@@ -104,7 +109,7 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        trackAdapter.listener = null
+        trackAdapter.action = null
     }
 
     private fun clearButtonVisibility(show: Boolean) {

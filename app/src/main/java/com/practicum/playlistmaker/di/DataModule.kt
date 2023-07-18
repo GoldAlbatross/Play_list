@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.practicum.playlistmaker.features.itunes_api.data.SearchRepositoryImpl
 import com.practicum.playlistmaker.features.itunes_api.data.network.ApiITunes
+import com.practicum.playlistmaker.features.itunes_api.data.network.InternetController
 import com.practicum.playlistmaker.features.itunes_api.data.network.NetworkClient
 import com.practicum.playlistmaker.features.itunes_api.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
@@ -53,4 +54,5 @@ val dataModule = module {
     singleOf(::PlayerImpl).bind<Player>()
     singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
     singleOf(::RetrofitNetworkClient).bind<NetworkClient>()
+    singleOf(::InternetController)
 }

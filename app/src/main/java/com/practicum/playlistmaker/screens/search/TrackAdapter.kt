@@ -14,10 +14,12 @@ import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
 import java.util.Collections
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(
+    private val debouncer: Debouncer,
+) : RecyclerView.Adapter<TrackViewHolder>() {
+
     internal val trackList = mutableListOf<Track>()
-    internal var listener: ((Track) -> Unit)? = null
-    private val debouncer = Debouncer()
+    internal var action: ((Track) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
     }
@@ -27,7 +29,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.debounceClickListener(debouncer) { listener!!.invoke(track) }
+        holder.itemView.debounceClickListener(debouncer) { action!!.invoke(track) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {

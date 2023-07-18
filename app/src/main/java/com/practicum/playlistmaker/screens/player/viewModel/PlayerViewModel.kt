@@ -1,49 +1,49 @@
 package com.practicum.playlistmaker.screens.player.viewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.features.player.domain.model.PlayerStates
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
 import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
-import com.practicum.playlistmaker.screens.player.model.PlayButtonState
+import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    val interactor: PlayerInteractor
+    private val interactor: PlayerInteractor
 ): ViewModel()  {
 
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val playButtonState = SingleLiveEvent<PlayButtonState>()
+    private val playButtonState = SingleLiveEvent<PlayerState>()
     private val likeButtonState = SingleLiveEvent<LikeButtonModel>()
     private val addButtonState = SingleLiveEvent<AddButtonModel>()
     private val timeState = MutableLiveData<String>()
 
-    fun playButtonStateLiveData(): LiveData<PlayButtonState> = playButtonState
+    private var timerJob: Job? = null
+    private var playerJob: Job? = null
+
+    fun playButtonStateLiveData(): LiveData<PlayerState> = playButtonState
     fun likeButtonStateLiveData(): LiveData<LikeButtonModel> = likeButtonState
     fun addButtonStateLiveData(): LiveData<AddButtonModel> = addButtonState
     fun timeStateLiveData(): LiveData<String> = timeState
 
     override fun onCleared() {
         super.onCleared()
-        handler.removeCallbacksAndMessages(null)
         interactor.stopMediaPlayer()
     }
 
     fun preparePlayer(trackLink: String) {
-        playButtonState.postValue(PlayButtonState.Prepare(clicked = false))
-        interactor.prepareMediaPlayer(trackLink) {
-            playButtonState.postValue(PlayButtonState.PrepareDone)
+        playButtonState.value = PlayerState.Loading()
+        playerJob = viewModelScope.launch {
+            interactor.prepareMediaPlayer(trackLink).collect { state ->
+                playButtonState.value = state
+            }
         }
-        interactor.setStopListenerOnMediaPlayer {
-            playButtonState.postValue(PlayButtonState.PrepareDone)
-            handler.removeCallbacksAndMessages(null)
-        }
+
     }
 
     fun onClickLike() {
@@ -55,28 +55,48 @@ class PlayerViewModel(
     }
 
     fun onClickedPlay() {
-        when (interactor.getState()) {
-            PlayerStates.DEFAULT -> playButtonState.postValue(PlayButtonState.Prepare(clicked = true))
-            PlayerStates.PREPARED -> playMusic()
-            PlayerStates.PLAYING -> pauseMusic()
-            PlayerStates.PAUSED -> playMusic()
+        when (val state = interactor.getState()) {
+            is PlayerState.Loading -> {
+                playButtonState.value = state
+            }
+            is PlayerState.Error -> {
+                playButtonState.value = state
+            }
+            is PlayerState.Ready -> {
+                playMusic()
+                setListener()
+            }
+            is PlayerState.Play -> {
+                pauseMusic()
+            }
+            is PlayerState.Pause -> {
+                playMusic()
+            }
+        }
+    }
+
+    private fun setListener() {
+        viewModelScope.launch {
+            interactor.setStopListenerOnMediaPlayer().collect { state ->
+                playButtonState.value = state
+            }
         }
     }
 
     private fun playMusic() {
-        playButtonState.postValue(PlayButtonState.Play)
         interactor.runPlayer()
-        handler.post(object : Runnable {
-            override fun run() {
-                timeState.postValue(interactor.getTime())
-                handler.postDelayed(this, DELAY_300)
-            }
-        })
+        playButtonState.postValue(PlayerState.Play)
+        timerJob = viewModelScope.launch {
+            do {
+                timeState.value = interactor.getTime()
+                delay(DELAY_300)
+            } while (interactor.getState() is PlayerState.Play)
+        }
     }
 
     fun pauseMusic() {
-        playButtonState.postValue(PlayButtonState.Pause)
+        timerJob?.cancel()
         interactor.pauseMediaPlayer()
-        handler.removeCallbacksAndMessages(null)
+        playButtonState.value = interactor.getState()
     }
 }
