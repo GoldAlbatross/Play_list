@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker.features.storage.data
+package com.practicum.playlistmaker.features.storage.preferences.data
 
 import android.content.SharedPreferences
-import com.practicum.playlistmaker.features.storage.data.converter.DataConverter
-import com.practicum.playlistmaker.features.storage.domain.api.LocalStorage
+import com.practicum.playlistmaker.features.storage.preferences.data.converter.DataConverter
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.LocalStorage
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write

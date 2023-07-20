@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.features.storage.data.converter
+package com.practicum.playlistmaker.features.storage.preferences.data.converter
 
 import com.google.gson.Gson
 

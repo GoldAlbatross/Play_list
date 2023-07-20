@@ -107,7 +107,7 @@
         android:layout_height="@dimen/size_50dp"
         android:layout_marginEnd="@dimen/size_16dp"
         android:background="@null"
-        android:src="@drawable/player_like"
+        android:src="@drawable/player_dislike"
         android:contentDescription="@string/button_like"
         app:layout_constraintTop_toTopOf="@id/btn_play"
         app:layout_constraintBottom_toBottomOf="@id/btn_play"

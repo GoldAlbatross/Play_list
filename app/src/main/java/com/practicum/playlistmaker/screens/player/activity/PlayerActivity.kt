@@ -38,10 +38,14 @@ class PlayerActivity : AppCompatActivity() {
         viewBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        drawScreen(track = router.getTrackFromIntent())
+        val track = router.getTrackFromIntent()
+        drawScreen(track)
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
-        binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
+        binding.btnLike.debounceClickListener(debouncer) {
+            flipAnimation(binding.btnLike)
+            viewModel.onClickLike(track)
+        }
         binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
         binding.btnPlay.apply {
             alpha = 0.1f
@@ -69,10 +73,8 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.likeButtonStateLiveData().observe(this) { state ->
-            when (state) {
-                LikeButtonModel.DisLike -> { /*TODO*/ }
-                LikeButtonModel.Like -> flipAnimation(binding.btnLike)
-            }
+            if (state) binding.btnLike.setImageResource(R.drawable.player_like)
+            else binding.btnLike.setImageResource(R.drawable.player_dislike)
         }
 
         viewModel.addButtonStateLiveData().observe(this) { state ->
@@ -99,6 +101,7 @@ class PlayerActivity : AppCompatActivity() {
         view.animate().apply { duration = DELAY_2000; rotationYBy(1080f) }
     }
     private fun drawScreen(track: Track) {
+        viewModel.getFavoriteState(track.trackId)
         viewModel.preparePlayer(trackLink = track.previewUrl)
         Glide.with(this)
             .load(track.url.replaceAfterLast('/', "512x512bb.jpg"))
