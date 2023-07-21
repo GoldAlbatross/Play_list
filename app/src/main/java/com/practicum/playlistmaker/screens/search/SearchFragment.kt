@@ -27,9 +27,7 @@ class SearchFragment: Fragment(R.layout.fragment_search) {
     private val binding by viewBinding<FragmentSearchBinding>()
     private val router by lazy { SearchRouter(requireContext()) }
     private val viewModel by viewModel<SearchViewModel>()
-    private val debouncer: Debouncer by lazy {
-        Debouncer(coroutineScope = viewLifecycleOwner.lifecycleScope)
-    }
+    private val debouncer by lazy { Debouncer(viewLifecycleOwner.lifecycleScope) }
     private val trackAdapter by lazy { TrackAdapter(debouncer) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

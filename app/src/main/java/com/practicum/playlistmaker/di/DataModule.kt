@@ -23,6 +23,7 @@ import com.practicum.playlistmaker.features.storage.preferences.domain.api.Local
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -59,9 +60,10 @@ val dataModule = module {
     singleOf(::PlayerImpl).bind<Player>()
     singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
     singleOf(::RetrofitNetworkClient).bind<NetworkClient>()
-    singleOf(::FavoriteRepositoryImpl).bind<FavoriteRepository>()
     singleOf(::InternetController)
-    factory { TrackDbConvertor() }
+
+    singleOf(::FavoriteRepositoryImpl).bind<FavoriteRepository>()
+    factoryOf(::TrackDbConvertor)
     single {
         Room
             .databaseBuilder(androidContext(), LocalDatabase::class.java, "favorite_database")

@@ -8,13 +8,13 @@ import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteInteractor
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
-import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -54,17 +54,19 @@ class PlayerViewModel(
 
     fun getFavoriteState(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            favoriteInteractor.isFavorite(id).collect{
-                likeButtonState.postValue(it)
-            }
+            favoriteInteractor.isFavorite(id)
+                .take(1)
+                .collect{ likeButtonState.postValue(it) }
         }
     }
 
     fun onClickLike(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteInteractor.isFavorite(track.trackId).collect { favorite ->
-                if (favorite) favoriteInteractor.removeFromFavorite(track.trackId)
-                else favoriteInteractor.addToFavorite(track)
+                if (favorite)
+                    favoriteInteractor.removeFromFavorite(track.trackId)
+                else
+                    favoriteInteractor.addToFavorite(track)
                 likeButtonState.postValue(!favorite)
             }
         }

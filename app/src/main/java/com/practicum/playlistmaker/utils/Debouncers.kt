@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 
 
 class Debouncer(
-    private val delay: Long = DELAY_1000,
     private val coroutineScope: CoroutineScope,
+    private val delay: Long = DELAY_1000,
 ){
     private var job: Job? = null
     private var available = true

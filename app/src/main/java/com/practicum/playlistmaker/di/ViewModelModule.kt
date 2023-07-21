@@ -8,7 +8,6 @@ import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
 import com.practicum.playlistmaker.screens.settings.viewModel.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import org.koin.dsl.bind
 
 val viewModelModule = module {
     viewModelOf(::RootViewModel)

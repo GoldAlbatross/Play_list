@@ -19,11 +19,11 @@ class FavoriteRepositoryImpl(
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        localDatabase.getDao().getFavoriteTracks().map { trackDbConvertor.map(it) }
+        emit(localDatabase.getDao().getFavoriteTracks().map { trackDbConvertor.map(it) })
     }
 
     override fun isFavorite(id: Int): Flow<Boolean> = flow {
-        localDatabase.getDao().isFavorite(id)
+        emit(localDatabase.getDao().isFavorite(id))
     }
 
 }
