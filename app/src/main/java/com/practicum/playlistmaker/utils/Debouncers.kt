@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.utils
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -10,16 +11,20 @@ class Debouncer(
     private val coroutineScope: CoroutineScope,
     private val delay: Long = DELAY_1000,
 ){
-    private var job: Job? = null
+
+    var job: Job? = null
     private var available = true
 
     fun onClick(action: () -> Unit) {
+        Log.d("qqq", "onClick")
         if (available) {
             available = false
             job = coroutineScope.launch {
+                Log.d("qqq", "available = $available")
                 action()
                 delay(delay)
                 available = true
+                Log.d("qqq", "available = $available")
             }
         }
     }

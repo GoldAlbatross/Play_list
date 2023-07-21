@@ -10,8 +10,7 @@ import com.practicum.playlistmaker.databinding.FragmentFavoriteBinding
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.screens.mediaLib.model.FavoriteUIState
 import com.practicum.playlistmaker.screens.mediaLib.viewModel.FavoriteListViewModel
-import com.practicum.playlistmaker.screens.search.TrackAdapter
-import com.practicum.playlistmaker.utils.Debouncer
+import com.practicum.playlistmaker.utils.debounce
 import com.practicum.playlistmaker.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,8 +19,7 @@ class FavoriteListFragment: Fragment(R.layout.fragment_favorite) {
     private val binding by viewBinding<FragmentFavoriteBinding>()
     private val router by lazy { FavoriteRouter(requireContext()) }
     private val viewModel by viewModel<FavoriteListViewModel>()
-    private val debouncer by lazy { Debouncer(viewLifecycleOwner.lifecycleScope) }
-    private val trackAdapter by lazy { TrackAdapter(debouncer) }
+    private val trackAdapter by lazy { FavoriteTrackAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,7 +31,10 @@ class FavoriteListFragment: Fragment(R.layout.fragment_favorite) {
         }
 
         // On tap to track
-        trackAdapter.action = { track -> router.openPlayerActivity(track) }
+        trackAdapter.action = debounce(
+            coroutineScope = viewLifecycleOwner.lifecycleScope,
+            action = { track -> router.openPlayerActivity(track) }
+        )
 
         viewModel.uiStateLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
