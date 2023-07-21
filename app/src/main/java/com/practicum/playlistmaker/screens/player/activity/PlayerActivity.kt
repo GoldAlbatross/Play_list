@@ -16,9 +16,11 @@ import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.screens.player.router.PlayerRouter
 import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
+import com.practicum.playlistmaker.utils.DELAY_1000
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_2000
 import com.practicum.playlistmaker.utils.DELAY_3000
+import com.practicum.playlistmaker.utils.DELAY_800
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
@@ -43,7 +45,6 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
         binding.btnLike.debounceClickListener(debouncer) {
-            flipAnimation(binding.btnLike)
             viewModel.onClickLike(track)
         }
         binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
@@ -98,7 +99,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun flipAnimation(view: ImageButton) {
-        view.animate().apply { duration = DELAY_2000; rotationYBy(1080f) }
+        view.animate().apply { duration = DELAY_800; rotationYBy(720f) }
     }
     private fun drawScreen(track: Track) {
         viewModel.getFavoriteState(track.trackId)
