@@ -13,6 +13,8 @@ class FavoriteListViewModel(
     private val favoriteInteractor: FavoriteInteractor,
 ): ViewModel() {
 
+    init { getTracks() }
+
     private val uiState = MutableLiveData<FavoriteUIState>()
     fun uiStateLiveData(): LiveData<FavoriteUIState> = uiState
     private fun getTracks() {
@@ -22,10 +24,6 @@ class FavoriteListViewModel(
                 else uiState.postValue(FavoriteUIState.Success(list))
             }
         }
-    }
-
-    fun updateTrackList() {
-        getTracks()
     }
 
 }

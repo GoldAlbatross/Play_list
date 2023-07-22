@@ -44,11 +44,6 @@ class FavoriteListFragment: Fragment(R.layout.fragment_favorite) {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.updateTrackList()
-    }
-
     private fun showDummy() {
         binding.recycler.visibility = View.INVISIBLE
         binding.dummy.visibility = View.VISIBLE

@@ -4,6 +4,7 @@ import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class FavoriteRepositoryImpl(
     private val localDatabase: LocalDatabase,
@@ -18,9 +19,11 @@ class FavoriteRepositoryImpl(
         localDatabase.getDao().removeFromFavorite(id)
     }
 
-    override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        emit(localDatabase.getDao().getFavoriteTracks().map { trackDbConvertor.map(it) })
-    }
+    override fun getFavoriteTracks(): Flow<List<Track>> =
+        localDatabase.getDao()
+            .getFavoriteTracks()
+            .map { list -> list.map { trackDbConvertor.map(it) } }
+
 
     override fun isFavorite(id: Int): Flow<Boolean> = flow {
         emit(localDatabase.getDao().isFavorite(id))

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteTrackDao {
@@ -15,7 +16,7 @@ interface FavoriteTrackDao {
     suspend fun removeFromFavorite(id: Int)
 
     @Query("SELECT * FROM favorite_tracks ORDER BY joinDate DESC;")
-    suspend fun getFavoriteTracks(): List<TrackEntity>
+    fun getFavoriteTracks(): Flow<List<TrackEntity>>
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE id = :id LIMIT 1);")
     suspend fun isFavorite(id: Int): Boolean
