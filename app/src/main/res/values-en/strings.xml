@@ -29,5 +29,8 @@
     <string name="favorite_tracks">Favorite Tracks</string>
     <string name="playlists">Playlists</string>
     <string name="check_network">Check your network connection!</string>
+    <string name="album_name">Name*</string>
+    <string name="album_description">Description</string>
+    <string name="create">Create</string>
 
 </resources>

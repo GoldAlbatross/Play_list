@@ -24,9 +24,11 @@
     <fragment
         android:id="@+id/favoriteListFragment"
         android:name="com.practicum.playlistmaker.screens.mediaLib.childFragments.FavoriteListFragment"
-        android:label="FavoriteListFragment" />
+        android:label="FavoriteListFragment"
+        tools:layout="@layout/fragment_favorite"/>
     <fragment
         android:id="@+id/playListFragment"
         android:name="com.practicum.playlistmaker.screens.mediaLib.childFragments.PlayListFragment"
-        android:label="PlayListFragment" />
+        android:label="PlayListFragment"
+        tools:layout="@layout/play_list"/>
 </navigation>

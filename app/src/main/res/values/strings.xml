@@ -39,5 +39,8 @@
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="check_network">Проверьте соединение с сетью!</string>
+    <string name="album_name">Hазвание*</string>
+    <string name="album_description">Описание</string>
+    <string name="create">Создать</string>
 
 </resources>
