@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchInteractor
 import com.practicum.playlistmaker.features.itunes_api.domain.model.NetworkResponse
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.StorageInteractor
 import com.practicum.playlistmaker.screens.search.model.ClearButtonState
 import com.practicum.playlistmaker.screens.search.model.UiState
 import com.practicum.playlistmaker.utils.DELAY_1500

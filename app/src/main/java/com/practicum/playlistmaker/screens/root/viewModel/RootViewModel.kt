@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.screens.root.viewModel
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.StorageInteractor
 import com.practicum.playlistmaker.utils.DARK_THEME_KEY
 
 class RootViewModel(

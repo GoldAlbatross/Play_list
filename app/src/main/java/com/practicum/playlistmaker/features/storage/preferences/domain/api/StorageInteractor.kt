@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.features.storage.domain.api
+package com.practicum.playlistmaker.features.storage.preferences.domain.api
 
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 

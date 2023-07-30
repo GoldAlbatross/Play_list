@@ -16,9 +16,11 @@ import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.screens.player.router.PlayerRouter
 import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
+import com.practicum.playlistmaker.utils.DELAY_1000
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_2000
 import com.practicum.playlistmaker.utils.DELAY_3000
+import com.practicum.playlistmaker.utils.DELAY_800
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
@@ -38,10 +40,13 @@ class PlayerActivity : AppCompatActivity() {
         viewBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        drawScreen(track = router.getTrackFromIntent())
+        val track = router.getTrackFromIntent()
+        drawScreen(track)
 
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
-        binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike() }
+        binding.btnLike.debounceClickListener(debouncer) {
+            viewModel.onClickLike(track)
+        }
         binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
         binding.btnPlay.apply {
             alpha = 0.1f
@@ -69,10 +74,8 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.likeButtonStateLiveData().observe(this) { state ->
-            when (state) {
-                LikeButtonModel.DisLike -> { /*TODO*/ }
-                LikeButtonModel.Like -> flipAnimation(binding.btnLike)
-            }
+            if (state) binding.btnLike.setImageResource(R.drawable.player_like)
+            else binding.btnLike.setImageResource(R.drawable.player_dislike)
         }
 
         viewModel.addButtonStateLiveData().observe(this) { state ->
@@ -96,9 +99,10 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun flipAnimation(view: ImageButton) {
-        view.animate().apply { duration = DELAY_2000; rotationYBy(1080f) }
+        view.animate().apply { duration = DELAY_800; rotationYBy(720f) }
     }
     private fun drawScreen(track: Track) {
+        viewModel.getFavoriteState(track.trackId)
         viewModel.preparePlayer(trackLink = track.previewUrl)
         Glide.with(this)
             .load(track.url.replaceAfterLast('/', "512x512bb.jpg"))

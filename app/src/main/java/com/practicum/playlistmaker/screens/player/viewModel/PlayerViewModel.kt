@@ -4,22 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteInteractor
 import com.practicum.playlistmaker.screens.player.model.AddButtonModel
-import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val interactor: PlayerInteractor
+    private val interactor: PlayerInteractor,
+    private val favoriteInteractor: FavoriteInteractor,
 ): ViewModel()  {
 
     private val playButtonState = SingleLiveEvent<PlayerState>()
-    private val likeButtonState = SingleLiveEvent<LikeButtonModel>()
+    private val likeButtonState = SingleLiveEvent<Boolean>()
     private val addButtonState = SingleLiveEvent<AddButtonModel>()
     private val timeState = MutableLiveData<String>()
 
@@ -27,13 +31,15 @@ class PlayerViewModel(
     private var playerJob: Job? = null
 
     fun playButtonStateLiveData(): LiveData<PlayerState> = playButtonState
-    fun likeButtonStateLiveData(): LiveData<LikeButtonModel> = likeButtonState
+    fun likeButtonStateLiveData(): LiveData<Boolean> = likeButtonState
     fun addButtonStateLiveData(): LiveData<AddButtonModel> = addButtonState
     fun timeStateLiveData(): LiveData<String> = timeState
 
     override fun onCleared() {
         super.onCleared()
         interactor.stopMediaPlayer()
+        timerJob = null
+        playerJob = null
     }
 
     fun preparePlayer(trackLink: String) {
@@ -46,8 +52,24 @@ class PlayerViewModel(
 
     }
 
-    fun onClickLike() {
-        likeButtonState.postValue(LikeButtonModel.Like)
+    fun getFavoriteState(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteInteractor.isFavorite(id)
+                .take(1)
+                .collect{ likeButtonState.postValue(it) }
+        }
+    }
+
+    fun onClickLike(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteInteractor.isFavorite(track.trackId).collect { favorite ->
+                if (favorite)
+                    favoriteInteractor.removeFromFavorite(track.trackId)
+                else
+                    favoriteInteractor.addToFavorite(track)
+                likeButtonState.postValue(!favorite)
+            }
+        }
     }
 
     fun onClickAdd() {

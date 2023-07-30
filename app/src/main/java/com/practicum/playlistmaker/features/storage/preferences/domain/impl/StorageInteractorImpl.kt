@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.features.storage.domain.impl
+package com.practicum.playlistmaker.features.storage.preferences.domain.impl
 
 
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.features.storage.domain.api.LocalStorage
-import com.practicum.playlistmaker.features.storage.domain.api.StorageInteractor
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.LocalStorage
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.StorageInteractor
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write

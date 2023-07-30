@@ -39,6 +39,7 @@ class SearchRepositoryImpl(
 
     private fun mapToTrack(trackDto: TrackDto): Track {
         return Track(
+            trackId = trackDto.trackId,
             track = trackDto.track,
             artist = trackDto.artist,
             trackTime = trackDto.trackTime,

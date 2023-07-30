@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.di
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.features.itunes_api.data.SearchRepositoryImpl
 import com.practicum.playlistmaker.features.itunes_api.data.network.ApiITunes
@@ -11,13 +12,18 @@ import com.practicum.playlistmaker.features.itunes_api.data.network.RetrofitNetw
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
 import com.practicum.playlistmaker.features.player.data.PlayerImpl
 import com.practicum.playlistmaker.features.player.domain.api.Player
-import com.practicum.playlistmaker.features.storage.data.LocalStorageImpl
-import com.practicum.playlistmaker.features.storage.data.converter.DataConverter
-import com.practicum.playlistmaker.features.storage.data.converter.GsonDataConverter
-import com.practicum.playlistmaker.features.storage.domain.api.LocalStorage
+import com.practicum.playlistmaker.features.storage.db_favorite.data.FavoriteRepositoryImpl
+import com.practicum.playlistmaker.features.storage.db_favorite.data.LocalDatabase
+import com.practicum.playlistmaker.features.storage.db_favorite.data.TrackDbConvertor
+import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteRepository
+import com.practicum.playlistmaker.features.storage.preferences.data.LocalStorageImpl
+import com.practicum.playlistmaker.features.storage.preferences.data.converter.DataConverter
+import com.practicum.playlistmaker.features.storage.preferences.data.converter.GsonDataConverter
+import com.practicum.playlistmaker.features.storage.preferences.domain.api.LocalStorage
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -55,4 +61,13 @@ val dataModule = module {
     singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
     singleOf(::RetrofitNetworkClient).bind<NetworkClient>()
     singleOf(::InternetController)
+
+    singleOf(::FavoriteRepositoryImpl).bind<FavoriteRepository>()
+    factoryOf(::TrackDbConvertor)
+    single {
+        Room
+            .databaseBuilder(androidContext(), LocalDatabase::class.java, "favorite_database")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
 }

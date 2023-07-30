@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.screens.search
+package com.practicum.playlistmaker.screens.mediaLib.childFragments
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,14 +9,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.utils.Debouncer
-import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
-import java.util.Collections
 
-class TrackAdapter(
-    private val debouncer: Debouncer,
-) : RecyclerView.Adapter<TrackViewHolder>() {
+class FavoriteTrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
 
     internal val trackList = mutableListOf<Track>()
     internal var action: ((Track) -> Unit)? = null
@@ -29,29 +24,9 @@ class TrackAdapter(
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.debounceClickListener(debouncer) {
-            action!!.invoke(track)
-        }
+        holder.itemView.setOnClickListener { action!!.invoke(track) }
     }
 
-    fun replaceItem(sourcePosition: Int, targetPosition: Int) {
-        Collections.swap(trackList, sourcePosition, targetPosition)
-        notifyItemMoved(sourcePosition, targetPosition)
-    }
-
-    fun popItem(position: Int) {
-        val track = trackList[position]
-        trackList.remove(track)
-        notifyItemRemoved(position)
-        trackList.add(0, track)
-        notifyItemInserted(0)
-        notifyItemRangeChanged(0, position + 1)
-    }
-
-    fun removeAt(position: Int) {
-        trackList.removeAt(position)
-        notifyItemRemoved(position)
-    }
 }
 
 class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
