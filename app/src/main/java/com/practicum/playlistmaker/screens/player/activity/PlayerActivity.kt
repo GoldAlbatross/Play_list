@@ -1,58 +1,58 @@
 package com.practicum.playlistmaker.screens.player.activity
 
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
-import com.practicum.playlistmaker.screens.player.model.AddButtonModel
-import com.practicum.playlistmaker.screens.player.model.LikeButtonModel
+import com.practicum.playlistmaker.features.storage.local_db.domain.model.Album
+import com.practicum.playlistmaker.features.storage.local_db.domain.model.ScreenState
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.screens.player.router.PlayerRouter
 import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
-import com.practicum.playlistmaker.utils.DELAY_1000
 import com.practicum.playlistmaker.utils.DELAY_1500
-import com.practicum.playlistmaker.utils.DELAY_2000
 import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.DELAY_800
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
-    private val debouncer: Debouncer by lazy {
-        Debouncer(coroutineScope = lifecycleScope)
+    private val debouncer: Debouncer by lazy { Debouncer(lifecycleScope) }
+    private val bottomSheetAdapter by lazy { BottomSheetAdapter(debouncer) }
+    private val bottomSheetContainer by lazy {
+        findViewById<ConstraintLayout>(R.id.bottom_sheet)
+    }
+    private val bottomSheetBehavior by lazy {
+        BottomSheetBehavior.from(bottomSheetContainer)
     }
     private val router by lazy { PlayerRouter(this) }
+    private val track by lazy { router.getTrackFromIntent() }
     private var viewBinding: ActivityPlayerBinding? = null
     private val binding get() = viewBinding!!
     private val viewModel by viewModel<PlayerViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = router.getTrackFromIntent()
         drawScreen(track)
-
-        binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
-        binding.btnLike.debounceClickListener(debouncer) {
-            viewModel.onClickLike(track)
-        }
-        binding.btnAdd.debounceClickListener(debouncer) { viewModel.onClickAdd() }
-        binding.btnPlay.apply {
-            alpha = 0.1f
-            debounceClickListener(debouncer) { viewModel.onClickedPlay() }
-            animate().apply { duration = DELAY_3000; rotationYBy(360f) }
-        }
+        initListeners()
+        initBottomSheet()
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
             when (state) {
@@ -78,14 +78,55 @@ class PlayerActivity : AppCompatActivity() {
             else binding.btnLike.setImageResource(R.drawable.player_dislike)
         }
 
-        viewModel.addButtonStateLiveData().observe(this) { state ->
-            when (state) {
-                AddButtonModel.Add -> flipAnimation(binding.btnAdd)
-                AddButtonModel.Remove -> { /*TODO*/ }
+        lifecycleScope.launch {
+            viewModel.addButtonStateFlow.collect { state ->
+                when (state) {
+                    is ScreenState.Content -> { drawBottomSheet(state.albums) }
+                    is ScreenState.Empty -> { drawBottomSheet(emptyList()) }
+                }
             }
         }
 
         viewModel.timeStateLiveData().observe(this) { updateTime(it)}
+    }
+
+    private fun initBottomSheet() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> { binding.coordinator?.setBackgroundColor(
+                        ContextCompat.getColor(this@PlayerActivity, R.color.transparent))
+                    }
+                    else -> { binding.coordinator?.setBackgroundColor(
+                        ContextCompat.getColor(this@PlayerActivity, R.color.background))
+                    }
+                }
+            }
+        })
+    }
+
+    private fun drawBottomSheet(albums: List<Album>) {
+        binding.bottomSheet?.recycler?.adapter = bottomSheetAdapter
+        bottomSheetAdapter.playList = albums
+        bottomSheetAdapter.notifyDataSetChanged()
+    }
+
+    private fun initListeners() {
+        binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
+        binding.btnLike.debounceClickListener(debouncer) {
+            viewModel.onClickLike(track)
+        }
+        binding.btnAdd.debounceClickListener(debouncer) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            viewModel.onClickAdd()
+        }
+        binding.btnPlay.apply {
+            alpha = 0.1f
+            debounceClickListener(debouncer) { viewModel.onClickedPlay() }
+            animate().apply { duration = DELAY_3000; rotationYBy(360f) }
+        }
     }
 
     override fun onPause() {
@@ -117,6 +158,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.txtAlbumRight.text = track.collectionName.ifEmpty { "" }
         binding.txtStyleRight.text = track.primaryGenreName
         binding.txtCountryRight.text = track.country
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
     private fun startAnimationAlfa() {
         binding.btnPlay.animate().apply { duration = DELAY_1500; alpha(1.0f) }

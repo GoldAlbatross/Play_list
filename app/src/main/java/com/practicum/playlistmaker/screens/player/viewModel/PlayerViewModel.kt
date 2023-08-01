@@ -6,25 +6,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteInteractor
-import com.practicum.playlistmaker.screens.player.model.AddButtonModel
+import com.practicum.playlistmaker.features.storage.local_db.domain.api.AlbumInteractor
+import com.practicum.playlistmaker.features.storage.local_db.domain.api.FavoriteInteractor
+import com.practicum.playlistmaker.features.storage.local_db.domain.model.ScreenState
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val interactor: PlayerInteractor,
     private val favoriteInteractor: FavoriteInteractor,
+    private val albumInteractor: AlbumInteractor,
 ): ViewModel()  {
 
     private val playButtonState = SingleLiveEvent<PlayerState>()
     private val likeButtonState = SingleLiveEvent<Boolean>()
-    private val addButtonState = SingleLiveEvent<AddButtonModel>()
     private val timeState = MutableLiveData<String>()
 
     private var timerJob: Job? = null
@@ -32,8 +36,10 @@ class PlayerViewModel(
 
     fun playButtonStateLiveData(): LiveData<PlayerState> = playButtonState
     fun likeButtonStateLiveData(): LiveData<Boolean> = likeButtonState
-    fun addButtonStateLiveData(): LiveData<AddButtonModel> = addButtonState
     fun timeStateLiveData(): LiveData<String> = timeState
+
+    private val addButtonState = MutableStateFlow<ScreenState>(ScreenState.Empty)
+    val addButtonStateFlow: StateFlow<ScreenState> = addButtonState.asStateFlow()
 
     override fun onCleared() {
         super.onCleared()
@@ -73,7 +79,12 @@ class PlayerViewModel(
     }
 
     fun onClickAdd() {
-        addButtonState.postValue(AddButtonModel.Add)
+        viewModelScope.launch(Dispatchers.IO) {
+            albumInteractor.getAlbumlist().collect { list ->
+                if (list.isEmpty()) addButtonState.emit(ScreenState.Empty)
+                else addButtonState.emit(ScreenState.Content(list))
+            }
+        }
     }
 
     fun onClickedPlay() {

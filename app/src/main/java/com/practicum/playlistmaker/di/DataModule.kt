@@ -12,10 +12,13 @@ import com.practicum.playlistmaker.features.itunes_api.data.network.RetrofitNetw
 import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchRepository
 import com.practicum.playlistmaker.features.player.data.PlayerImpl
 import com.practicum.playlistmaker.features.player.domain.api.Player
-import com.practicum.playlistmaker.features.storage.db_favorite.data.FavoriteRepositoryImpl
-import com.practicum.playlistmaker.features.storage.db_favorite.data.LocalDatabase
-import com.practicum.playlistmaker.features.storage.db_favorite.data.TrackDbConvertor
-import com.practicum.playlistmaker.features.storage.db_favorite.domain.api.FavoriteRepository
+import com.practicum.playlistmaker.features.storage.local_db.data.favorite.FavoriteRepositoryImpl
+import com.practicum.playlistmaker.features.storage.local_db.data.LocalDatabase
+import com.practicum.playlistmaker.features.storage.local_db.data.album.AlbumDbConvertor
+import com.practicum.playlistmaker.features.storage.local_db.data.favorite.TrackDbConvertor
+import com.practicum.playlistmaker.features.storage.local_db.data.album.AlbumRepositoryImpl
+import com.practicum.playlistmaker.features.storage.local_db.domain.api.AlbumRepository
+import com.practicum.playlistmaker.features.storage.local_db.domain.api.FavoriteRepository
 import com.practicum.playlistmaker.features.storage.preferences.data.LocalStorageImpl
 import com.practicum.playlistmaker.features.storage.preferences.data.converter.DataConverter
 import com.practicum.playlistmaker.features.storage.preferences.data.converter.GsonDataConverter
@@ -55,15 +58,19 @@ val dataModule = module {
         androidContext().getSharedPreferences(PREF_KEY, AppCompatActivity.MODE_PRIVATE)
     }
 
+    singleOf(::FavoriteRepositoryImpl).bind<FavoriteRepository>()
+    singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
+    singleOf(::AlbumRepositoryImpl).bind<AlbumRepository>()
+
     singleOf(::LocalStorageImpl).bind<LocalStorage>()
     singleOf(::GsonDataConverter).bind<DataConverter>()
     singleOf(::PlayerImpl).bind<Player>()
-    singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
+
     singleOf(::RetrofitNetworkClient).bind<NetworkClient>()
     singleOf(::InternetController)
 
-    singleOf(::FavoriteRepositoryImpl).bind<FavoriteRepository>()
     factoryOf(::TrackDbConvertor)
+    factoryOf(::AlbumDbConvertor)
     single {
         Room
             .databaseBuilder(androidContext(), LocalDatabase::class.java, "favorite_database")

@@ -16,6 +16,8 @@
     <dimen name="size_64dp">64dp</dimen>
     <dimen name="size_90dp">90dp</dimen>
     <dimen name="size_100dp">100dp</dimen>
+    <dimen name="size_140dp">140dp</dimen>
+
     <dimen name="text_size_11sp">11sp</dimen>
     <dimen name="text_size_13sp">13sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>

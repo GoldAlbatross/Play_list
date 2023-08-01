@@ -12,5 +12,6 @@
     <color name="blue_background">#608FEC</color>
     <color name="light_gray">#E6E8EB</color>
     <color name="text_gray">#AEAFB4</color>
-    <color name="none">#00FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="background">#803772E7</color>
 </resources>

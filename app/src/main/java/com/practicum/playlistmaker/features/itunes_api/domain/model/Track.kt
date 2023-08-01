@@ -2,8 +2,10 @@ package com.practicum.playlistmaker.features.itunes_api.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Track(
     val trackId: Int,
     val track: String,

@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.screens.root.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmaker.R
@@ -26,6 +27,21 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.menu.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.createFragment -> hideBottomNav()
+                else -> showBottomNav()
+            }
+        }
+    }
+
+    private fun hideBottomNav() {
+        binding.menu.visibility = View.GONE
+    }
+
+    private fun showBottomNav() {
+        binding.menu.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
