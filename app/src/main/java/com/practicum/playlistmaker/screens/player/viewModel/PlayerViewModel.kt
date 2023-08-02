@@ -8,7 +8,8 @@ import com.practicum.playlistmaker.features.itunes_api.domain.model.Track
 import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.features.storage.local_db.domain.api.AlbumInteractor
 import com.practicum.playlistmaker.features.storage.local_db.domain.api.FavoriteInteractor
-import com.practicum.playlistmaker.features.storage.local_db.domain.model.ScreenState
+import com.practicum.playlistmaker.features.storage.local_db.domain.model.Album
+import com.practicum.playlistmaker.features.storage.local_db.domain.model.BottomSheetUIState
 import com.practicum.playlistmaker.screens.player.model.PlayerState
 import com.practicum.playlistmaker.utils.DELAY_300
 import com.practicum.playlistmaker.utils.SingleLiveEvent
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlayerViewModel(
     private val interactor: PlayerInteractor,
@@ -38,8 +40,8 @@ class PlayerViewModel(
     fun likeButtonStateLiveData(): LiveData<Boolean> = likeButtonState
     fun timeStateLiveData(): LiveData<String> = timeState
 
-    private val addButtonState = MutableStateFlow<ScreenState>(ScreenState.Empty)
-    val addButtonStateFlow: StateFlow<ScreenState> = addButtonState.asStateFlow()
+    private val addButtonState = MutableStateFlow<BottomSheetUIState>(BottomSheetUIState.Empty)
+    val addButtonStateFlow: StateFlow<BottomSheetUIState> = addButtonState.asStateFlow()
 
     override fun onCleared() {
         super.onCleared()
@@ -80,9 +82,9 @@ class PlayerViewModel(
 
     fun onClickAdd() {
         viewModelScope.launch(Dispatchers.IO) {
-            albumInteractor.getAlbumlist().collect { list ->
-                if (list.isEmpty()) addButtonState.emit(ScreenState.Empty)
-                else addButtonState.emit(ScreenState.Content(list))
+            albumInteractor.getAlbumList().collect { list ->
+                if (list.isEmpty()) addButtonState.emit(BottomSheetUIState.Empty)
+                else addButtonState.emit(BottomSheetUIState.Content(list))
             }
         }
     }
@@ -131,5 +133,18 @@ class PlayerViewModel(
         timerJob?.cancel()
         interactor.pauseMediaPlayer()
         playButtonState.value = interactor.getState()
+    }
+
+    fun onClickedAlbum(track: Track, album: Album) {
+        viewModelScope.launch {
+            val song = album.trackList.filter { it.trackId == track.trackId }
+            if (song.isNotEmpty()) addButtonState.emit(BottomSheetUIState.Exist(album.name))
+            else {
+                withContext(Dispatchers.IO) {
+                    albumInteractor.addToAlbum(track, album)
+                    addButtonState.emit(BottomSheetUIState.Success(album.name))
+                }
+            }
+        }
     }
 }

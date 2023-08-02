@@ -8,6 +8,6 @@ data class Album(
     var uri: String = "",
     var name: String = "",
     var description: String = "",
-    var trackList: List<Track> = emptyList(),
-    var trackCount: Int = 0,
+    val trackList: List<Track> = emptyList(),
+    val trackCount: Int = 0,
 )

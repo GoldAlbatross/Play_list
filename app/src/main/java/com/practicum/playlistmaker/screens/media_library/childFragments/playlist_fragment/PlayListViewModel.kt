@@ -22,7 +22,7 @@ class PlayListViewModel(
 
     private fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            albumInteractor.getAlbumlist().collect { list ->
+            albumInteractor.getAlbumList().collect { list ->
                 if (list.isEmpty()) uiState.emit(ScreenState.Empty)
                 else uiState.emit(ScreenState.Content(list))
             }

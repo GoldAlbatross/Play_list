@@ -29,9 +29,7 @@ class BottomSheetAdapter(
         val pos = holder.adapterPosition
         val item = playList[pos]
         holder.bind(item)
-        holder.itemView.debounceClickListener(debouncer) {
-            action!!.invoke(item)
-        }
+        holder.itemView.debounceClickListener(debouncer) { action!!.invoke(item) }
     }
 }
 

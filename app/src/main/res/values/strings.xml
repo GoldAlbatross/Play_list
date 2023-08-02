@@ -49,5 +49,7 @@
     <string name="album_created">Плейлист %s создан</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="create_album">Новый плейлист</string>
+    <string name="added_to_album">Добавлено в плейлист %s</string>
+    <string name="track_exist">Трек уже добавлен в плейлист %s</string>
 
 </resources>

@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.CreateFragmentBinding
+import androidx.fragment.app.FragmentManager
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -102,11 +103,17 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
         findNavController().navigateUp()
     }
     private fun goBack() {
-        findNavController().navigateUp()
+        try {
+            findNavController().navigateUp()
+        } catch (e: Exception) {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 
     private fun createButtonClickable(state: Boolean) {
         binding.create.isEnabled = state
     }
+
+    companion object { fun newInstance() = CreateFragment() }
 
 }
