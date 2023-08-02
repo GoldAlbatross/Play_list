@@ -97,16 +97,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun drawBottomSheet(albums: List<Album>) {
-        binding.bottomSheet
-            .newAlbum
-            .debounceClickListener(debouncer) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.player_containerView, CreateFragment.newInstance())
-                    .addToBackStack(null)
-                    .commit()
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        bottomSheetAdapter.action = { album ->  viewModel.onClickedAlbum(track, album) }
+        binding.bottomSheet.newAlbum.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.player_containerView, CreateFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
         bottomSheetAdapter.playList = albums
         binding.bottomSheet.recycler.adapter = bottomSheetAdapter
         bottomSheetAdapter.notifyDataSetChanged()
@@ -127,10 +124,10 @@ class PlayerActivity : AppCompatActivity() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) { }
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> { binding.coordinator?.setBackgroundColor(
+                    BottomSheetBehavior.STATE_HIDDEN -> { binding.coordinator.setBackgroundColor(
                         ContextCompat.getColor(this@PlayerActivity, R.color.transparent))
                     }
-                    else -> { binding.coordinator?.setBackgroundColor(
+                    else -> { binding.coordinator.setBackgroundColor(
                         ContextCompat.getColor(this@PlayerActivity, R.color.background))
                     }
                 }
@@ -150,6 +147,7 @@ class PlayerActivity : AppCompatActivity() {
             debounceClickListener(debouncer) { viewModel.onClickedPlay() }
             animate().apply { duration = DELAY_3000; rotationYBy(360f) }
         }
+        bottomSheetAdapter.action = { album ->  viewModel.onClickedAlbum(track, album) }
     }
 
     override fun onPause() {

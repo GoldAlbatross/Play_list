@@ -1,7 +1,10 @@
 package com.practicum.playlistmaker.screens.album_creating
 
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,16 +20,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.CreateFragmentBinding
 import androidx.fragment.app.FragmentManager
+import com.practicum.playlistmaker.screens.root.activity.RootActivity
 import com.practicum.playlistmaker.utils.viewBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 class CreateFragment: Fragment(R.layout.create_fragment) {
 
     private val binding by viewBinding<CreateFragmentBinding>()
     private val viewModel by viewModel<CreateAlbumViewModel>()
     private lateinit var dialog: AlertDialog
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,7 +38,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
         registerImagePicker()
         setListeners()
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiStateFlow.collect { state ->
                 when (state) {
                     is ScreenState.Default -> {  }
@@ -100,12 +104,12 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             .show()
-        findNavController().navigateUp()
+        goBack()
     }
     private fun goBack() {
-        try {
+        if (requireActivity() is RootActivity) {
             findNavController().navigateUp()
-        } catch (e: Exception) {
+        } else {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }

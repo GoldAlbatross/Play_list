@@ -34,7 +34,6 @@ class PlayerViewModel(
     private val timeState = MutableLiveData<String>()
 
     private var timerJob: Job? = null
-    private var playerJob: Job? = null
 
     fun playButtonStateLiveData(): LiveData<PlayerState> = playButtonState
     fun likeButtonStateLiveData(): LiveData<Boolean> = likeButtonState
@@ -46,13 +45,11 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         interactor.stopMediaPlayer()
-        timerJob = null
-        playerJob = null
     }
 
     fun preparePlayer(trackLink: String) {
         playButtonState.value = PlayerState.Loading()
-        playerJob = viewModelScope.launch {
+        viewModelScope.launch {
             interactor.prepareMediaPlayer(trackLink).collect { state ->
                 playButtonState.value = state
             }
