@@ -24,7 +24,7 @@ class ViewBindingDelegate<T : ViewBinding>(
     private var binding: T? = null
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        Log.d(TAG, "ViewBindingDelegate -> getValue(${thisRef?.simpleName()}): T")
+        Log.d(TAG, "ViewBindingDelegate -> getValue(thisRef: ${thisRef?.simpleName()}): T")
         val viewLifecycleOwner: LifecycleOwner = fragment.viewLifecycleOwner
         if (fragment.view != null) return getOrCreateBinding(viewLifecycleOwner)
         else throw IllegalStateException("Called before onViewCreated()/after onDestroyView()")
