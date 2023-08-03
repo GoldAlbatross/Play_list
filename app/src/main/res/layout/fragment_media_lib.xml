@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.practicum.playlistmaker.screens.media_library.MediaLibFragment">
+    tools:context="com.practicum.playlistmaker.presentation.fragment.media_library.MediaLibFragment">
 
     <TextView
         android:id="@+id/Title"

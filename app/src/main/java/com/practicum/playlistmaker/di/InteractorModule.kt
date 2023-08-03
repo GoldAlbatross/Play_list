@@ -1,15 +1,15 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.features.itunes_api.domain.api.SearchInteractor
-import com.practicum.playlistmaker.features.itunes_api.domain.iml.SearchInteractorImpl
-import com.practicum.playlistmaker.features.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.features.player.domain.impl.PlayerInteractorImpl
-import com.practicum.playlistmaker.features.storage.local_db.domain.api.AlbumInteractor
-import com.practicum.playlistmaker.features.storage.local_db.domain.api.FavoriteInteractor
-import com.practicum.playlistmaker.features.storage.local_db.domain.impl.AlbumInteractorImpl
-import com.practicum.playlistmaker.features.storage.local_db.domain.impl.FavoriteInteractorImpl
-import com.practicum.playlistmaker.features.storage.preferences.domain.api.StorageInteractor
-import com.practicum.playlistmaker.features.storage.preferences.domain.impl.StorageInteractorImpl
+import com.practicum.playlistmaker.domain.network.api.SearchInteractor
+import com.practicum.playlistmaker.domain.network.iml.SearchInteractorImpl
+import com.practicum.playlistmaker.domain.player.api.PlayerInteractor
+import com.practicum.playlistmaker.domain.player.impl.PlayerInteractorImpl
+import com.practicum.playlistmaker.domain.local_db.api.PlayListInteractor
+import com.practicum.playlistmaker.domain.local_db.api.FavoriteInteractor
+import com.practicum.playlistmaker.domain.local_db.impl.PlayListInteractorImpl
+import com.practicum.playlistmaker.domain.local_db.impl.FavoriteInteractorImpl
+import com.practicum.playlistmaker.domain.shared_prefs.api.StorageInteractor
+import com.practicum.playlistmaker.domain.shared_prefs.impl.StorageInteractorImpl
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -20,5 +20,5 @@ val interactorModule = module {
     singleOf(::StorageInteractorImpl).bind<StorageInteractor>()
     singleOf(::PlayerInteractorImpl).bind<PlayerInteractor>()
     singleOf(::FavoriteInteractorImpl).bind<FavoriteInteractor>()
-    singleOf(::AlbumInteractorImpl).bind<AlbumInteractor>()
+    singleOf(::PlayListInteractorImpl).bind<PlayListInteractor>()
 }

@@ -1,12 +1,12 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.screens.album_creating.CreateAlbumViewModel
-import com.practicum.playlistmaker.screens.root.viewModel.RootViewModel
-import com.practicum.playlistmaker.screens.media_library.childFragments.favorite_fragment.FavoriteListViewModel
-import com.practicum.playlistmaker.screens.media_library.childFragments.playlist_fragment.PlayListViewModel
-import com.practicum.playlistmaker.screens.player.viewModel.PlayerViewModel
-import com.practicum.playlistmaker.screens.search.viewModel.SearchViewModel
-import com.practicum.playlistmaker.screens.settings.viewModel.SettingsViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.CreateAlbumViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.RootViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.FavoriteListViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.PlayListViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.PlayerViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.SearchViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
