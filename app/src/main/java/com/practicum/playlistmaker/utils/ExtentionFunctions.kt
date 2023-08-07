@@ -36,7 +36,7 @@ fun Int.getTimeFormat(): String {
 }
 
 fun <T> T.simpleName(): String {
-    return this!!::class.java.simpleName
+    return this!!::class.simpleName ?: "Unknown class"
 }
 
 
