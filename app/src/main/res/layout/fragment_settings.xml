@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context="com.practicum.playlistmaker.screens.settings.SettingsFragment">
+    tools:context="com.practicum.playlistmaker.presentation.fragment.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/title"

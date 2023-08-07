@@ -29,5 +29,15 @@
     <string name="favorite_tracks">Favorite Tracks</string>
     <string name="playlists">Playlists</string>
     <string name="check_network">Check your network connection!</string>
+    <string name="album_name">Name*</string>
+    <string name="album_description">Description</string>
+    <string name="create">Create</string>
+    <string name="queryTitle">Complete playlist creation?</string>
+    <string name="data_will_be_lost">All unsaved data will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="album_created">Playlist %s has been created</string>
+    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="create_album">Create New Album</string>
 
 </resources>

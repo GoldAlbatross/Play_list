@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:name=".app.App"
@@ -18,8 +22,7 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".screens.root.activity.RootActivity"
-            android:windowSoftInputMode="adjustNothing"
+            android:name=".presentation.activity.RootActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +31,8 @@
         </activity>
 
         <activity
-            android:name=".screens.player.activity.PlayerActivity"
+            android:name=".presentation.activity.player.PlayerActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

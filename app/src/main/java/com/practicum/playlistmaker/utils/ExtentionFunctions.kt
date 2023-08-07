@@ -31,7 +31,12 @@ fun View.debounceClickListener(debouncer: Debouncer, action: () -> Unit) {
     setOnClickListener { debouncer.onClick(action) }
 }
 
-fun Int.getTimeFormat():String {
+fun Int.getTimeFormat(): String {
     return SimpleDateFormat("mm:ss", Locale.US).format(this)
 }
+
+fun <T> T.simpleName(): String {
+    return this!!::class.simpleName ?: "Unknown class"
+}
+
 
