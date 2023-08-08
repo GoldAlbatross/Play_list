@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.fragment.playlist_fragment
+package com.practicum.playlistmaker.presentation.fragment.playlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ class PlayListAdapter(
 ) : RecyclerView.Adapter<PlayListViewHolder>() {
 
     internal var playList = listOf<Album>()
-    internal var action: ((Album) -> Unit)? = null
+    internal var action: ((Long) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
         return PlayListViewHolder(
             CreateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,7 +29,7 @@ class PlayListAdapter(
         val item = playList[pos]
         holder.bind(item)
         holder.itemView.debounceClickListener(debouncer) {
-            action!!.invoke(item)
+            action!!.invoke(item.id)
         }
     }
 }

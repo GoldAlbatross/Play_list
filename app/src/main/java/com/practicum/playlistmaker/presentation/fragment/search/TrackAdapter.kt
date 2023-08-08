@@ -30,7 +30,7 @@ class TrackAdapter(
         val track = trackList[pos]
         holder.bind(track)
         holder.itemView.debounceClickListener(debouncer) {
-            action!!.invoke(track)
+            action?.invoke(track)
         }
     }
 

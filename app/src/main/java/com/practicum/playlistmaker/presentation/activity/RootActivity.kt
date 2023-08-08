@@ -36,6 +36,7 @@ class RootActivity : AppCompatActivity() {
             Log.d(TAG, "RootActivity -> navController.addOnDestinationChangedListener { destination = ${destination.label} }")
             when (destination.id) {
                 R.id.createFragment -> hideBottomNav()
+                R.id.albumFragment -> hideBottomNav()
                 R.id.search -> setInputMode(true)
                 else -> {
                     setInputMode(false)

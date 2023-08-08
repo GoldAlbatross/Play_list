@@ -27,11 +27,5 @@ class PlayListViewModel(
                 else uiState.emit(ScreenState.Content(list))
             }
         }
-
     }
-
-    fun onClickTrack(album: Album) {
-        //TODO("Not yet implemented")
-    }
-
 }

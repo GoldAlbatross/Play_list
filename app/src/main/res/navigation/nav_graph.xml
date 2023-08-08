@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_media_lib_to_createFragment"
             app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_media_lib_to_albumFragment"
+            app:destination="@id/albumFragment" />
     </fragment>
 
     <fragment
@@ -30,18 +33,36 @@
 
     <fragment
         android:id="@+id/favoriteListFragment"
-        android:name="com.practicum.playlistmaker.presentation.fragment.favorite_fragment.FavoriteListFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.favorite.FavoriteListFragment"
         android:label="FavoriteListFragment"
         tools:layout="@layout/fragment_favorite"/>
 
     <fragment
         android:id="@+id/playListFragment"
-        android:name="com.practicum.playlistmaker.presentation.fragment.playlist_fragment.PlayListFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.playlist.PlayListFragment"
         android:label="PlayListFragment"
-        tools:layout="@layout/create_fragment"/>
+        tools:layout="@layout/create_fragment">
+        <action
+            android:id="@+id/action_playListFragment_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createFragment"
-        android:name="com.practicum.playlistmaker.presentation.fragment.create_fragment.CreateFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.create.CreateFragment"
         android:label="CreateFragment" />
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.album.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" >
+        <action
+            android:id="@+id/action_albumFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.practicum.playlistmaker.presentation.activity.player.PlayerActivity"
+        android:label="activity_player"
+        tools:layout="@layout/activity_player" />
 </navigation>

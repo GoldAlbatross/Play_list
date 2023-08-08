@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.domain.local_db.api.PlayListInteractor
 import com.practicum.playlistmaker.domain.local_db.model.Album
-import com.practicum.playlistmaker.presentation.fragment.create_fragment.ScreenState
+import com.practicum.playlistmaker.presentation.fragment.create.ScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

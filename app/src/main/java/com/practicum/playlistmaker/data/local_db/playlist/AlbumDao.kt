@@ -13,8 +13,16 @@ interface AlbumDao {
     suspend fun createAlbum(album: AlbumEntity)
 
     @Query("UPDATE album SET trackList = :trackList, trackCount = :trackCount, date = :date WHERE id = :id")
-    suspend fun updateAlbumFields(id: Long, trackList: String, trackCount: Int, date: Long,)
+    suspend fun updateAlbumFields(id: Long, trackList: String, trackCount: Int, date: Long)
 
     @Query("SELECT * FROM album ORDER BY date DESC;")
     fun getAlbums(): Flow<List<AlbumEntity>>
+
+    @Query("SELECT * FROM album WHERE id = :id LIMIT 1;")
+    suspend fun getAlbum(id: Long): AlbumEntity
+
+
+    @Query("DELETE FROM album WHERE id = :id")
+    suspend fun removeAlbumById(id: Long)
+
 }

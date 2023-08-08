@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.fragment.create_fragment
+package com.practicum.playlistmaker.presentation.fragment.create
 
 import android.os.Bundle
 import android.util.Log

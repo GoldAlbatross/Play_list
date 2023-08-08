@@ -9,4 +9,8 @@ interface PlayListInteractor {
     suspend fun createAlbum(album: Album)
     fun getAlbumList(): Flow<List<Album>>
     suspend fun addToAlbum(track: Track, album: Album)
+    suspend fun getAlbum(id: Long): Album
+    suspend fun removeTrack(albumId: Long, trackId: Int)
+    suspend fun removeAlbum(albumId: Long)
+
 }

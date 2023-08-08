@@ -39,5 +39,18 @@
     <string name="album_created">Playlist %s has been created</string>
     <string name="add_to_playlist">Add to Playlist</string>
     <string name="create_album">Create New Album</string>
+    <string name="added_to_album">Added into album %s</string>
+    <string name="track_exist">Track is exist %s</string>
+
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+
+    <plurals name="count">
+        <item quantity="one">%1$d track</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
+    <string name="delete_track">Delete the track?</string>
 
 </resources>

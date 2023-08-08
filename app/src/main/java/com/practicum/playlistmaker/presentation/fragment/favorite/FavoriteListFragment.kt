@@ -1,11 +1,13 @@
-package com.practicum.playlistmaker.presentation.fragment.favorite_fragment
+package com.practicum.playlistmaker.presentation.fragment.favorite
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.FragmentFavoriteBinding
 import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.presentation.viewmodel.FavoriteListViewModel
@@ -21,6 +23,7 @@ class FavoriteListFragment: Fragment(R.layout.fragment_favorite) {
     private val trackAdapter by lazy { FavoriteTrackAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "PlayListFragment -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize recycler

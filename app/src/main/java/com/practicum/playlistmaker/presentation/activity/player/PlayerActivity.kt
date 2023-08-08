@@ -16,10 +16,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.local_db.model.BottomSheetUIState
-import com.practicum.playlistmaker.presentation.fragment.create_fragment.CreateFragment
+import com.practicum.playlistmaker.domain.network.model.Track
+import com.practicum.playlistmaker.presentation.fragment.create.CreateFragment
 import com.practicum.playlistmaker.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_3000
