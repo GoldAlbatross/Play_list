@@ -23,7 +23,7 @@ class FavoriteListFragment: Fragment(R.layout.fragment_favorite) {
     private val trackAdapter by lazy { FavoriteTrackAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "PlayListFragment -> onViewCreated()")
+        Log.d(TAG, "FavoriteListFragment -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize recycler

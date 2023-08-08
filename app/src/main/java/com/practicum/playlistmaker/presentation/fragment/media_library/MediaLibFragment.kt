@@ -17,7 +17,7 @@ class MediaLibFragment : Fragment(R.layout.fragment_media_lib) {
     private val binding by viewBinding<FragmentMediaLibBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "PlayListFragment -> onViewCreated()")
+        Log.d(TAG, "MediaLibFragment -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = MediaLibViewPagerAdapter(

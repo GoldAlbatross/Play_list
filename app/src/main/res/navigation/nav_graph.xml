@@ -42,9 +42,6 @@
         android:name="com.practicum.playlistmaker.presentation.fragment.playlist.PlayListFragment"
         android:label="PlayListFragment"
         tools:layout="@layout/create_fragment">
-        <action
-            android:id="@+id/action_playListFragment_to_albumFragment"
-            app:destination="@id/albumFragment" />
     </fragment>
 
     <fragment

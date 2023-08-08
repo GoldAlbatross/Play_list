@@ -10,6 +10,7 @@ class AlbumAdapter: FavoriteTrackAdapter() {
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
+        holder.itemView.setOnClickListener { action?.invoke(track) }
         holder.itemView.setOnLongClickListener { longPress!!.invoke(track.trackId); true }
     }
 }

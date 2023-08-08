@@ -8,12 +8,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.CreateItemBinding
 import com.practicum.playlistmaker.domain.local_db.model.Album
-import com.practicum.playlistmaker.utils.Debouncer
-import com.practicum.playlistmaker.utils.debounceClickListener
 
-class PlayListAdapter(
-    private val debouncer: Debouncer,
-) : RecyclerView.Adapter<PlayListViewHolder>() {
+class PlayListAdapter : RecyclerView.Adapter<PlayListViewHolder>() {
 
     internal var playList = listOf<Album>()
     internal var action: ((Long) -> Unit)? = null
@@ -28,7 +24,7 @@ class PlayListAdapter(
         val pos = holder.adapterPosition
         val item = playList[pos]
         holder.bind(item)
-        holder.itemView.debounceClickListener(debouncer) {
+        holder.itemView.setOnClickListener {
             action!!.invoke(item.id)
         }
     }

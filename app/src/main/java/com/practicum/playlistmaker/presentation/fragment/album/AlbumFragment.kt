@@ -43,8 +43,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     private val trackAdapter by lazy { AlbumAdapter() }
     private var trackDialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "AlbumFragment -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "AlbumFragment -> onViewCreated()")
 
         initListeners()
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
@@ -60,6 +60,13 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        Log.d(TAG, "AlbumFragment -> onDestroyView()")
+        super.onDestroyView()
+        trackAdapter.action = null
+        trackAdapter.longPress = null
     }
 
     private fun showApps(album: Album) {
