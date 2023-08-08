@@ -37,6 +37,7 @@ class AlbumViewModel(
         Log.d(TAG, "AlbumViewModel -> deleteTrack(trackId: $trackId)")
         viewModelScope.launch(Dispatchers.IO) {
             playListInteractor.removeTrack(albumId, trackId)
+            getAlbum()
         }
     }
 

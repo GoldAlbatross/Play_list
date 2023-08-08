@@ -83,7 +83,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         val sb = StringBuilder()
         sb.append("${album.name}\n")
         sb.append("${album.description}\n")
-        sb.append(resources.getQuantityString(R.plurals.count, album.trackCount) + "\n\n")
+        sb.append(resources.getQuantityString(R.plurals.count, album.trackCount, album.trackCount) + "\n\n")
 
         for ((index, track) in album.trackList.withIndex()) {
             sb.append("[${index + 1}]. ${track.artist} — ${track.track} (${track.trackTime.getTimeFormat()})\n")
@@ -136,7 +136,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         trackDialog = AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete_track))
             .setNegativeButton(R.string.no) { _,_ -> trackDialog?.dismiss() }
-            .setPositiveButton(R.string.yes) { _,_ -> removeTrack(trackId) }
+            .setPositiveButton(R.string.yes) { _,_ -> viewModel.deleteTrack(trackId) }
             .create()
         trackDialog?.setCanceledOnTouchOutside(false)
         trackDialog?.setCancelable(false)
@@ -161,22 +161,15 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         findNavController().navigateUp()
     }
 
-    private fun removeTrack(id: Int) {
-        Log.d(TAG, "AlbumFragment -> removeTrack(id: $id)")
-        trackAdapter.trackList.filter { it.trackId != id }
-        trackAdapter.notifyDataSetChanged()
-        viewModel.deleteTrack(id)
-    }
-
     private fun drawScreenWithBottomSheet(album: Album) {
         Log.d(TAG, "AlbumFragment -> drawScreenWithBottomSheet(album: Album)")
-        bottomSheetDotsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         drawScreen(album)
         trackAdapter.trackList.apply { clear(); addAll(album.trackList) }
         binding.albumBottomSheet.recycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
         bottomSheetBehavior.isHideable = false
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        hideBottomSheetDots()
     }
 
     private fun drawScreen(album: Album) {
@@ -196,6 +189,13 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
             bottomSheetBehavior.isHideable = true
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
+        hideBottomSheetDots()
+
+    }
+
+    private fun hideBottomSheetDots() {
+        bottomSheetDotsBehavior.isHideable = true
+        bottomSheetDotsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun getTimeAllTracks(list: List<Track>): String {

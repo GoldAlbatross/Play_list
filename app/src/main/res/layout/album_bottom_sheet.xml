@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bottom_sheet"
     app:behavior_fitToContents="true"
+    app:behavior_skipCollapsed="true"
     app:behavior_hideable="false"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
