@@ -32,11 +32,10 @@ open class CreateFragment: Fragment(R.layout.create_fragment) {
 
     protected open val binding by viewBinding<CreateFragmentBinding>()
     protected open val viewModel by viewModel<CreateAlbumViewModel>()
-    protected val album: Album? by lazy {
-        requireArguments().getParcelableFromBundle(KEY_TRACK, Album::class.java)
-    }
+    protected val album by lazy { arguments?.getParcelableFromBundle(KEY_TRACK, Album::class.java) }
     private var dialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "${className()} -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         prepareDialog()

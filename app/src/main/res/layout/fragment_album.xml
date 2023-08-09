@@ -41,9 +41,10 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/player_placeholder" />
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/back_btn"
         style="@style/toolbar"
+        app:navigationIconTint="@color/black"
         android:layout_height="wrap_content"
         android:theme="@style/BaseRipple"
         app:layout_constraintBottom_toTopOf="@id/image"

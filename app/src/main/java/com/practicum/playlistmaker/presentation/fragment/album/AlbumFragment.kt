@@ -20,8 +20,8 @@ import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.presentation.viewmodel.AlbumViewModel
 import com.practicum.playlistmaker.utils.KEY_TRACK
-import com.practicum.playlistmaker.utils.getTimeFormat
 import com.practicum.playlistmaker.utils.className
+import com.practicum.playlistmaker.utils.getTimeFormat
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -76,6 +76,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         }
         val chooserIntent = Intent.createChooser(shareIntent, "Share APK")
         activity?.startActivity(chooserIntent)
+        hideBottomSheetDots()
 
     }
 
@@ -87,9 +88,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         sb.append(resources.getQuantityString(R.plurals.count, album.trackCount, album.trackCount) + "\n\n")
 
         for ((index, track) in album.trackList.withIndex()) {
-            sb.append("[${index + 1}]. ${track.artist} — ${track.track} (${track.trackTime.getTimeFormat()})\n")
+            sb.append("${index + 1}. ${track.artist} — ${track.track} (${track.trackTime.getTimeFormat()})\n")
         }
-
         return sb.toString()
     }
 
