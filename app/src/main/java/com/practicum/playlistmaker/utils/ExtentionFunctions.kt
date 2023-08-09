@@ -18,12 +18,12 @@ fun <T : Parcelable?> Intent.getParcelableFromIntent(key: String, clazz: Class<T
     }
 }
 
-fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T>): T {
+fun <T : Parcelable?> Bundle.getParcelableFromBundle(key: String, clazz: Class<T>): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        getParcelable(key, clazz)!!
+        getParcelable(key, clazz)
     else {
         @Suppress("DEPRECATION")
-        getParcelable<T>(key)!!
+        getParcelable<T>(key)
     }
 }
 
@@ -35,7 +35,7 @@ fun Int.getTimeFormat(): String {
     return SimpleDateFormat("mm:ss", Locale.US).format(this)
 }
 
-fun <T> T.simpleName(): String {
+fun <T> T.className(): String {
     return this!!::class.simpleName ?: "Unknown class"
 }
 

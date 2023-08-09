@@ -26,7 +26,7 @@ import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.className
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
         initListeners()
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
-            Log.d(TAG, "PlayerActivity -> playButtonStateLiveData().observe(this) { state = ${state.simpleName()} }")
+            Log.d(TAG, "PlayerActivity -> playButtonStateLiveData().observe(this) { state = ${state.className()} }")
             when (state) {
                 is PlayerState.Loading -> { showToast(state.message) }
                 is PlayerState.Error -> { showToast(state.message) }
@@ -79,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.addButtonStateFlow.collect { state ->
-                Log.d(TAG, "PlayerActivity -> addButtonStateFlow.collect { state = ${state.simpleName()} }")
+                Log.d(TAG, "PlayerActivity -> addButtonStateFlow.collect { state = ${state.className()} }")
                 when (state) {
                     is BottomSheetUIState.Content -> {
                         drawBottomSheet(state.albums)

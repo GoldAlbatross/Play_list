@@ -52,5 +52,7 @@
         <item quantity="other">%1$d tracks</item>
     </plurals>
     <string name="delete_track">Delete the track?</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
 
 </resources>

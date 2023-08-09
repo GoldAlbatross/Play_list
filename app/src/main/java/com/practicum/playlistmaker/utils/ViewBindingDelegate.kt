@@ -38,13 +38,13 @@ class ViewBindingDelegate<T : ViewBinding>(
             viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onDestroy(owner: LifecycleOwner) {
                     super.onDestroy(owner)
-                    Log.d(TAG, "ViewBindingDelegate -> ${binding.simpleName()} = null")
+                    Log.d(TAG, "ViewBindingDelegate -> ${binding.className()} = null")
                     this@ViewBindingDelegate.binding = null
                 }
             })
 
             this.binding = binding
-            Log.d(TAG, "ViewBindingDelegate -> return ${binding.simpleName()}")
+            Log.d(TAG, "ViewBindingDelegate -> return ${binding.className()}")
             binding
         }
     }

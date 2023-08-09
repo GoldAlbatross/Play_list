@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CreateAlbumViewModel(
+open class CreateAlbumViewModel(
     private val interactor: PlayListInteractor,
 ): ViewModel() {
 
-    private var album = Album()
-    private val uiStateMutable = MutableStateFlow<ScreenState>(ScreenState.Default)
+    protected var album = Album()
+    protected val uiStateMutable = MutableStateFlow<ScreenState>(ScreenState.Default)
     val uiState: StateFlow<ScreenState> = uiStateMutable.asStateFlow()
 
     fun onNameTextChange(text: String) {
@@ -37,7 +37,7 @@ class CreateAlbumViewModel(
         album = album.copy(description = text)
     }
 
-    fun onBackPressed() {
+    open fun onBackPressed() {
         Log.d(TAG, "CreateAlbumViewModel -> onBackPressed()")
         viewModelScope.launch {
             if (album.uri.isNotEmpty() || album.name.isNotEmpty() || album.description.isNotEmpty()) {
@@ -58,7 +58,7 @@ class CreateAlbumViewModel(
         }
     }
 
-    fun onCreatePressed() {
+    open fun onCreatePressed(data: Album?) {
         Log.d(TAG, "CreateAlbumViewModel -> onCreatePressed()")
         viewModelScope.launch(Dispatchers.IO) {
             uiStateMutable.emit(ScreenState.SaveAlbum(album.name))

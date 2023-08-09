@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -19,11 +18,10 @@ import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.FragmentAlbumBinding
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.network.model.Track
-import com.practicum.playlistmaker.presentation.fragment.settings.SettingsRouter
 import com.practicum.playlistmaker.presentation.viewmodel.AlbumViewModel
 import com.practicum.playlistmaker.utils.KEY_TRACK
 import com.practicum.playlistmaker.utils.getTimeFormat
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.className
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,13 +41,13 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     private val trackAdapter by lazy { AlbumAdapter() }
     private var trackDialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "${className()} -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "AlbumFragment -> onViewCreated()")
 
         initListeners()
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiState.collect { state ->
-                Log.d(TAG, "AlbumFragment -> uiState.collect { state = ${state.simpleName()} }")
+                Log.d(TAG, "${className()} -> uiState.collect { state = ${state.className()} }")
                 when (state) {
                     is AlbumScreenState.Default -> { }
                     is AlbumScreenState.Content -> { drawScreen(state.album) }
@@ -60,16 +58,18 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 }
             }
         }
+        viewModel.getAlbum()
     }
 
     override fun onDestroyView() {
-        Log.d(TAG, "AlbumFragment -> onDestroyView()")
+        Log.d(TAG, "${className()} -> onDestroyView()")
         super.onDestroyView()
         trackAdapter.action = null
         trackAdapter.longPress = null
     }
 
     private fun showApps(album: Album) {
+        Log.d(TAG, "${className()} -> showApps(album: Album)")
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, convertAlbumToString(album))
             type = "text/plain"
@@ -80,6 +80,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun convertAlbumToString(album: Album): String {
+        Log.d(TAG, "${className()} -> convertAlbumToString(album: Album): String")
         val sb = StringBuilder()
         sb.append("${album.name}\n")
         sb.append("${album.description}\n")
@@ -93,7 +94,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun showSnack() {
-        Log.d(TAG, "AlbumFragment -> showSnack()")
+        Log.d(TAG, "${className()} -> showSnack()")
         Snackbar
             .make(requireContext(), binding.root, getString(R.string.nothing_to_share), Snackbar.LENGTH_SHORT)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
@@ -102,7 +103,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun initListeners() {
-        Log.d(TAG, "AlbumFragment -> initListeners()")
+        Log.d(TAG, "${className()} -> initListeners()")
         trackAdapter.action = { track ->
             findNavController().navigate(
                 resId = R.id.action_albumFragment_to_playerActivity,
@@ -118,12 +119,18 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun showBottomSheetDots(album: Album) {
+        Log.d(TAG, "${className()} -> showBottomSheetDots(album: Album)")
         binding.bottomSheetDots.apply {
             item.name.text = album.name
             item.time.text = getTimeAllTracks(album.trackList)
             share.setOnClickListener { showApps(album) }
-            change.setOnClickListener {  }
             remove.setOnClickListener { prepareAlbumDialog() }
+            change.setOnClickListener {
+                findNavController().navigate(
+                    resId = R.id.action_albumFragment_to_editFragment,
+                    args = bundleOf(KEY_TRACK to album),
+                )
+            }
             Glide.with(requireActivity()).load(album.uri)
                 .placeholder(R.drawable.player_placeholder)
                 .into(item.picture)
@@ -132,7 +139,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun prepareTrackDialog(trackId: Int) {
-        Log.d(TAG, "AlbumFragment -> prepareDialog(id: $id)")
+        Log.d(TAG, "${className()} -> prepareTrackDialog(trackId: $trackId)")
         trackDialog = AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete_track))
             .setNegativeButton(R.string.no) { _,_ -> trackDialog?.dismiss() }
@@ -144,7 +151,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun prepareAlbumDialog() {
-        Log.d(TAG, "AlbumFragment -> prepareAlbumDialog()")
+        Log.d(TAG, "${className()} -> prepareAlbumDialog()")
         trackDialog = AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.remove_album))
             .setNegativeButton(R.string.no) { _,_ -> trackDialog?.dismiss() }
@@ -156,13 +163,13 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun removeAlbum() {
-        Log.d(TAG, "AlbumFragment -> removeAlbum()")
+        Log.d(TAG, "${className()} -> removeAlbum()")
         viewModel.deleteAlbum()
         findNavController().navigateUp()
     }
 
     private fun drawScreenWithBottomSheet(album: Album) {
-        Log.d(TAG, "AlbumFragment -> drawScreenWithBottomSheet(album: Album)")
+        Log.d(TAG, "${className()} -> drawScreenWithBottomSheet(album: Album)")
         drawScreen(album)
         trackAdapter.trackList.apply { clear(); addAll(album.trackList) }
         binding.albumBottomSheet.recycler.adapter = trackAdapter
@@ -173,7 +180,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     }
 
     private fun drawScreen(album: Album) {
-        Log.d(TAG, "AlbumFragment -> drawScreen(album: Album)")
+        Log.d(TAG, "${className()} -> drawScreen(album: Album)")
         Glide.with(requireActivity())
             .load(album.uri)
             .centerCrop()

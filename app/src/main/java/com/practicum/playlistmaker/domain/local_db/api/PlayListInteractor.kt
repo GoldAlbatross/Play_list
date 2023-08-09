@@ -12,5 +12,5 @@ interface PlayListInteractor {
     suspend fun getAlbum(id: Long): Album
     suspend fun removeTrack(albumId: Long, trackId: Int)
     suspend fun removeAlbum(albumId: Long)
-
+    suspend fun updateAlbum(id: Long, uri: String, name: String, description: String)
 }

@@ -10,4 +10,5 @@ interface PlaylistRepository {
     suspend fun refreshAlbum(album: Album)
     suspend fun getAlbum(id: Long): Album
     suspend fun removeAlbum(albumId: Long)
+    suspend fun updateAlbum(id: Long, uri: String, name: String, description: String)
 }

@@ -12,8 +12,12 @@ interface AlbumDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createAlbum(album: AlbumEntity)
 
-    @Query("UPDATE album SET trackList = :trackList, trackCount = :trackCount, date = :date WHERE id = :id")
+    @Query("UPDATE album SET trackList = :trackList, trackCount = :trackCount, date = :date WHERE id = :id;")
     suspend fun updateAlbumFields(id: Long, trackList: String, trackCount: Int, date: Long)
+
+    @Query("UPDATE album SET uri = :uri, name = :name, description = :description WHERE id = :id;")
+    suspend fun updateAlbum(id: Long, uri: String, name: String, description: String)
+
 
     @Query("SELECT * FROM album ORDER BY date DESC;")
     fun getAlbums(): Flow<List<AlbumEntity>>
@@ -22,7 +26,7 @@ interface AlbumDao {
     suspend fun getAlbum(id: Long): AlbumEntity
 
 
-    @Query("DELETE FROM album WHERE id = :id")
+    @Query("DELETE FROM album WHERE id = :id;")
     suspend fun removeAlbumById(id: Long)
 
 }

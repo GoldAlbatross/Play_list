@@ -18,17 +18,23 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.CreateFragmentBinding
+import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.presentation.activity.RootActivity
 import com.practicum.playlistmaker.presentation.viewmodel.CreateAlbumViewModel
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.KEY_TRACK
+import com.practicum.playlistmaker.utils.className
+import com.practicum.playlistmaker.utils.getParcelableFromBundle
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-class CreateFragment: Fragment(R.layout.create_fragment) {
+open class CreateFragment: Fragment(R.layout.create_fragment) {
 
-    private val binding by viewBinding<CreateFragmentBinding>()
-    private val viewModel by viewModel<CreateAlbumViewModel>()
+    protected open val binding by viewBinding<CreateFragmentBinding>()
+    protected open val viewModel by viewModel<CreateAlbumViewModel>()
+    protected val album: Album? by lazy {
+        requireArguments().getParcelableFromBundle(KEY_TRACK, Album::class.java)
+    }
     private var dialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +45,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiState.collect { state ->
-                Log.d(TAG, "CreateFragment -> uiState.collect { state = ${state.simpleName()} }")
+                Log.d(TAG, "CreateFragment -> uiState.collect { state = ${state.className()} }")
                 when (state) {
                     is ScreenState.Default -> {  }
                     is ScreenState.Button -> { createButtonClickable(state.clickable) }
@@ -57,7 +63,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
             viewModel.onBackPressed()
         }
         binding.apply {
-            create.setOnClickListener { viewModel.onCreatePressed() }
+            create.setOnClickListener { viewModel.onCreatePressed(album) }
             toolbar.setNavigationOnClickListener {
                 viewModel.onBackPressed()
             }

@@ -52,11 +52,13 @@
     <string name="added_to_album"                       >Добавлено в плейлист %s</string>
     <string name="track_exist"                          >Трек уже добавлен в плейлист %s</string>
     <string name="delete_track"                         >Хотите удалить трек?</string>
-    <string name="share">Поделиться</string>
-    <string name="change">Редактировать информацию</string>
-    <string name="remove_list">Удалить плейлист</string>
-    <string name="nothing_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
-    <string name="remove_album">Хотите удалить плейлист?</string>
+    <string name="share"                                >Поделиться</string>
+    <string name="change"                               >Редактировать информацию</string>
+    <string name="remove_list"                          >Удалить плейлист</string>
+    <string name="nothing_to_share"                     >В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="remove_album"                         >Хотите удалить плейлист?</string>
+    <string name="save"                                 >Сохранить</string>
+    <string name="edit"                                 >Редактировать</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут</item>

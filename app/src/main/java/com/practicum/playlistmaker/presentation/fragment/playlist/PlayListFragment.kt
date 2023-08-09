@@ -14,7 +14,7 @@ import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.local_db.model.ScreenState
 import com.practicum.playlistmaker.presentation.fragment.album.AlbumFragment.Companion.ALBUM_KEY
 import com.practicum.playlistmaker.presentation.viewmodel.PlayListViewModel
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.className
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,7 +34,7 @@ class PlayListFragment: Fragment(R.layout.fragment_playlist) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiStateFlow.collect { state ->
-                Log.d(TAG, "PlayListFragment -> viewModel.uiStateFlow.collect { state ->${state.simpleName()} }")
+                Log.d(TAG, "PlayListFragment -> viewModel.uiStateFlow.collect { state ->${state.className()} }")
                 when (state) {
                     is ScreenState.Content -> { drawUI(state.albums) }
                     is ScreenState.Empty -> { drawUI(emptyList()) }

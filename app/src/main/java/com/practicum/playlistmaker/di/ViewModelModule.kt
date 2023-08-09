@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.di
 
 import com.practicum.playlistmaker.presentation.viewmodel.AlbumViewModel
 import com.practicum.playlistmaker.presentation.viewmodel.CreateAlbumViewModel
+import com.practicum.playlistmaker.presentation.viewmodel.EditViewModel
 import com.practicum.playlistmaker.presentation.viewmodel.RootViewModel
 import com.practicum.playlistmaker.presentation.viewmodel.FavoriteListViewModel
 import com.practicum.playlistmaker.presentation.viewmodel.PlayListViewModel
@@ -20,5 +21,6 @@ val viewModelModule = module {
     viewModelOf(::PlayListViewModel)
     viewModelOf(::FavoriteListViewModel)
     viewModelOf(::CreateAlbumViewModel)
+    viewModelOf(::EditViewModel)
     viewModel { (id: Long) -> AlbumViewModel(albumId = id, playListInteractor = get()) }
 }
