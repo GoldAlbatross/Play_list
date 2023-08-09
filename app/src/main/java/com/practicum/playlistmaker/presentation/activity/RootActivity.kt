@@ -37,7 +37,7 @@ class RootActivity : AppCompatActivity() {
                 R.id.createFragment -> hideBottomNav()
                 R.id.albumFragment -> hideBottomNav()
                 R.id.editFragment -> hideBottomNav()
-                R.id.search -> setInputMode(true)
+                R.id.searchFragment -> setInputMode(true)
                 else -> {
                     setInputMode(false)
                     showBottomNav()

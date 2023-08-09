@@ -8,11 +8,8 @@ import com.practicum.playlistmaker.domain.local_db.api.PlayListInteractor
 import com.practicum.playlistmaker.presentation.fragment.album.AlbumScreenState
 import com.practicum.playlistmaker.utils.className
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -20,8 +17,6 @@ class AlbumViewModel(
     private val albumId: Long,
     private val playListInteractor: PlayListInteractor,
 ): ViewModel() {
-
-    //init { getAlbum() }
 
     private val uiStateMutable = MutableStateFlow<AlbumScreenState>(AlbumScreenState.Default)
     val uiState: StateFlow<AlbumScreenState> = uiStateMutable.asStateFlow()

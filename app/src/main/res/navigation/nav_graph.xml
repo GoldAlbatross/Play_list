@@ -44,4 +44,24 @@
         android:id="@+id/editFragment"
         android:name="com.practicum.playlistmaker.presentation.fragment.edit.EditFragment"
         android:label="EditFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/favoriteListFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.favorite.FavoriteListFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/playListFragment"
+        android:name="com.practicum.playlistmaker.presentation.fragment.playlist.PlayListFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
 </navigation>
