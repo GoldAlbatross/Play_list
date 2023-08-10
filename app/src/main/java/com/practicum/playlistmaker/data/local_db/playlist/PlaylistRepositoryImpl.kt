@@ -38,7 +38,7 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun refreshAlbum(album: Album) {
-        Log.d(TAG, "${className()} -> refreshAlbum(album: $album)")
+        Log.d(TAG, "${className()} -> refreshAlbum(album: ${album.id})")
         database.getAlbumDao().updateAlbumFields(
             id = album.id,
             trackList = gson.toJson(album.trackList),

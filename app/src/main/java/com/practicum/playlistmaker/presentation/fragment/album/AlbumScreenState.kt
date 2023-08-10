@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.domain.local_db.model.Album
 
 sealed interface AlbumScreenState {
     object Default: AlbumScreenState
-    data class Content(val album: Album): AlbumScreenState
+    data class EmptyBottomSheet(val album: Album): AlbumScreenState
     data class BottomSheet(val album: Album): AlbumScreenState
     object EmptyShare: AlbumScreenState
     data class Share(val album: Album): AlbumScreenState

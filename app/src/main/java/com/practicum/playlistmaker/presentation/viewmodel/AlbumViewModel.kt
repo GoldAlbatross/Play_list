@@ -26,7 +26,7 @@ class AlbumViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val album = playListInteractor.getAlbum(albumId)
             if (album.trackCount == 0) {
-                uiStateMutable.emit(AlbumScreenState.Content(album))
+                uiStateMutable.emit(AlbumScreenState.EmptyBottomSheet(album))
             } else {
                 uiStateMutable.emit(AlbumScreenState.BottomSheet(album))
             }
@@ -44,6 +44,7 @@ class AlbumViewModel(
     fun onSharePressed() {
         Log.d(TAG, "${className()} -> onSharePressed()")
         viewModelScope.launch(Dispatchers.IO) {
+            uiStateMutable.emit(AlbumScreenState.Default)
             val album = playListInteractor.getAlbum(albumId)
             if (album.trackCount == 0) {
                 uiStateMutable.emit(AlbumScreenState.EmptyShare)

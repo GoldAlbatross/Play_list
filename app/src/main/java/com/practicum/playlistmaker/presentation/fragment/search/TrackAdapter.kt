@@ -29,9 +29,7 @@ class TrackAdapter(
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.debounceClickListener(debouncer) {
-            action?.invoke(track)
-        }
+        holder.itemView.debounceClickListener(debouncer) { action?.invoke(track) }
     }
 
     fun replaceItem(sourcePosition: Int, targetPosition: Int) {

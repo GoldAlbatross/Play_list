@@ -59,6 +59,7 @@
     <string name="remove_album"                         >Хотите удалить плейлист?</string>
     <string name="save"                                 >Сохранить</string>
     <string name="edit"                                 >Редактировать</string>
+    <string name="no_tracks">В плейлисте нет треков</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут</item>

@@ -50,11 +50,14 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 Log.d(TAG, "${className()} -> uiState.collect { state = ${state.className()} }")
                 when (state) {
                     is AlbumScreenState.Default -> {  }
-                    is AlbumScreenState.Content -> { drawScreen(state.album) }
                     is AlbumScreenState.BottomSheet -> { drawScreenWithBottomSheet(state.album) }
-                    is AlbumScreenState.EmptyShare -> { showSnack() }
+                    is AlbumScreenState.EmptyShare -> { showSnack(false) }
                     is AlbumScreenState.Share -> { showApps(state.album) }
                     is AlbumScreenState.Dots -> { showBottomSheetDots(state.album) }
+                    is AlbumScreenState.EmptyBottomSheet -> {
+                        showSnack(true)
+                        drawScreen(state.album)
+                    }
                 }
             }
         }
@@ -65,8 +68,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         super.onDestroyView()
         trackAdapter.action = null
         trackAdapter.longPress = null
+        trackSheet = null
         dotsSheet = null
-
     }
 
     private fun showApps(album: Album) {
@@ -92,10 +95,13 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         return sb.toString()
     }
 
-    private fun showSnack() {
-        Log.d(TAG, "${className()} -> showSnack()")
+    private fun showSnack(emptyBottomSheet: Boolean) {
+        Log.d(TAG, "${className()} -> showSnack(emptyBottomSheet: $emptyBottomSheet)")
+        val message =
+            if (emptyBottomSheet) getString(R.string.no_tracks)
+            else getString(R.string.nothing_to_share)
         Snackbar
-            .make(requireContext(), binding.root, getString(R.string.nothing_to_share), Snackbar.LENGTH_SHORT)
+            .make(requireContext(), binding.root, message, Snackbar.LENGTH_SHORT)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             .show()
@@ -122,7 +128,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         with(binding.bottomSheetDots) {
             item.name.text = album.name
             item.time.text = getTimeAllTracks(album.trackList)
-            share.setOnClickListener { showApps(album) }
+            share.setOnClickListener { viewModel.onSharePressed() }
             remove.setOnClickListener { prepareAlbumDialog() }
             change.setOnClickListener {
                 findNavController().navigate(
