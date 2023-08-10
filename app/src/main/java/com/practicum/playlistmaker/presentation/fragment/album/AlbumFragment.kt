@@ -50,11 +50,14 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 Log.d(TAG, "${className()} -> uiState.collect { state = ${state.className()} }")
                 when (state) {
                     is AlbumScreenState.Default -> {  }
-                    is AlbumScreenState.EmptyBottomSheet -> { showSnack(); drawScreen(state.album) }
                     is AlbumScreenState.BottomSheet -> { drawScreenWithBottomSheet(state.album) }
-                    is AlbumScreenState.EmptyShare -> { showSnack() }
+                    is AlbumScreenState.EmptyShare -> { showSnack(false) }
                     is AlbumScreenState.Share -> { showApps(state.album) }
                     is AlbumScreenState.Dots -> { showBottomSheetDots(state.album) }
+                    is AlbumScreenState.EmptyBottomSheet -> {
+                        showSnack(true)
+                        drawScreen(state.album)
+                    }
                 }
             }
         }
@@ -92,9 +95,11 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         return sb.toString()
     }
 
-    private fun showSnack() {
-        Log.d(TAG, "${className()} -> showSnack()")
-        val message = getString(R.string.nothing_to_share)
+    private fun showSnack(emptyBottomSheet: Boolean) {
+        Log.d(TAG, "${className()} -> showSnack(emptyBottomSheet: $emptyBottomSheet)")
+        val message =
+            if (emptyBottomSheet) getString(R.string.no_tracks)
+            else getString(R.string.nothing_to_share)
         Snackbar
             .make(requireContext(), binding.root, message, Snackbar.LENGTH_SHORT)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
