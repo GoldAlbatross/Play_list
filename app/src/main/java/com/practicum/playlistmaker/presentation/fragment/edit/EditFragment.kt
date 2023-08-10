@@ -18,13 +18,11 @@ class EditFragment : CreateFragment() {
     override val viewModel by viewModel<EditViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "${className()} -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
         drawScreen(album!!)
     }
 
     private fun drawScreen(album: Album) {
-        Log.d(TAG, "${className()} -> onViewCreated()")
         binding.apply {
             name.setText(album.name)
             description.setText(album.description)

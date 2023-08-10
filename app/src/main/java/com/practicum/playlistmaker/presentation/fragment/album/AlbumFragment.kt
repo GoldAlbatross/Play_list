@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -32,24 +33,23 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
 
     private val binding by viewBinding<FragmentAlbumBinding>()
     private val viewModel by viewModel<AlbumViewModel> { parametersOf(arguments?.getLong(ALBUM_KEY)) }
-    private val bottomSheetDotsBehavior by lazy {
-        BottomSheetBehavior.from(binding.bottomSheetDots.root)
-    }
-    private val bottomSheetBehavior by lazy {
-        BottomSheetBehavior.from(binding.albumBottomSheet.root)
-    }
+    private var dotsSheet: BottomSheetBehavior<ConstraintLayout>? = null
+    private var trackSheet: BottomSheetBehavior<ConstraintLayout>? = null
     private val trackAdapter by lazy { AlbumAdapter() }
     private var trackDialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "${className()} -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
+        dotsSheet = BottomSheetBehavior.from(binding.bottomSheetDots.root)
+        trackSheet = BottomSheetBehavior.from(binding.albumBottomSheet.root)
 
         initListeners()
+        viewModel.getAlbum()
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiState.collect { state ->
                 Log.d(TAG, "${className()} -> uiState.collect { state = ${state.className()} }")
                 when (state) {
-                    is AlbumScreenState.Default -> { }
+                    is AlbumScreenState.Default -> {  }
                     is AlbumScreenState.Content -> { drawScreen(state.album) }
                     is AlbumScreenState.BottomSheet -> { drawScreenWithBottomSheet(state.album) }
                     is AlbumScreenState.EmptyShare -> { showSnack() }
@@ -58,7 +58,6 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 }
             }
         }
-        viewModel.getAlbum()
     }
 
     override fun onDestroyView() {
@@ -66,6 +65,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         super.onDestroyView()
         trackAdapter.action = null
         trackAdapter.longPress = null
+        dotsSheet = null
+
     }
 
     private fun showApps(album: Album) {
@@ -76,8 +77,6 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         }
         val chooserIntent = Intent.createChooser(shareIntent, "Share APK")
         activity?.startActivity(chooserIntent)
-        hideBottomSheetDots()
-
     }
 
     private fun convertAlbumToString(album: Album): String {
@@ -111,7 +110,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
             )
         }
         trackAdapter.longPress = { prepareTrackDialog(it) }
-        binding.apply {
+        with(binding) {
             backBtn.setNavigationOnClickListener { findNavController().popBackStack() }
             share.setOnClickListener { viewModel.onSharePressed() }
             dots.setOnClickListener { viewModel.onDotsPressed() }
@@ -120,7 +119,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
 
     private fun showBottomSheetDots(album: Album) {
         Log.d(TAG, "${className()} -> showBottomSheetDots(album: Album)")
-        binding.bottomSheetDots.apply {
+        with(binding.bottomSheetDots) {
             item.name.text = album.name
             item.time.text = getTimeAllTracks(album.trackList)
             share.setOnClickListener { showApps(album) }
@@ -135,7 +134,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
                 .placeholder(R.drawable.player_placeholder)
                 .into(item.picture)
         }
-        bottomSheetDotsBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dotsSheet?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun prepareTrackDialog(trackId: Int) {
@@ -174,35 +173,28 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         trackAdapter.trackList.apply { clear(); addAll(album.trackList) }
         binding.albumBottomSheet.recycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
-        bottomSheetBehavior.isHideable = false
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        hideBottomSheetDots()
+        trackSheet?.isHideable = false
+        trackSheet?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun drawScreen(album: Album) {
         Log.d(TAG, "${className()} -> drawScreen(album: Album)")
+        dotsSheet?.state = BottomSheetBehavior.STATE_HIDDEN
         Glide.with(requireActivity())
             .load(album.uri)
             .centerCrop()
             .placeholder(R.drawable.player_placeholder)
             .into(binding.image)
-        binding.apply {
+        with(binding) {
             name.text = album.name
             year.text = album.description
             time.text = getTimeAllTracks(album.trackList)
             trackCount.text = getTrackCount(album.trackCount)
         }
         if (album.trackList.isEmpty()) {
-            bottomSheetBehavior.isHideable = true
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            trackSheet?.isHideable = true
+            trackSheet?.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        hideBottomSheetDots()
-
-    }
-
-    private fun hideBottomSheetDots() {
-        bottomSheetDotsBehavior.isHideable = true
-        bottomSheetDotsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun getTimeAllTracks(list: List<Track>): String {

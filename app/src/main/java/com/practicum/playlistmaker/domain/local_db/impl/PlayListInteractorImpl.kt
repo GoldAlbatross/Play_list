@@ -24,7 +24,7 @@ class PlayListInteractorImpl(
 
     override suspend fun addToAlbum(track: Track, album: Album) {
         Log.d(TAG, "${className()} -> addToAlbum(track: ${track.trackId}, album: ${album.id})")
-        playlistRepository.refreshAlbum(album.copy(trackList = album.trackList + track))
+        playlistRepository.refreshAlbum(album.copy(trackList = listOf(track) + album.trackList))
     }
 
     override suspend fun updateAlbum(id: Long, uri: String, name: String, description: String) {
