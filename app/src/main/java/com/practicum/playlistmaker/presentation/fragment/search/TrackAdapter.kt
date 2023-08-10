@@ -66,7 +66,7 @@ class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         trackTime.text = model.trackTime.getTimeFormat()
         Glide
             .with(itemView.context)
-            .load(model.url)
+            .load(model.url.replaceAfterLast('/', "60x60bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(10))
             .into(artwork)
