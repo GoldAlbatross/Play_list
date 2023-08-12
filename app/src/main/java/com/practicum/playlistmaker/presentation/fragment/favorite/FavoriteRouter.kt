@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.fragment.favorite_fragment
+package com.practicum.playlistmaker.presentation.fragment.favorite
 
 import android.content.Context
 import android.content.Intent

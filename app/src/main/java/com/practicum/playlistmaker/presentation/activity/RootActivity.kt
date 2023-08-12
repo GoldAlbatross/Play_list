@@ -11,7 +11,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.ActivityRootBinding
 import com.practicum.playlistmaker.presentation.viewmodel.RootViewModel
-import com.practicum.playlistmaker.utils.simpleName
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RootActivity : AppCompatActivity() {
@@ -36,7 +35,9 @@ class RootActivity : AppCompatActivity() {
             Log.d(TAG, "RootActivity -> navController.addOnDestinationChangedListener { destination = ${destination.label} }")
             when (destination.id) {
                 R.id.createFragment -> hideBottomNav()
-                R.id.search -> setInputMode(true)
+                R.id.albumFragment -> hideBottomNav()
+                R.id.editFragment -> hideBottomNav()
+                R.id.searchFragment -> setInputMode(true)
                 else -> {
                     setInputMode(false)
                     showBottomNav()

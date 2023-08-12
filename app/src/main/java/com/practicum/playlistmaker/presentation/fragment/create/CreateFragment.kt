@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.fragment.create_fragment
+package com.practicum.playlistmaker.presentation.fragment.create
 
 import android.os.Bundle
 import android.util.Log
@@ -18,19 +18,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.CreateFragmentBinding
+import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.presentation.activity.RootActivity
 import com.practicum.playlistmaker.presentation.viewmodel.CreateAlbumViewModel
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.KEY_TRACK
+import com.practicum.playlistmaker.utils.className
+import com.practicum.playlistmaker.utils.getParcelableFromBundle
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-class CreateFragment: Fragment(R.layout.create_fragment) {
+open class CreateFragment: Fragment(R.layout.create_fragment) {
 
-    private val binding by viewBinding<CreateFragmentBinding>()
-    private val viewModel by viewModel<CreateAlbumViewModel>()
+    protected open val binding by viewBinding<CreateFragmentBinding>()
+    protected open val viewModel by viewModel<CreateAlbumViewModel>()
+    protected val album by lazy { arguments?.getParcelableFromBundle(KEY_TRACK, Album::class.java) }
     private var dialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "${className()} -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         prepareDialog()
@@ -39,7 +44,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiState.collect { state ->
-                Log.d(TAG, "CreateFragment -> uiState.collect { state = ${state.simpleName()} }")
+                Log.d(TAG, "${className()} -> uiState.collect { state = ${state.className()} }")
                 when (state) {
                     is ScreenState.Default -> {  }
                     is ScreenState.Button -> { createButtonClickable(state.clickable) }
@@ -52,12 +57,12 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
     }
 
     private fun setListeners() {
-        Log.d(TAG, "CreateFragment -> setListeners()")
+        Log.d(TAG, "${className()} -> setListeners()")
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             viewModel.onBackPressed()
         }
         binding.apply {
-            create.setOnClickListener { viewModel.onCreatePressed() }
+            create.setOnClickListener { viewModel.onCreatePressed(album) }
             toolbar.setNavigationOnClickListener {
                 viewModel.onBackPressed()
             }
@@ -71,7 +76,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
     }
 
     private fun prepareDialog() {
-        Log.d(TAG, "CreateFragment -> prepareDialog()")
+        Log.d(TAG, "${className()} -> prepareDialog()")
         dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.queryTitle)
             .setMessage(R.string.data_will_be_lost)
@@ -85,7 +90,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
 
 
     private fun registerImagePicker() {
-        Log.d(TAG, "CreateFragment -> registerImagePicker()")
+        Log.d(TAG, "${className()} -> registerImagePicker()")
         val picker =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 uri?.let {
@@ -102,7 +107,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
     }
 
     private fun saveAlbum(album: String) {
-        Log.d(TAG, "CreateFragment -> saveAlbum(album: $album)")
+        Log.d(TAG, "${className()} -> saveAlbum(album: $album)")
         Snackbar
             .make(requireContext(), binding.root, getString(R.string.album_created, album), Snackbar.LENGTH_SHORT)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
@@ -112,7 +117,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
     }
 
     private fun goBack() {
-        Log.d(TAG, "CreateFragment -> goBack()")
+        Log.d(TAG, "${className()} -> goBack()")
         if (requireActivity() is RootActivity) {
             findNavController().navigateUp()
         } else {
@@ -121,7 +126,7 @@ class CreateFragment: Fragment(R.layout.create_fragment) {
     }
 
     private fun createButtonClickable(state: Boolean) {
-        Log.d(TAG, "CreateFragment -> createButtonClickable(state: $state)")
+        Log.d(TAG, "${className()} -> createButtonClickable(state: $state)")
         binding.create.isEnabled = state
     }
 

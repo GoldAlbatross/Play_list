@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker.presentation.fragment.media_library
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.FragmentMediaLibBinding
 import com.practicum.playlistmaker.utils.viewBinding
 
@@ -15,6 +17,7 @@ class MediaLibFragment : Fragment(R.layout.fragment_media_lib) {
     private val binding by viewBinding<FragmentMediaLibBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "MediaLibFragment -> onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = MediaLibViewPagerAdapter(

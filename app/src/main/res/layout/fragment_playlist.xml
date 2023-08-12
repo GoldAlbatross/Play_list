@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.fragment.playlist_fragment.PlayListFragment">
+    tools:context=".presentation.fragment.playlist.PlayListFragment">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/refresh_btn"

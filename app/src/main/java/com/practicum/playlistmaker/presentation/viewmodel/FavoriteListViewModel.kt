@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.domain.local_db.api.FavoriteInteractor
-import com.practicum.playlistmaker.presentation.fragment.favorite_fragment.FavoriteUIState
+import com.practicum.playlistmaker.presentation.fragment.favorite.FavoriteUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

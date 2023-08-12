@@ -24,7 +24,6 @@ class ViewBindingDelegate<T : ViewBinding>(
     private var binding: T? = null
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        Log.d(TAG, "ViewBindingDelegate -> getValue(thisRef: ${thisRef?.simpleName()}): T")
         val viewLifecycleOwner: LifecycleOwner = fragment.viewLifecycleOwner
         if (fragment.view != null) return getOrCreateBinding(viewLifecycleOwner)
         else throw IllegalStateException("Called before onViewCreated()/after onDestroyView()")
@@ -39,13 +38,13 @@ class ViewBindingDelegate<T : ViewBinding>(
             viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onDestroy(owner: LifecycleOwner) {
                     super.onDestroy(owner)
-                    Log.d(TAG, "ViewBindingDelegate -> ${binding.simpleName()} = null")
+                    Log.d(TAG, "ViewBindingDelegate -> ${binding.className()} = null")
                     this@ViewBindingDelegate.binding = null
                 }
             })
 
             this.binding = binding
-            Log.d(TAG, "ViewBindingDelegate -> return ${binding.simpleName()}")
+            Log.d(TAG, "ViewBindingDelegate -> return ${binding.className()}")
             binding
         }
     }

@@ -11,12 +11,13 @@
 
     <ImageView
         android:id="@+id/picture"
-        android:layout_width="@dimen/size_56dp"
-        android:layout_height="@dimen/size_56dp"
+        android:layout_width="@dimen/size_46dp"
+        android:layout_height="@dimen/size_46dp"
         android:layout_marginStart="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_8dp"
         android:layout_marginBottom="@dimen/size_8dp"
         android:layout_gravity="center_vertical"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/picture_of_album"
         tools:src="@drawable/placeholder"/>
 
@@ -35,10 +36,8 @@
             android:textSize="@dimen/text_size_16sp"
             tools:text="Smells Like Teen Spirit" />
         <TextView
-            android:id="@+id/count"
+            android:id="@+id/time"
             style="@style/text_for_recycler_item"
             tools:text="Nirvana" />
     </LinearLayout>
-
-
 </LinearLayout>

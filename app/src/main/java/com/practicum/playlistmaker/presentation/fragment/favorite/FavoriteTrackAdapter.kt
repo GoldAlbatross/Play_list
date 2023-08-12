@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.fragment.favorite_fragment
+package com.practicum.playlistmaker.presentation.fragment.favorite
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.utils.getTimeFormat
 
-class FavoriteTrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
+open class FavoriteTrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
 
     internal val trackList = mutableListOf<Track>()
     internal var action: ((Track) -> Unit)? = null
@@ -24,7 +24,7 @@ class FavoriteTrackAdapter: RecyclerView.Adapter<TrackViewHolder>() {
         val pos = holder.adapterPosition
         val track = trackList[pos]
         holder.bind(track)
-        holder.itemView.setOnClickListener { action!!.invoke(track) }
+        holder.itemView.setOnClickListener { action?.invoke(track) }
     }
 
 }
@@ -43,7 +43,7 @@ class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         trackTime.text = model.trackTime.getTimeFormat()
         Glide
             .with(itemView.context)
-            .load(model.url)
+            .load(model.url.replaceAfterLast('/', "60x60bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(10))
             .into(artwork)

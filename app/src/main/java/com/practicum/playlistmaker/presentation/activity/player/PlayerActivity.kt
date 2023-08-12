@@ -16,17 +16,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.local_db.model.BottomSheetUIState
-import com.practicum.playlistmaker.presentation.fragment.create_fragment.CreateFragment
+import com.practicum.playlistmaker.domain.network.model.Track
+import com.practicum.playlistmaker.presentation.fragment.create.CreateFragment
 import com.practicum.playlistmaker.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
-import com.practicum.playlistmaker.utils.simpleName
+import com.practicum.playlistmaker.utils.className
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
         initListeners()
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
-            Log.d(TAG, "PlayerActivity -> playButtonStateLiveData().observe(this) { state = ${state.simpleName()} }")
+            Log.d(TAG, "PlayerActivity -> playButtonStateLiveData().observe(this) { state = ${state.className()} }")
             when (state) {
                 is PlayerState.Loading -> { showToast(state.message) }
                 is PlayerState.Error -> { showToast(state.message) }
@@ -79,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.addButtonStateFlow.collect { state ->
-                Log.d(TAG, "PlayerActivity -> addButtonStateFlow.collect { state = ${state.simpleName()} }")
+                Log.d(TAG, "PlayerActivity -> addButtonStateFlow.collect { state = ${state.className()} }")
                 when (state) {
                     is BottomSheetUIState.Content -> {
                         drawBottomSheet(state.albums)

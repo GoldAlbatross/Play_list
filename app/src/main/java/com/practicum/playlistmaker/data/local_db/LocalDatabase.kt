@@ -8,7 +8,7 @@ import com.practicum.playlistmaker.data.local_db.favorite.FavoriteTrackDao
 import com.practicum.playlistmaker.data.local_db.favorite.TrackEntity
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [TrackEntity::class, AlbumEntity::class]
 )
 abstract class LocalDatabase: RoomDatabase() {
