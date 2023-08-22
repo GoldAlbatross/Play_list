@@ -1,0 +1,26 @@
+[versions]
+android = "8.1.1"
+kotlin = "1.8.10"
+ksp = "1.8.10-1.0.9"
+ksjson = "1.5.1"
+
+
+[libraries]
+android-gradle-plugin = { module = "com.android.tools.build:gradle",                   version.ref = "android" }
+kotlin-gradle-plugin =  { module = "org.jetbrains.kotlin:kotlin-gradle-plugin",        version.ref = "kotlin" }
+
+kotlin-stdlib =         { module = "org.jetbrains.kotlin:kotlin-stdlib",               version.ref = "kotlin" }
+serialization-json =  { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "ksjson" }
+
+
+[bundles]
+serialization = ["kotlin-stdlib", "serialization-json"]
+
+[plugins]
+android-library =      { id = "com.android.library",                       version.ref = "android" }
+android-application =  { id = "com.android.application",                   version.ref = "android" }
+
+kotlin-android =       { id = "org.jetbrains.kotlin.android",              version.ref = "kotlin"  }
+kotlin-parcelize =     { id = "org.jetbrains.kotlin.plugin.parcelize",     version.ref = "kotlin" }
+ksp =                  { id = "com.google.devtools.ksp",                   version.ref = "ksp"}
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
