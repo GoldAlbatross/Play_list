@@ -35,8 +35,8 @@ fun Int.getTimeFormat(): String {
     return SimpleDateFormat("mm:ss", Locale.US).format(this)
 }
 
-fun <T> T.className(): String {
-    return this!!::class.simpleName ?: "Unknown class"
-}
+val <T> T.className: String
+    get() = this!!::class.simpleName ?: "Unknown class"
+
 
 

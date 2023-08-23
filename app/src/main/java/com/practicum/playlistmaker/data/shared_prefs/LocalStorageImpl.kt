@@ -1,23 +1,24 @@
 package com.practicum.playlistmaker.data.shared_prefs
 
 import android.content.SharedPreferences
-import android.util.Log
-import com.practicum.playlistmaker.app.TAG
+import com.practicum.playlistmaker.Logger
 import com.practicum.playlistmaker.data.shared_prefs.converter.DataConverter
 import com.practicum.playlistmaker.domain.shared_prefs.api.LocalStorage
+import com.practicum.playlistmaker.utils.className
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
 class LocalStorageImpl(
     private val dataConverter: DataConverter,
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences,
+    private val logger: Logger
 ): LocalStorage {
 
 
     private val lock = ReentrantReadWriteLock()
     override fun <T> writeData(key: String, data: T) {
-        Log.d(TAG, "LocalStorageImpl -> writeData()")
+        logger.log("$className -> writeData()")
         lock.write {
             when (data) {
                 is Boolean -> preferences.edit().putBoolean(key, data).apply()
@@ -28,8 +29,9 @@ class LocalStorageImpl(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> readData(key: String, defaultValue: T): T {
-        Log.d(TAG, "LocalStorageImpl -> readData()")
+        logger.log("$className -> readData()")
         lock.read {
             return when (defaultValue) {
                 is Boolean -> preferences.getBoolean(key, defaultValue as Boolean) as T
@@ -41,7 +43,7 @@ class LocalStorageImpl(
     }
 
     private fun <T> SharedPreferences.getObject(key: String, defaultValue: T): T {
-        Log.d(TAG, "LocalStorageImpl -> getObject()")
+        logger.log("$className -> getObject()")
         val json = this.getString(key, null)
         return  if (json == null || json == "null")
             defaultValue
