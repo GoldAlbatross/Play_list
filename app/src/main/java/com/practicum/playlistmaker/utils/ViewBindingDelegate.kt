@@ -1,12 +1,11 @@
 package com.practicum.playlistmaker.utils
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
-import com.practicum.playlistmaker.app.TAG
+import com.practicum.playlistmaker.Logger
 import java.lang.reflect.Method
 import kotlin.reflect.KProperty
 
@@ -22,6 +21,7 @@ class ViewBindingDelegate<T : ViewBinding>(
 
 
     private var binding: T? = null
+    private var logger = Logger()
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         val viewLifecycleOwner: LifecycleOwner = fragment.viewLifecycleOwner
@@ -38,13 +38,13 @@ class ViewBindingDelegate<T : ViewBinding>(
             viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onDestroy(owner: LifecycleOwner) {
                     super.onDestroy(owner)
-                    Log.d(TAG, "ViewBindingDelegate -> ${binding.className()} = null")
+                    logger.log("$className -> ${binding.className} = null")
                     this@ViewBindingDelegate.binding = null
                 }
             })
 
             this.binding = binding
-            Log.d(TAG, "ViewBindingDelegate -> return ${binding.className()}")
+            logger.log("$className -> return ${binding.className}")
             binding
         }
     }

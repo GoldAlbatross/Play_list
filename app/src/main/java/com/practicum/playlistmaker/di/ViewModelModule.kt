@@ -22,5 +22,9 @@ val viewModelModule = module {
     viewModelOf(::FavoriteListViewModel)
     viewModelOf(::CreateAlbumViewModel)
     viewModelOf(::EditViewModel)
-    viewModel { (id: Long) -> AlbumViewModel(albumId = id, playListInteractor = get()) }
+    viewModel { (id: Long) -> AlbumViewModel(
+        albumId = id,
+        playListInteractor = get(),
+        logger = get())
+    }
 }

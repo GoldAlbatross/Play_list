@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.presentation.activity.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -13,8 +12,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.practicum.playlistmaker.Logger
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.app.TAG
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.local_db.model.BottomSheetUIState
@@ -24,14 +23,16 @@ import com.practicum.playlistmaker.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.utils.DELAY_1500
 import com.practicum.playlistmaker.utils.DELAY_3000
 import com.practicum.playlistmaker.utils.Debouncer
+import com.practicum.playlistmaker.utils.className
 import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
-import com.practicum.playlistmaker.utils.className
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
+    private val logger: Logger by inject()
     private val viewModel by viewModel<PlayerViewModel>()
     private val debouncer: Debouncer by lazy { Debouncer(lifecycleScope) }
     private val bottomSheetAdapter by lazy { BottomSheetAdapter(debouncer) }
@@ -52,7 +53,7 @@ class PlayerActivity : AppCompatActivity() {
         initListeners()
 
         viewModel.playButtonStateLiveData().observe(this) { state ->
-            Log.d(TAG, "PlayerActivity -> playButtonStateLiveData().observe(this) { state = ${state.className()} }")
+            logger.log("$className -> playButtonStateLiveData().observe(this) { state = ${state.className} }")
             when (state) {
                 is PlayerState.Loading -> { showToast(state.message) }
                 is PlayerState.Error -> { showToast(state.message) }
@@ -72,14 +73,14 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.likeButtonStateLiveData().observe(this) { state ->
-            Log.d(TAG, "PlayerActivity -> likeButtonStateLiveData().observe(this) { state = $state }")
+            logger.log("$className -> likeButtonStateLiveData().observe(this) { state = $state }")
             if (state) binding.btnLike.setImageResource(R.drawable.player_like)
             else binding.btnLike.setImageResource(R.drawable.player_dislike)
         }
 
         lifecycleScope.launch {
             viewModel.addButtonStateFlow.collect { state ->
-                Log.d(TAG, "PlayerActivity -> addButtonStateFlow.collect { state = ${state.className()} }")
+                logger.log("$className -> addButtonStateFlow.collect { state = ${state.className} }")
                 when (state) {
                     is BottomSheetUIState.Content -> {
                         drawBottomSheet(state.albums)
@@ -101,7 +102,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun drawBottomSheet(albums: List<Album>) {
-        Log.d(TAG, "PlayerActivity -> drawBottomSheet(albums: $albums)")
+        logger.log("$className -> drawBottomSheet(albums: $albums)")
         if (albums.isNotEmpty()) {
             binding.bottomSheet.newAlbum.setOnClickListener {
                 supportFragmentManager.beginTransaction()
@@ -117,7 +118,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun hideBottomSheet(message: String) {
-        Log.d(TAG, "PlayerActivity -> hideBottomSheet(message: $message)")
+        logger.log("$className -> hideBottomSheet(message: $message)")
         Snackbar
             .make(this, binding.root, message, Snackbar.LENGTH_SHORT)
             .setBackgroundTint(ContextCompat.getColor(this, R.color.blue))
@@ -127,7 +128,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initBottomSheet() {
-        Log.d(TAG, "PlayerActivity -> initBottomSheet()")
+        logger.log("$className -> initBottomSheet()")
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) { }
@@ -145,7 +146,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        Log.d(TAG, "PlayerActivity -> initListeners()")
+        logger.log("$className -> initListeners()")
         binding.backBtn.setNavigationOnClickListener { router.onClickedBack() }
         binding.btnLike.debounceClickListener(debouncer) { viewModel.onClickLike(track) }
         binding.btnAdd.debounceClickListener(debouncer) {
@@ -162,18 +163,18 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "PlayerActivity -> onPause()")
+        logger.log("$className -> onPause()")
         viewModel.pauseMusic()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "PlayerActivity -> onDestroy()")
+        logger.log("$className -> onDestroy()")
         viewBinding = null
     }
 
     private fun drawScreen(track: Track) {
-        Log.d(TAG, "PlayerActivity -> drawScreen(track: $track)")
+        logger.log("$className -> drawScreen(track: $track)")
         viewModel.getFavoriteState(track.trackId)
         viewModel.preparePlayer(trackLink = track.previewUrl)
         Glide.with(this)
@@ -192,26 +193,26 @@ class PlayerActivity : AppCompatActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
     private fun startAnimationAlfa() {
-        Log.d(TAG, "PlayerActivity -> startAnimationAlfa()")
+        logger.log("$className -> startAnimationAlfa()")
         binding.btnPlay.animate().apply { duration = DELAY_1500; alpha(1.0f) }
     }
     private fun startPressAnimation() {
-        Log.d(TAG, "PlayerActivity -> startPressAnimation()")
+        logger.log("$className -> startPressAnimation()")
         binding.btnPlay.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale))
     }
     private fun showToast(message: String?) {
-        Log.d(TAG, "PlayerActivity -> showToast(message: $message)")
+        logger.log("$className -> showToast(message: $message)")
         message?.let {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
     }
 
     private fun changeImageForPlayButton(image: Int) {
-        Log.d(TAG, "PlayerActivity -> changeImageForPlayButton(image: $image)")
+        logger.log("$className -> changeImageForPlayButton(image: $image)")
         binding.btnPlay.setImageResource(image)
     }
     private fun updateTime(time: String) {
-        Log.d(TAG, "PlayerActivity -> updateTime(time: $time)")
+        logger.log("$className -> updateTime(time: $time)")
         binding.currentTime.text = time
     }
 }

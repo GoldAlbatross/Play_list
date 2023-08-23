@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.app.TAG
+import com.practicum.playlistmaker.Logger
 import com.practicum.playlistmaker.domain.local_db.api.PlayListInteractor
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.presentation.fragment.create.ScreenState
@@ -12,10 +12,11 @@ import kotlinx.coroutines.launch
 
 class EditViewModel(
     private val interactor: PlayListInteractor,
-): CreateAlbumViewModel(interactor) {
+    private val logger: Logger
+): CreateAlbumViewModel(interactor,logger) {
 
     override fun onCreatePressed(data: Album?) {
-        Log.d(TAG, "${className()} -> onCreatePressed()")
+        logger.log("$className -> onCreatePressed()")
         viewModelScope.launch(Dispatchers.IO) {
             if (data!!.name.isNotEmpty()) {
                 interactor.updateAlbum(
@@ -30,7 +31,7 @@ class EditViewModel(
     }
 
     override fun onBackPressed() {
-        Log.d(TAG, "${className()} -> onBackPressed()")
+        logger.log("$className -> onBackPressed()")
         viewModelScope.launch {
             if (album.name.isNotEmpty()) {
                 uiStateMutable.emit(ScreenState.GoBack)
