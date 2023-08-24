@@ -19,8 +19,10 @@ import com.practicum.playlistmaker.databinding.FragmentAlbumBinding
 import com.practicum.playlistmaker.domain.local_db.model.Album
 import com.practicum.playlistmaker.domain.network.model.Track
 import com.practicum.playlistmaker.presentation.viewmodel.AlbumViewModel
+import com.practicum.playlistmaker.utils.Debouncer
 import com.practicum.playlistmaker.utils.KEY_TRACK
 import com.practicum.playlistmaker.utils.className
+import com.practicum.playlistmaker.utils.debounceClickListener
 import com.practicum.playlistmaker.utils.getTimeFormat
 import com.practicum.playlistmaker.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +38,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
     private val viewModel by viewModel<AlbumViewModel> { parametersOf(arguments?.getLong(ALBUM_KEY)) }
     private var dotsSheet: BottomSheetBehavior<ConstraintLayout>? = null
     private var trackSheet: BottomSheetBehavior<ConstraintLayout>? = null
-    private val trackAdapter by lazy { AlbumAdapter() }
+    private var debouncer: Debouncer? = null
+    private val trackAdapter by lazy { AlbumAdapter(debouncer!!) }
     private var trackDialog: AlertDialog? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         logger.log("$className -> onViewCreated()")
@@ -44,7 +47,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         dotsSheet = BottomSheetBehavior.from(binding.bottomSheetDots.root)
         trackSheet = BottomSheetBehavior.from(binding.albumBottomSheet.root)
 
-        initListeners()
+        debouncer = Debouncer(viewLifecycleOwner.lifecycleScope)
+        initListeners(debouncer!!)
         viewModel.getAlbum()
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.uiState.collect { state ->
@@ -71,6 +75,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         trackAdapter.longPress = null
         trackSheet = null
         dotsSheet = null
+        debouncer = null
     }
 
     private fun showApps(album: Album) {
@@ -108,7 +113,7 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
             .show()
     }
 
-    private fun initListeners() {
+    private fun initListeners(debouncer: Debouncer) {
         logger.log("$className -> initListeners()")
         trackAdapter.action = { track ->
             findNavController().navigate(
@@ -119,8 +124,8 @@ class AlbumFragment: Fragment(R.layout.fragment_album) {
         trackAdapter.longPress = { prepareTrackDialog(it) }
         with(binding) {
             backBtn.setNavigationOnClickListener { findNavController().popBackStack() }
-            share.setOnClickListener { viewModel.onSharePressed() }
-            dots.setOnClickListener { viewModel.onDotsPressed() }
+            share.debounceClickListener(debouncer) { viewModel.onSharePressed() }
+            dots.debounceClickListener(debouncer) { viewModel.onDotsPressed() }
         }
     }
 

@@ -17,6 +17,7 @@ class Debouncer(
     fun onClick(action: () -> Unit) {
         if (available) {
             available = false
+            job?.cancel()
             job = coroutineScope.launch {
                 action()
                 delay(delay)
