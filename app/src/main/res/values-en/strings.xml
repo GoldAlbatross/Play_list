@@ -52,7 +52,13 @@
         <item quantity="other">%1$d tracks</item>
     </plurals>
     <string name="delete_track">Delete the track?</string>
+    <string name="share">Shared</string>
+    <string name="change">Change infarmation</string>
+    <string name="remove_list">Remove album</string>
+    <string name="nothing_to_share">Nothing to share</string>
+    <string name="remove_album">Do you want remove the album?</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
+    <string name="no_tracks">Empty</string>
 
 </resources>
